@@ -6,6 +6,8 @@ import ru.fomin.client.gui.controllers.AuthenticationController;
 import ru.fomin.client.util.ControllersUtil;
 
 import javafx.scene.control.Button;
+import ru.fomin.common.KeyCommands;
+
 import java.io.*;
 import java.net.ContentHandler;
 import java.net.Socket;
@@ -40,8 +42,8 @@ public class HandlerCommands implements Commands {
     public String sendFile(String filename) {
         try {
             File file = new File(filename);
-            if (file.exists()) {
-                out.writeUTF("upload");
+            if (file.isFile()) {
+                out.writeUTF(KeyCommands.UPLOAD);
                 out.writeUTF(file.getName());
                 long length = file.length();
                 out.writeLong(length);
@@ -74,6 +76,18 @@ public class HandlerCommands implements Commands {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public String[] getFiles() {
+        String files = "";
+        try {
+            out.writeUTF(KeyCommands.GET_FILES);
+            files = in.readUTF();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return files.isEmpty() ? new String[0] : files.split(KeyCommands.DELIMITER);
     }
 
     public static Commands getCommands() {

@@ -1,6 +1,6 @@
 package ru.fomin.server.core;
 
-import ru.fomin.server.network.ClientHandler;
+import ru.fomin.server.network.SocketHandler;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -14,7 +14,7 @@ public class Server {
         try (ServerSocket server = new ServerSocket(port)){
             System.out.println("Server started");
             while (true) {
-                service.execute(new ClientHandler(server.accept()));
+                service.execute(new SocketHandler(server.accept()));
             }
         } catch (IOException e) {
             e.printStackTrace();
