@@ -57,7 +57,8 @@ public class ControllersUtil {
         stage.setResizable(false);
         return stage;
     }
-    static void showInfoMessage(String message) {
+   public static void showInfoMessage(String message) {
         JOptionPane.showMessageDialog(null, message);
     }
+
 }

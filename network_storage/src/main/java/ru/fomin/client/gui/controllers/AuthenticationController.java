@@ -4,7 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import ru.fomin.client.core.Handler;
+import ru.fomin.client.core.HandlerCommands;
 
 import static ru.fomin.client.util.ControllersUtil.*;
 
@@ -13,14 +13,6 @@ import java.util.ResourceBundle;
 
 public class AuthenticationController {
     private boolean isConnected = false;
-    static Handler handler;
-    static String ip = "127.0.0.1";
-    static int port = 8189;
-
-    static void setConnectionProperties(String ip, int port) {
-        AuthenticationController.ip = ip;
-        AuthenticationController.port = port;
-    }
 
     @FXML
     private ResourceBundle resources;
@@ -63,11 +55,12 @@ public class AuthenticationController {
     private void connect() {
         if (!isConnected) {
             isConnected = true;
-            handler = new Handler(port, ip, this);
+            new HandlerCommands(this);
         }
     }
 
     public void changeIsConnected() {
         isConnected = isConnected ? false : true;
     }
+
 }
