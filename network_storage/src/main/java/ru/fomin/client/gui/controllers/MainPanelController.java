@@ -61,6 +61,20 @@ public class MainPanelController {
         btn_upload.setOnAction(event -> upload());
 
         field_file_path.setOnAction(event -> upload());
+
+        btn_download.setOnAction(event -> download());
+    }
+
+    private void download() {
+        String fileName = multipleSelectionModel.getSelectedItem();
+        String path = field_file_path.getText();
+        if (!(new File(path).isDirectory())) {
+            showErrorMessage("Wrong directory");
+            return;
+        }
+        if (commands.download(fileName, path)) {
+            showInfoMessage(String.format("Download %s is successful", fileName));
+        }
     }
 
     private void upload() {
@@ -68,7 +82,7 @@ public class MainPanelController {
         if (filePath.isEmpty()) {
             return;
         }
-       if(!commands.sendFile(filePath).equals(KeyCommands.DONE)) return;
+        if (!commands.sendFile(filePath).equals(KeyCommands.DONE)) return;
         updateFileList(filePath);
         field_file_path.setText("");
     }

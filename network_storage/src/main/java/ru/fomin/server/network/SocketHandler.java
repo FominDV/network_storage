@@ -1,16 +1,21 @@
 package ru.fomin.server.network;
 
 import ru.fomin.common.KeyCommands;
+import ru.fomin.server.core.Commands;
+import ru.fomin.server.core.HandlerCommands;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.Arrays;
-import java.util.List;
 
 public class SocketHandler implements Runnable {
     private final Socket socket;
+    private static final Commands COMMANDS;
     private DataOutputStream out;
     private DataInputStream in;
+
+    static {
+        COMMANDS=HandlerCommands.getHandlerCommands();
+    }
 
     public SocketHandler(Socket socket) {
         this.socket = socket;
@@ -28,7 +33,7 @@ public class SocketHandler implements Runnable {
             while (true) {
                 String command = in.readUTF();
                 try {
-                    handling(command);
+                    COMMANDS.handleRequest(command, this);
                 } catch (IOException e) {
                     out.writeUTF(KeyCommands.ERROR);
                 }
@@ -38,56 +43,31 @@ public class SocketHandler implements Runnable {
         }
     }
 
-    private void handling(String command) throws IOException {
-        switch (command) {
-            case KeyCommands.UPLOAD:
-                upload();
-                break;
-            case KeyCommands.DOWNLOAD:
-                download();
-                break;
-            case KeyCommands.DELETE:
-                delete();
-                break;
-            case KeyCommands.GET_FILES:
-                getFileArray();
-                break;
-            default:
-                out.writeUTF(KeyCommands.COMMAND_ERROR);
-        }
+    public String readUTF() throws IOException {
+        return in.readUTF();
     }
 
-    private void getFileArray() throws IOException {
-        File root = new File("src/main/java/ru/fomin/server/main_repository");
-        File[] filesArray = root.listFiles();
-        String fileNames = "";
-        for (File file:filesArray){
-            fileNames+=file.getName()+KeyCommands.DELIMITER;
-        }
-        out.writeUTF(fileNames.substring(0,fileNames.length()-1));
+    public long readLong() throws IOException {
+        return in.readLong();
     }
 
-    private void upload() throws IOException {
-        File file = new File("src/main/java/ru/fomin/server/main_repository" + File.separator + in.readUTF());
-        if (!file.exists()) {
-            file.createNewFile();
-        }
-        long size = in.readLong();
-        FileOutputStream fos = new FileOutputStream(file);
-        byte[] buffer = new byte[256];
-        for (int i = 0; i < (size + 255) / 256; i++) { // FIXME
-            int read = in.read(buffer);
-            fos.write(buffer, 0, read);
-        }
-        fos.close();
-        out.writeUTF(KeyCommands.DONE);
+    public void writeUTF(String message) throws IOException {
+        out.writeUTF(message);
     }
 
-    private void download() throws IOException {
-
+    public void writeLong(Long number) throws IOException {
+        out.writeLong(number);
     }
 
-    private void delete() throws IOException {
+    public int read(byte[] buffer) throws IOException {
+        return in.read(buffer);
+    }
 
+    public void write(byte[] buffer, int len) throws IOException {
+        out.write(buffer,0,len);
+    }
+
+    public void flush() throws IOException {
+        out.flush();
     }
 }

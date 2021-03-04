@@ -49,7 +49,7 @@ public class HandlerCommands implements Commands {
                 out.writeLong(length);
                 FileInputStream fis = new FileInputStream(file);
                 int read = 0;
-                byte[] buffer = new byte[256];
+                byte[] buffer = new byte[KeyCommands.SIZE_OF_PACKAGE];
                 while ((read = fis.read(buffer)) != -1) {
                     out.write(buffer, 0, read);
                 }
@@ -88,6 +88,35 @@ public class HandlerCommands implements Commands {
             e.printStackTrace();
         }
         return files.isEmpty() ? new String[0] : files.split(KeyCommands.DELIMITER);
+    }
+
+    @Override
+    public boolean download(String filename, String path) {
+        byte[] bytes;
+        int sizeOfPackage = KeyCommands.SIZE_OF_PACKAGE;
+        try {
+            out.writeUTF(KeyCommands.DOWNLOAD);
+            out.writeUTF(filename);
+            File file = new File(path + File.separator + filename);
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            long size = in.readLong();
+            long countOfPackages = (size + sizeOfPackage - 1) / sizeOfPackage;
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+            byte[] buffer = new byte[sizeOfPackage];
+            for (long i = 0; i < countOfPackages; i++) { // FIXME
+                int read = in.read(buffer);
+                fileOutputStream.write(buffer, 0, read);
+            }
+            fileOutputStream.close();
+            //for future statistical
+            //out.writeUTF(KeyCommands.DONE);
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public static Commands getCommands() {

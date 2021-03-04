@@ -7,4 +7,5 @@ public interface Commands {
     String sendFile(String filename);
     void exitToAuthentication(Button button);
     String[] getFiles();
+    boolean download(String filename, String path);
 }

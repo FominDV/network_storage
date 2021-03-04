@@ -10,6 +10,7 @@ public class KeyCommands {
    public static final String ERROR="error";
    public static final String DELIMITER="±";
    public static final String GET_FILES="get_files";
+   public static final int SIZE_OF_PACKAGE=256;
 
 
 
