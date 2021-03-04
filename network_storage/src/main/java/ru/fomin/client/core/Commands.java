@@ -8,4 +8,5 @@ public interface Commands {
     void exitToAuthentication(Button button);
     String[] getFiles();
     boolean download(String filename, String path);
+    boolean delete(String filename);
 }

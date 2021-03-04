@@ -63,10 +63,30 @@ public class MainPanelController {
         field_file_path.setOnAction(event -> upload());
 
         btn_download.setOnAction(event -> download());
+
+        btn_delete.setOnAction(event -> delete());
+    }
+
+    private void delete() {
+        String fileName = multipleSelectionModel.getSelectedItem();
+        if(!hasText(fileName)){
+            showErrorMessage("File was not chosen");
+            return;
+        }
+        if (commands.delete(fileName)) {
+            observableList.remove(fileName);
+            showInfoMessage(fileName + " was deleted");
+        } else {
+            showErrorMessage("ERROR of connection or server\nPlease, try again");
+        }
     }
 
     private void download() {
         String fileName = multipleSelectionModel.getSelectedItem();
+        if(!hasText(fileName)){
+            showErrorMessage("File was not chosen");
+            return;
+        }
         String path = field_file_path.getText();
         if (!(new File(path).isDirectory())) {
             showErrorMessage("Wrong directory");
@@ -79,12 +99,19 @@ public class MainPanelController {
 
     private void upload() {
         String filePath = field_file_path.getText();
-        if (filePath.isEmpty()) {
+        File file=new File(filePath);
+        String feedback;
+        if (!file.isFile()) {
+            showErrorMessage(String.format("Path \"%s\" is not file",filePath));
             return;
         }
-        if (!commands.sendFile(filePath).equals(KeyCommands.DONE)) return;
-        updateFileList(filePath);
+        if (!(feedback = commands.sendFile(filePath)).equals(KeyCommands.DONE)) {
+            showErrorMessage(feedback);
+            return;
+        }
+        observableList.add(file.getName());
         field_file_path.setText("");
+        showInfoMessage(String.format("Upload %s is successful", (new File(filePath)).getName()));
     }
 
     private void updateFileList(String[] filesArray) {
@@ -92,9 +119,5 @@ public class MainPanelController {
         list_files.setItems(observableList);
         multipleSelectionModel = list_files.getSelectionModel();
         if (multipleSelectionModel.getSelectedItem() == null) multipleSelectionModel.select(0);
-    }
-
-    private void updateFileList(String filePath) {
-        observableList.add(new File(filePath).getName());
     }
 }

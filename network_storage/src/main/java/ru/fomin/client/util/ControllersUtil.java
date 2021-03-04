@@ -18,7 +18,7 @@ public class ControllersUtil {
     }
 
     public static void showAndHideStages(String pathOfFXML, Labeled labeled) {
-        Platform.runLater(()->labeled.getScene().getWindow().hide());
+        Platform.runLater(() -> labeled.getScene().getWindow().hide());
         Stage stage = getStage(pathOfFXML);
         stage.setResizable(false);
         stage.setOnCloseRequest(event -> {
@@ -33,7 +33,7 @@ public class ControllersUtil {
     }
 
     static void showStage(String pathOfFXML) {
-        Stage stage=getStage(pathOfFXML);
+        Stage stage = getStage(pathOfFXML);
         stage.setResizable(false);
         stage.setOnCloseRequest(event -> event.consume());
         stage.show();
@@ -57,8 +57,12 @@ public class ControllersUtil {
         stage.setResizable(false);
         return stage;
     }
-   public static void showInfoMessage(String message) {
+
+    public static void showInfoMessage(String message) {
         JOptionPane.showMessageDialog(null, message);
     }
 
+    public static boolean hasText(String str) {
+        return str != null && str.length() != 0 ? true : false;
+    }
 }

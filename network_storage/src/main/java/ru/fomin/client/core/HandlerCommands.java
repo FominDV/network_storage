@@ -92,7 +92,6 @@ public class HandlerCommands implements Commands {
 
     @Override
     public boolean download(String filename, String path) {
-        byte[] bytes;
         int sizeOfPackage = KeyCommands.SIZE_OF_PACKAGE;
         try {
             out.writeUTF(KeyCommands.DOWNLOAD);
@@ -105,7 +104,7 @@ public class HandlerCommands implements Commands {
             long countOfPackages = (size + sizeOfPackage - 1) / sizeOfPackage;
             FileOutputStream fileOutputStream = new FileOutputStream(file);
             byte[] buffer = new byte[sizeOfPackage];
-            for (long i = 0; i < countOfPackages; i++) { // FIXME
+            for (long i = 0; i < countOfPackages; i++) {
                 int read = in.read(buffer);
                 fileOutputStream.write(buffer, 0, read);
             }
@@ -113,6 +112,18 @@ public class HandlerCommands implements Commands {
             //for future statistical
             //out.writeUTF(KeyCommands.DONE);
             return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public boolean delete(String filename) {
+        try {
+            out.writeUTF(KeyCommands.DELETE);
+            out.writeUTF(filename);
+            return in.readUTF().equals(KeyCommands.DONE) ? true : false;
         } catch (IOException e) {
             e.printStackTrace();
             return false;
