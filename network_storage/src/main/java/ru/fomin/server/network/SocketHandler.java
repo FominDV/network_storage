@@ -9,13 +9,9 @@ import java.net.Socket;
 
 public class SocketHandler implements Runnable {
     private final Socket socket;
-    private static final Commands COMMANDS;
+    private  final Commands commands=new HandlerCommands();
     private DataOutputStream out;
     private DataInputStream in;
-
-    static {
-        COMMANDS=HandlerCommands.getHandlerCommands();
-    }
 
     public SocketHandler(Socket socket) {
         this.socket = socket;
@@ -33,7 +29,7 @@ public class SocketHandler implements Runnable {
             while (true) {
                 String command = in.readUTF();
                 try {
-                    COMMANDS.handleRequest(command, this);
+                    commands.handleRequest(command, this);
                 } catch (IOException e) {
                     out.writeUTF(KeyCommands.ERROR);
                 }

@@ -13,13 +13,6 @@ public class HandlerCommands implements Commands {
     private static final HandlerCommands handlerCommands = new HandlerCommands();
     private static final String MAIN_PATH = "src/main/java/ru/fomin/server/main_repository";
 
-    private HandlerCommands() {
-    }
-
-    public static HandlerCommands getHandlerCommands() {
-        return handlerCommands;
-    }
-
     @Override
     synchronized public void handleRequest(String keyCommand, SocketHandler socketHandler) throws IOException {
         switch (keyCommand) {
