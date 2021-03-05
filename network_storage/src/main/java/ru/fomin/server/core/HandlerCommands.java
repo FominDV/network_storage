@@ -81,7 +81,7 @@ public class HandlerCommands implements Commands {
     }
 
     synchronized private void delete(SocketHandler socketHandler) throws IOException {
-        Path path = Paths.get(MAIN_PATH + File.separator + socketHandler.readUTF());
+        Path path = Paths.get(MAIN_PATH, socketHandler.readUTF());
         Files.delete(path);
         socketHandler.writeUTF(KeyCommands.DONE);
     }

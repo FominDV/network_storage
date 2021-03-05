@@ -13,6 +13,8 @@ import java.util.ResourceBundle;
 
 public class AuthenticationController {
     private boolean isConnected = false;
+    private static String login="ivan";
+    private static String password="123";
 
     @FXML
     private ResourceBundle resources;
@@ -38,18 +40,26 @@ public class AuthenticationController {
 
     @FXML
     void initialize() {
+        field_login.setText(login);
+        field_password.setText(password);
+
         btn_login.setOnAction(event -> {
             connect();
             showAndHideStages("/fxml/main_panel.fxml", btn_login);
         });
         btn_registration.setOnAction(event -> {
             connect();
-
         });
 
         btnTCP_IP.setOnAction(event -> {
         });
+
         btn_info.setOnAction(event -> showDeveloperInfo());
+
+        btn_registration.setOnAction(event -> {
+            connect();
+            showAndHideStages("/fxml/registration.fxml", btn_registration);
+        });
     }
 
     private void connect() {
@@ -63,4 +73,16 @@ public class AuthenticationController {
         isConnected = isConnected ? false : true;
     }
 
+    public void setTextToField_login(String login) {
+        field_login.setText(login);
+    }
+
+    public void setTextToField_password(String password) {
+        field_password.setText(password);
+    }
+
+   static void setAuthenticationData(String login, String password){
+       AuthenticationController.login=login;
+       AuthenticationController.password=password;
+    }
 }

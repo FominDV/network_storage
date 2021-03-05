@@ -44,7 +44,7 @@
             </Button>
          </children>
       </AnchorPane>
-      <TextField fx:id="field_login" alignment="TOP_CENTER" focusTraversable="false" layoutX="114.0" layoutY="125.0" prefHeight="40.0" prefWidth="172.0" promptText="login" style="-fx-border-radius: 6; -fx-border-color: #0c2dff;" text="ivan">
+      <TextField fx:id="field_login" alignment="TOP_CENTER" focusTraversable="false" layoutX="114.0" layoutY="125.0" prefHeight="40.0" prefWidth="172.0" promptText="login" style="-fx-border-radius: 6; -fx-border-color: #0c2dff;">
          <font>
             <Font name="Times New Roman Italic" size="21.0" />
          </font>
@@ -69,7 +69,7 @@
             <Font name="Impact" size="21.0" />
          </font>
       </Label>
-      <PasswordField fx:id="field_password" alignment="TOP_CENTER" focusTraversable="false" layoutX="114.0" layoutY="188.0" prefHeight="40.0" prefWidth="172.0" promptText="password" style="-fx-border-color: #0c2dff; -fx-border-radius: 6;" text="123">
+      <PasswordField fx:id="field_password" alignment="TOP_CENTER" focusTraversable="false" layoutX="114.0" layoutY="188.0" prefHeight="40.0" prefWidth="172.0" promptText="password" style="-fx-border-color: #0c2dff; -fx-border-radius: 6;">
          <font>
             <Font name="Times New Roman Italic" size="21.0" />
          </font>

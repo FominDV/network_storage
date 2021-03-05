@@ -1,20 +1,15 @@
 package ru.fomin.client.core;
 
-import javafx.application.Application;
 import javafx.application.Platform;
 import ru.fomin.client.gui.controllers.AuthenticationController;
-import ru.fomin.client.util.ControllersUtil;
 
 import javafx.scene.control.Button;
 import ru.fomin.common.KeyCommands;
 
 import java.io.*;
-import java.net.ContentHandler;
 import java.net.Socket;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 
-import static ru.fomin.client.util.ControllersUtil.showAndHideStages;
+import static ru.fomin.client.util.ControllersUtil.*;
 
 public class HandlerCommands implements Commands {
 
@@ -128,6 +123,11 @@ public class HandlerCommands implements Commands {
             e.printStackTrace();
             return false;
         }
+    }
+
+    @Override
+    public String registration(String login, String password) {
+        return KeyCommands.DUPLICATED_LOGIN;
     }
 
     public static Commands getCommands() {
