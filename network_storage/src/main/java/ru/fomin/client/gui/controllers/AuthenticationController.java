@@ -60,6 +60,8 @@ public class AuthenticationController {
             connect();
             showAndHideStages("/fxml/registration.fxml", btn_registration);
         });
+
+        btnTCP_IP.setOnAction(event -> showAndHideStages("/fxml/connaction_properties.fxml",btnTCP_IP));
     }
 
     private void connect() {

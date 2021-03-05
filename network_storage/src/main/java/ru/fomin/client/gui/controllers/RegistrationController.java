@@ -12,8 +12,6 @@ import static ru.fomin.client.util.ControllersUtil.*;
 
 public class RegistrationController {
 
-    private static final String PASSWORD_PATTERN = "(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9@#$%]).{8,}";
-
     private Commands commands;
 
     @FXML
@@ -48,59 +46,28 @@ public class RegistrationController {
     private void registration() {
         String login = field_login.getText();
         String password = field_password.getText();
-        if (validation(login, password)) {
+        if (!validation(login, password, field_repeat_password.getText())) {
+            clearFields();
+            return;
+        }
             switch (commands.registration(login, password)) {
                 case KeyCommands.DONE:
                     showInfoMessage("Registration is successful\nYour login: " + login);
-                    AuthenticationController.setAuthenticationData(login,password);
+                    AuthenticationController.setAuthenticationData(login, password);
                     commands.exitToAuthentication(btn_cancel);
                     break;
                 case KeyCommands.DUPLICATED_LOGIN:
-                    field_login.setText("");
-                    clearPasswordFields();
+                    clearFields();
                     showErrorMessage(String.format("Login %s already exist", login));
                     break;
                 default:
                     showErrorMessage("ERROR of server");
             }
-        }
+
     }
 
-    private boolean validation(String login, String password) {
-        String repeated_password = field_repeat_password.getText();
-
-        //Verify empty field
-        if (!(hasText(login) || hasText(password) || hasText(repeated_password))) {
-            showErrorMessage("All field should be fill");
-            return false;
-        }
-
-        //Verify length of login
-        int loginLends = login.length();
-        if (loginLends < 3 || loginLends > 20) {
-            field_login.setText("");
-            clearPasswordFields();
-            showErrorMessage("Length of login should be greater than 2 and less than 21");
-            return false;
-        }
-
-        //Verify password entity
-        if (!password.matches(PASSWORD_PATTERN)) {
-            showErrorMessage("The password should be at least 8 characters long,\n contain at least 1 large letter,\n one small letter\n and contain special character OR digit.");
-            clearPasswordFields();
-            return false;
-        }
-
-        //Verify password comparison
-        if (!password.equals(repeated_password)) {
-            showErrorMessage("The passwords don't match");
-            clearPasswordFields();
-            return false;
-        }
-        return true;
-    }
-
-    private void clearPasswordFields() {
+    private void clearFields() {
+        field_login.setText("");
         field_password.setText("");
         field_repeat_password.setText("");
     }

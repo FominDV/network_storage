@@ -18,7 +18,6 @@ public class HandlerCommands implements Commands {
     private DataInputStream in;
     private DataOutputStream out;
     private Socket socket;
-
     static String ip = "127.0.0.1";
     static int port = 8189;
 
@@ -145,5 +144,13 @@ public class HandlerCommands implements Commands {
 
     public static int getPort() {
         return port;
+    }
+
+    public static void setIp(String ip) {
+        HandlerCommands.ip = ip;
+    }
+
+    public static void setPort(int port) {
+        HandlerCommands.port = port;
     }
 }
