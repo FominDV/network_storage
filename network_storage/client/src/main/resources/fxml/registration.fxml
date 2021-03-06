@@ -3,17 +3,18 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.Blend?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="430.0" prefWidth="300.0" style="-fx-background-color: #c5c7f1;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.UpdatePasswordController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="290.0" style="-fx-background-color: #c5c7f1;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.fomin.gui.controllers.RegistrationController">
     <children>
         <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="100.0" prefWidth="300.0" style="-fx-background-color: #771aff;">
             <children>
-                <Label alignment="TOP_CENTER" layoutX="7.0" layoutY="32.0" prefHeight="52.0" prefWidth="286.0" text="Change Password" textAlignment="CENTER" textFill="#ccffc5" textOverrun="CLIP">
+                <Label alignment="TOP_CENTER" layoutX="7.0" layoutY="32.0" prefHeight="52.0" prefWidth="276.0" text="Registration" textAlignment="CENTER" textFill="#ccffc5" textOverrun="CLIP">
                     <font>
                         <Font name="Times New Roman Bold Italic" size="37.0" />
                     </font>
@@ -21,12 +22,12 @@
                         <Blend />
                     </effect>
                 </Label>
-                <ImageView fitHeight="28.0" fitWidth="24.0" layoutX="2.0" layoutY="72.0" pickOnBounds="true" preserveRatio="true">
+                <ImageView fitHeight="28.0" fitWidth="24.0" layoutX="2.0" layoutY="34.0" pickOnBounds="true" preserveRatio="true">
                     <image>
                         <Image url="@../images/fire.png" />
                     </image>
                 </ImageView>
-                <ImageView fitHeight="24.0" fitWidth="24.0" layoutX="274.0" layoutY="72.0" pickOnBounds="true" preserveRatio="true">
+                <ImageView fitHeight="24.0" fitWidth="24.0" layoutX="274.0" layoutY="34.0" pickOnBounds="true" preserveRatio="true">
                     <image>
                         <Image url="@../images/fire.png" />
                     </image>
@@ -43,32 +44,22 @@
                 </Button>
             </children>
         </AnchorPane>
-        <Button fx:id="btn_change" layoutX="12.0" layoutY="357.0" mnemonicParsing="false" prefHeight="52.0" prefWidth="276.0" style="-fx-background-color: #7fcfff; -fx-border-color: #0c2dff; -fx-border-radius: 6;" text="change" textFill="#244bd7">
+        <Button fx:id="btn_registration" layoutX="12.0" layoutY="305.0" mnemonicParsing="false" prefHeight="81.0" prefWidth="276.0" style="-fx-background-color: #7fcfff; -fx-border-color: #0c2dff; -fx-border-radius: 6;" text="registration" textFill="#244bd7">
             <font>
                 <Font name="Impact" size="25.0" />
             </font>
         </Button>
-      <Label layoutX="18.0" layoutY="112.0" prefHeight="28.0" prefWidth="194.0" text="Present password:" textFill="#0c14b5">
+      <TextField fx:id="field_login" alignment="TOP_CENTER" focusTraversable="false" layoutX="18.0" layoutY="110.0" prefHeight="40.0" prefWidth="264.0" promptText="login" style="-fx-border-radius: 6; -fx-border-color: #0c2dff;">
          <font>
-            <Font name="Impact" size="21.0" />
+            <Font name="Times New Roman Italic" size="21.0" />
          </font>
-      </Label>
-      <Label layoutX="18.0" layoutY="201.0" prefHeight="28.0" prefWidth="194.0" text="Future password:" textFill="#0c14b5">
-         <font>
-            <Font name="Impact" size="21.0" />
-         </font>
-      </Label>
-      <PasswordField fx:id="field_password" alignment="CENTER" focusTraversable="false" layoutX="18.0" layoutY="153.0" prefHeight="40.0" prefWidth="264.0" promptText="present password" style="-fx-border-color: #0c2dff; -fx-border-radius: 6;">
+      </TextField>
+      <PasswordField fx:id="field_password" alignment="CENTER" focusTraversable="false" layoutX="18.0" layoutY="180.0" prefHeight="40.0" prefWidth="264.0" promptText="password" style="-fx-border-color: #0c2dff; -fx-border-radius: 6;">
          <font>
             <Font name="Times New Roman Italic" size="21.0" />
          </font>
       </PasswordField>
-      <PasswordField fx:id="field_new_password" alignment="CENTER" focusTraversable="false" layoutX="18.0" layoutY="243.0" prefHeight="40.0" prefWidth="264.0" promptText="new password" style="-fx-border-color: #0c2dff; -fx-border-radius: 6;">
-         <font>
-            <Font name="Times New Roman Italic" size="21.0" />
-         </font>
-      </PasswordField>
-      <PasswordField fx:id="field_repeat_password" alignment="CENTER" focusTraversable="false" layoutX="18.0" layoutY="300.0" prefHeight="40.0" prefWidth="264.0" promptText="repeat new password" style="-fx-border-color: #0c2dff; -fx-border-radius: 6;">
+      <PasswordField fx:id="field_repeat_password" alignment="CENTER" focusTraversable="false" layoutX="18.0" layoutY="251.0" prefHeight="40.0" prefWidth="264.0" promptText="repeat password" style="-fx-border-color: #0c2dff; -fx-border-radius: 6;">
          <font>
             <Font name="Times New Roman Italic" size="21.0" />
          </font>
