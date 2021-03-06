@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 
+import static ru.fomin.client.util.ControllersUtil.showAndHideStages;
 import static ru.fomin.client.util.ControllersUtil.showDeveloperInfo;
 
 public class UpdatePasswordController {
@@ -29,6 +30,9 @@ public class UpdatePasswordController {
     void initialize() {
 
         btn_info.setOnAction(event -> showDeveloperInfo());
+
+        btn_cancel.setOnAction(event -> showAndHideStages("/fxml/main_panel.fxml", btn_cancel));
+
 
     }
 }

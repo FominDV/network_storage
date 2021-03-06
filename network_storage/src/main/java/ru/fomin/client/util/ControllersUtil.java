@@ -71,7 +71,7 @@ public class ControllersUtil {
 
    public static boolean validation(String login, String password, String repeated_password) {
         //Verify empty field
-        if (!(hasText(login) || hasText(password) || hasText(repeated_password))) {
+        if (!(hasText(login) && hasText(password) && hasText(repeated_password))) {
             showErrorMessage("All field should be fill");
             return false;
         }

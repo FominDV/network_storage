@@ -67,6 +67,8 @@ public class MainPanelController {
         btn_download.setOnAction(event -> download());
 
         btn_delete.setOnAction(event -> delete());
+
+        btn_change_password.setOnAction(event -> showAndHideStages("/fxml/update_password.fxml",btn_change_password));
     }
 
     private void delete() {
