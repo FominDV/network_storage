@@ -11,7 +11,7 @@ import java.nio.file.Paths;
 public class HandlerCommands implements Commands {
 
     private static final HandlerCommands handlerCommands = new HandlerCommands();
-    private static final String MAIN_PATH = "src/main/java/ru/fomin/server/main_repository";
+    private static final String MAIN_PATH = "main_repository";
 
     @Override
     synchronized public void handleRequest(String keyCommand, SocketHandler socketHandler) throws IOException {
@@ -36,7 +36,7 @@ public class HandlerCommands implements Commands {
     synchronized private void getFileArray(SocketHandler socketHandler) throws IOException {
         File root = new File(MAIN_PATH);
         File[] filesArray = root.listFiles();
-        if (filesArray.length == 0) {
+        if (filesArray != null && filesArray.length == 0) {
             socketHandler.writeUTF("");
             return;
         }
@@ -77,6 +77,7 @@ public class HandlerCommands implements Commands {
             socketHandler.write(buffer, read);
         }
         socketHandler.flush();
+        fis.close();
         //socketHandler.readUTF();
     }
 
