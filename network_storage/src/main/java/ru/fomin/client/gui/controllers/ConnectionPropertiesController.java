@@ -10,6 +10,8 @@ import static ru.fomin.client.util.ControllersUtil.*;
 
 public class ConnectionPropertiesController {
 
+    private static final String IP_PATTERN = "(25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[0-9]{2}|[0-9])(\\.(25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[0-9]{2}|[0-9])){3}";
+
     @FXML
     private Button btn_info;
 
@@ -46,7 +48,7 @@ public class ConnectionPropertiesController {
             if (isValidConnectionProperties(newIP, newPort)) {
                 HandlerCommands.setIp(newIP);
                 HandlerCommands.setPort(Integer.parseInt(newPort));
-                showInfoMessage(String.format("Successful\nIp: %s\nPort: %s",newIP,newPort));
+                showInfoMessage(String.format("Successful\nIp: %s\nPort: %s", newIP, newPort));
                 showAndHideStages("/fxml/authentication.fxml", btn_cancel);
             } else {
                 field_ip.setText("");
@@ -71,7 +73,7 @@ public class ConnectionPropertiesController {
             showErrorMessage("The port should be less than 65536 and greater than zero");
             return false;
         }
-        if (!newIP.matches("(25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[0-9]{2}|[0-9])(\\.(25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[0-9]{2}|[0-9])){3}")) {
+        if (!newIP.matches(IP_PATTERN)) {
             showErrorMessage("Invalid IP: " + newIP);
             return false;
         }

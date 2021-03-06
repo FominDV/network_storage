@@ -64,8 +64,6 @@ public class MainPanelController {
 
         btn_upload.setOnAction(event -> upload());
 
-        field_file_path.setOnAction(event -> upload());
-
         btn_download.setOnAction(event -> download());
 
         btn_delete.setOnAction(event -> delete());
