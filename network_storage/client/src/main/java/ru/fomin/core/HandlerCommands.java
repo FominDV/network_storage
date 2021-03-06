@@ -123,9 +123,18 @@ public class HandlerCommands implements Commands {
         }
     }
 
+    //Should return KeyCommands.DONE, KeyCommands.DUPLICATED_LOGIN or any error
     @Override
     public String registration(String login, String password) {
-        return KeyCommands.DUPLICATED_LOGIN;
+        try {
+            out.writeUTF(KeyCommands.REGISTRATION);
+            out.writeUTF(login);
+            out.writeUTF(password);
+            return in.readUTF();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return KeyCommands.ERROR;
+        }
     }
 
     public static Commands getCommands() {

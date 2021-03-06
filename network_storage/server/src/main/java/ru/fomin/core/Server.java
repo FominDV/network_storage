@@ -12,13 +12,15 @@ public class Server {
     int port = 8189;
 
     public Server() {
+
         ExecutorService service = Executors.newFixedThreadPool(4);
         try (ServerSocket server = new ServerSocket(port)) {
+            Class.forName("ru.fomin.dao.SessionFactory");
             System.out.println("Server started");
             while (true) {
                 service.execute(new SocketHandler(server.accept()));
             }
-        } catch (IOException e) {
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }

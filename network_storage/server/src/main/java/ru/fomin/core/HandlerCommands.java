@@ -1,7 +1,10 @@
 package ru.fomin.core;
 
 import ru.fomin.KeyCommands;
+import ru.fomin.dao.UserDao;
+import ru.fomin.entities.User;
 import ru.fomin.network.SocketHandler;
+import ru.fomin.services.UserService;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -28,9 +31,23 @@ public class HandlerCommands implements Commands {
             case KeyCommands.GET_FILES:
                 getFileArray(socketHandler);
                 break;
+            case KeyCommands.REGISTRATION:
+                registration(socketHandler);
+                break;
             default:
                 socketHandler.writeUTF(KeyCommands.COMMAND_ERROR);
         }
+    }
+
+    private void registration(SocketHandler socketHandler) throws IOException {
+        String login = socketHandler.readUTF();
+        String password = socketHandler.readUTF();
+        if (UserService.isUserExist(login)) {
+            socketHandler.writeUTF(KeyCommands.DUPLICATED_LOGIN);
+            return;
+        }
+        UserDao.create(login, password);
+        socketHandler.writeUTF(KeyCommands.DONE);
     }
 
     synchronized private void getFileArray(SocketHandler socketHandler) throws IOException {
