@@ -5,7 +5,8 @@ import ru.fomin.KeyCommands;
 import ru.fomin.gui.controllers.AuthenticationController;
 
 import javafx.scene.control.Button;
-import ru.fomin.util.ControllersUtil;
+
+import static ru.fomin.util.ControllersUtil.*;
 
 import java.io.*;
 import java.net.Socket;
@@ -60,15 +61,11 @@ public class HandlerCommands implements Commands {
 
     @Override
     public void exitToAuthentication(Button button) {
-        try {
-            socket.close();
-            authenticationController.changeIsConnected();
-            Platform.runLater(() -> {
-                ControllersUtil.showAndHideStages("/fxml/authentication.fxml", button);
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        closeConnection();
+        authenticationController.changeIsConnected();
+        Platform.runLater(() -> {
+            showAndHideStages("/fxml/authentication.fxml", button);
+        });
     }
 
     @Override
@@ -137,13 +134,32 @@ public class HandlerCommands implements Commands {
         }
     }
 
-    public static Commands getCommands() {
-        return commands;
+    @Override
+    public boolean authentication(String login, String password) {
+        try {
+            out.writeUTF(KeyCommands.AUTHENTICATION);
+            out.writeUTF(login);
+            out.writeUTF(password);
+            return in.readUTF().equals(KeyCommands.DONE);
+        } catch (IOException e) {
+            showConnectionError();
+            closeConnection();
+        }
+        return false;
     }
 
-    public static void setConnectionProperties(String ip, int port) {
-        HandlerCommands.ip = ip;
-        HandlerCommands.port = port;
+    private void closeConnection() {
+        try {
+            in.close();
+            out.close();
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static Commands getCommands() {
+        return commands;
     }
 
     public static String getIp() {

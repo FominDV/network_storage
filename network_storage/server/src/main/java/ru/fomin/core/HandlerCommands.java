@@ -34,8 +34,21 @@ public class HandlerCommands implements Commands {
             case KeyCommands.REGISTRATION:
                 registration(socketHandler);
                 break;
+            case KeyCommands.AUTHENTICATION:
+                authentication(socketHandler);
+                break;
             default:
                 socketHandler.writeUTF(KeyCommands.COMMAND_ERROR);
+        }
+    }
+
+    private void authentication(SocketHandler socketHandler) throws IOException {
+        String login = socketHandler.readUTF();
+        String password = socketHandler.readUTF();
+        if(UserService.isValidUserData(login,password)){
+            socketHandler.writeUTF(KeyCommands.DONE);
+        }else {
+            socketHandler.writeUTF(KeyCommands.ERROR);
         }
     }
 

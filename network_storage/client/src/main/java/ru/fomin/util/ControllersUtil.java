@@ -96,4 +96,8 @@ public class ControllersUtil {
         }
         return true;
     }
+
+    public static void showConnectionError(){
+        showErrorMessage("Show connection Error");
+    }
 }

@@ -12,6 +12,7 @@ public class KeyCommands {
    public static final String GET_FILES="get_files";
    public static final String DUPLICATED_LOGIN="duplicated_login";
    public static final String REGISTRATION="registration";
+   public static final String AUTHENTICATION="authentication";
 
    public static final int SIZE_OF_PACKAGE=256;
 
