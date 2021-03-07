@@ -99,8 +99,6 @@ public class HandlerCommands implements Commands {
                 fileOutputStream.write(buffer, 0, read);
             }
             fileOutputStream.close();
-            //for future statistical
-            //out.writeUTF(KeyCommands.DONE);
             return true;
         } catch (IOException e) {
             e.printStackTrace();

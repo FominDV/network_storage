@@ -1,0 +1,71 @@
+package ru.fomin.entities;
+
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
+import javax.persistence.*;
+import java.util.List;
+
+@Entity
+@Table(name = "directories")
+public class Directory {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @OneToMany(mappedBy = "directory", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<FileData> files;
+
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @ManyToMany
+    @JoinTable(name = "DirToDir",
+            joinColumns = @JoinColumn(name = "parent_id"),
+            inverseJoinColumns = @JoinColumn(name = "child_id"))
+    private List<Directory> nestedDirectories;
+
+    private String path;
+
+    public Directory() {
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public List<FileData> getFiles() {
+        return files;
+    }
+
+    public void setFiles(List<FileData> files) {
+        this.files = files;
+    }
+
+    public List<Directory> getNestedDirectories() {
+        return nestedDirectories;
+    }
+
+    public void setNestedDirectories(List<Directory> nestedDirectories) {
+        this.nestedDirectories = nestedDirectories;
+    }
+
+    public Long getId() {
+        return id;
+    }
+}

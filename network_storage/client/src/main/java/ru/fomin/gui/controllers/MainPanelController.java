@@ -12,10 +12,15 @@ import ru.fomin.KeyCommands;
 import ru.fomin.util.ControllersUtil;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class MainPanelController {
 
     private Commands commands;
+    private Map<String, Long> fileMap;
+    private Map<String,Long> directoryMap;
     private ObservableList<String> observableList;
     private MultipleSelectionModel<String> multipleSelectionModel;
     private FileChooser fileChooser = new FileChooser();
@@ -55,7 +60,7 @@ public class MainPanelController {
     void initialize() {
         commands = HandlerCommands.getCommands();
 
-        updateFileList(commands.getFiles());
+        updateFileList();
 
         btn_info.setOnAction(event -> ControllersUtil.showDeveloperInfo());
 
@@ -116,8 +121,21 @@ public class MainPanelController {
         ControllersUtil.showInfoMessage(String.format("Upload %s is successful", file.getName()));
     }
 
-    private void updateFileList(String[] filesArray) {
-        observableList = FXCollections.observableArrayList(filesArray);
+    private void updateFileList() {
+        boolean isFile=true;
+        String[] filesData = commands.getFiles();
+        List<String> filesList = new ArrayList<>(filesData.length/2);
+        for (int i = 0; i < filesData.length; i++) {
+            if(filesData[i+1].equals(KeyCommands.HARD_DELIMITER)){
+                isFile=false;
+            }
+            filesList.add(filesData[i]);
+            if(isFile){
+            fileMap.put(filesData[i],Long.parseLong(filesData[i++]));}else {
+                directoryMap.put(filesData[i],Long.parseLong(filesData[i++]));
+            }
+        }
+        observableList = FXCollections.observableArrayList(filesList);
         list_files.setItems(observableList);
         multipleSelectionModel = list_files.getSelectionModel();
         if (multipleSelectionModel.getSelectedItem() == null) multipleSelectionModel.select(0);
