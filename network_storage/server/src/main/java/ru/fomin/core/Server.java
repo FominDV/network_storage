@@ -17,6 +17,7 @@ public class Server {
         try (ServerSocket server = new ServerSocket(port)) {
             Class.forName("ru.fomin.dao.SessionFactory");
             System.out.println("Server started");
+
             while (true) {
                 service.execute(new SocketHandler(server.accept()));
             }

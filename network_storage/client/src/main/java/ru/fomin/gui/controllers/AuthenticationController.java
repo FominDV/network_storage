@@ -15,7 +15,7 @@ import java.util.ResourceBundle;
 public class AuthenticationController {
     private boolean isConnected = false;
     private static String login = "Dmitriy777";
-    private static String password = "qwertyOOO7";
+    private static String password = "Dmitriy777";
     private Commands commands;
 
     @FXML

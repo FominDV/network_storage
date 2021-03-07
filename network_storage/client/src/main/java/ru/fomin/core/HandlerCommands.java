@@ -39,6 +39,9 @@ public class HandlerCommands implements Commands {
             if (file.isFile()) {
                 out.writeUTF(KeyCommands.UPLOAD);
                 out.writeUTF(file.getName());
+                if(in.readUTF().equals(KeyCommands.ALREADY_EXIST)){
+                    return KeyCommands.ALREADY_EXIST;
+                }
                 long length = file.length();
                 out.writeLong(length);
                 FileInputStream fis = new FileInputStream(file);
@@ -81,12 +84,12 @@ public class HandlerCommands implements Commands {
     }
 
     @Override
-    public boolean download(String filename, String path) {
+    public boolean download(Long id, String path, String fileName) {
         int sizeOfPackage = KeyCommands.SIZE_OF_PACKAGE;
         try {
             out.writeUTF(KeyCommands.DOWNLOAD);
-            out.writeUTF(filename);
-            File file = new File(path + File.separator + filename);
+            out.writeLong(id);
+            File file = new File(path + File.separator + fileName);
             if (!file.exists()) {
                 file.createNewFile();
             }
@@ -107,10 +110,10 @@ public class HandlerCommands implements Commands {
     }
 
     @Override
-    public boolean delete(String filename) {
+    public boolean delete(Long id, String type ) {
         try {
-            out.writeUTF(KeyCommands.DELETE);
-            out.writeUTF(filename);
+            out.writeUTF(type);
+            out.writeLong(id);
             return in.readUTF().equals(KeyCommands.DONE) ? true : false;
         } catch (IOException e) {
             e.printStackTrace();

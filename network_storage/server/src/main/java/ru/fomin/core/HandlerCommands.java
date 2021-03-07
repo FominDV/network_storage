@@ -3,23 +3,22 @@ package ru.fomin.core;
 import ru.fomin.KeyCommands;
 import ru.fomin.entities.Directory;
 import ru.fomin.entities.FileData;
-import ru.fomin.entities.User;
 import ru.fomin.network.SocketHandler;
 import ru.fomin.services.DirectoryService;
+import ru.fomin.services.FileDataService;
 import ru.fomin.services.UserService;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 
 public class HandlerCommands implements Commands {
     private Directory currentDirectory;
     private static final UserService USER_SERVICE = new UserService();
     private static final DirectoryService DIRECTORY_SERVICE = new DirectoryService();
-    private static final HandlerCommands handlerCommands = new HandlerCommands();
+    private static final FileDataService FILE_DATA_SERVICE = new FileDataService();
     private static final String MAIN_PATH = "main_repository";
 
     @Override
@@ -31,8 +30,8 @@ public class HandlerCommands implements Commands {
             case KeyCommands.DOWNLOAD:
                 sendFile(socketHandler);
                 break;
-            case KeyCommands.DELETE:
-                delete(socketHandler);
+            case KeyCommands.DELETE_FILE:
+                deleteFile(socketHandler);
                 break;
             case KeyCommands.GET_FILES:
                 getFileArray(socketHandler);
@@ -72,14 +71,15 @@ public class HandlerCommands implements Commands {
     }
 
     synchronized private void getFileArray(SocketHandler socketHandler) throws IOException {
-        List<FileData> fileList = currentDirectory.getFiles();
-        List<Directory> directoryList = currentDirectory.getNestedDirectories();
-        if (fileList == null || fileList.size() == 0) {
+        Long id = currentDirectory.getId();
+        List<FileData> currentFileList = DIRECTORY_SERVICE.getFiles(id);
+        List<Directory> currentDirectoryList = DIRECTORY_SERVICE.getNestedDirectories(id);
+        if (currentFileList.size() == 0&&currentDirectoryList.size()==0) {
             socketHandler.writeUTF("");
             return;
         }
         StringBuffer fileNames = new StringBuffer(200);
-        for (FileData file : fileList) {
+        for (FileData file : currentFileList) {
             fileNames.append(file.getName());
             fileNames.append(KeyCommands.DELIMITER);
             fileNames.append(file.getId());
@@ -87,7 +87,7 @@ public class HandlerCommands implements Commands {
         }
         fileNames.append(KeyCommands.HARD_DELIMITER);
         String directoryName;
-        for (Directory directory : directoryList) {
+        for (Directory directory : currentDirectoryList) {
             directoryName = new File(directory.getPath()).getName();
             fileNames.append(KeyCommands.DELIMITER);
             fileNames.append(directoryName);
@@ -100,10 +100,15 @@ public class HandlerCommands implements Commands {
     synchronized private void download(SocketHandler socketHandler) throws IOException {
         int sizeOfPackage = KeyCommands.SIZE_OF_PACKAGE;
         long countOfPackages;
-        File file = new File(currentDirectory.getPath() + File.separator + socketHandler.readUTF());
-        if (!file.exists()) {
-            file.createNewFile();
+        String fileName = socketHandler.readUTF();
+        if (DIRECTORY_SERVICE.getFiles(currentDirectory.getId()).
+                stream().
+                anyMatch(file -> file.getName().equals(fileName))) {
+            socketHandler.writeUTF(KeyCommands.ALREADY_EXIST);
+            return;
         }
+        socketHandler.writeUTF(KeyCommands.DONE);
+        File file = new File(currentDirectory.getPath() + File.separator + fileName);
         long size = socketHandler.readLong();
         countOfPackages = (size + sizeOfPackage - 1) / sizeOfPackage;
         FileOutputStream fos = new FileOutputStream(file);
@@ -114,25 +119,29 @@ public class HandlerCommands implements Commands {
         }
         fos.close();
         socketHandler.flush();
+        FILE_DATA_SERVICE.createFile(fileName, currentDirectory);
         socketHandler.writeUTF(KeyCommands.DONE);
     }
 
     synchronized private void sendFile(SocketHandler socketHandler) throws IOException {
-//        String fileName = socketHandler.readU();
-//        File file = getFile(fileName);
-//        socketHandler.writeLong(file.length());
-//        FileInputStream fis = new FileInputStream(file);
-//        int read = 0;
-//        byte[] buffer = new byte[KeyCommands.SIZE_OF_PACKAGE];
-//        while ((read = fis.read(buffer)) != -1) {
-//            socketHandler.write(buffer, read);
-//        }
-//        socketHandler.flush();
-//        fis.close();
+        Long id = socketHandler.readLong();
+        String filePath =currentDirectory.getPath()+File.separator+ FILE_DATA_SERVICE.getFileById(id).getName();
+        File file=new File(filePath);
+        socketHandler.writeLong(file.length());
+        FileInputStream fis = new FileInputStream(file);
+        int read = 0;
+        byte[] buffer = new byte[KeyCommands.SIZE_OF_PACKAGE];
+        while ((read = fis.read(buffer)) != -1) {
+            socketHandler.write(buffer, read);
+        }
+        socketHandler.flush();
+        fis.close();
     }
 
-    synchronized private void delete(SocketHandler socketHandler) throws IOException {
-        Path path = Paths.get(currentDirectory.getPath(), socketHandler.readUTF());
+    synchronized private void deleteFile(SocketHandler socketHandler) throws IOException {
+        Long id = socketHandler.readLong();
+        String fileName=FILE_DATA_SERVICE.deleteFile(id);
+        Path path = Paths.get(currentDirectory.getPath(), fileName);
         Files.delete(path);
         socketHandler.writeUTF(KeyCommands.DONE);
     }

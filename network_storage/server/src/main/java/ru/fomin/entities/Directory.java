@@ -18,15 +18,20 @@ public class Directory {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "directory", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "directory", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FileData> files;
 
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @ManyToMany
+    @OneToMany
     @JoinTable(name = "DirToDir",
             joinColumns = @JoinColumn(name = "parent_id"),
             inverseJoinColumns = @JoinColumn(name = "child_id"))
     private List<Directory> nestedDirectories;
+
+    @ManyToOne
+    @JoinTable(name = "DirToDir",
+            joinColumns = @JoinColumn(name = "child_id"),
+            inverseJoinColumns = @JoinColumn(name = "parent_id"))
+    private Directory parentDirectory;
 
     private String path;
 
@@ -67,5 +72,13 @@ public class Directory {
 
     public Long getId() {
         return id;
+    }
+
+    public Directory getParentDirectory() {
+        return parentDirectory;
+    }
+
+    public void setParentDirectory(Directory parentDirectory) {
+        this.parentDirectory = parentDirectory;
     }
 }
