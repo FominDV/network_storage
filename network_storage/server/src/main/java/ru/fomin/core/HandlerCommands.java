@@ -16,6 +16,9 @@ import java.util.List;
 
 public class HandlerCommands implements Commands {
     private Directory currentDirectory;
+    private String rootDirectory;
+
+    //services
     private static final UserService USER_SERVICE = new UserService();
     private static final DirectoryService DIRECTORY_SERVICE = new DirectoryService();
     private static final FileDataService FILE_DATA_SERVICE = new FileDataService();
@@ -33,6 +36,9 @@ public class HandlerCommands implements Commands {
             case KeyCommands.DELETE_FILE:
                 deleteFile(socketHandler);
                 break;
+            case KeyCommands.DELETE_DIR:
+                deleteDirectory(socketHandler);
+                break;
             case KeyCommands.GET_FILES:
                 getFileArray(socketHandler);
                 break;
@@ -42,9 +48,34 @@ public class HandlerCommands implements Commands {
             case KeyCommands.AUTHENTICATION:
                 authentication(socketHandler);
                 break;
+            case KeyCommands.GET_CURRENT_DIR:
+                getCurrentDirectory(socketHandler);
+                break;
+            case KeyCommands.CREATE_DIRECTORY:
+                createDirectory(socketHandler);
+                break;
             default:
                 socketHandler.writeUTF(KeyCommands.COMMAND_ERROR);
         }
+    }
+
+    private void deleteDirectory(SocketHandler socketHandler) throws IOException{
+
+    }
+
+    private void createDirectory(SocketHandler socketHandler) throws IOException {
+        String newDirectory=currentDirectory.getPath()+File.separator+socketHandler.readUTF();
+        if(DIRECTORY_SERVICE.createDirectory(currentDirectory, newDirectory)){
+            Files.createDirectory(Paths.get(newDirectory));
+            socketHandler.writeUTF(KeyCommands.DONE);
+        }else {
+            socketHandler.writeUTF(KeyCommands.ALREADY_EXIST);
+        }
+    }
+
+    private void getCurrentDirectory(SocketHandler socketHandler) throws IOException {
+        String formattedCurrentDirectory=currentDirectory.getPath().substring(MAIN_PATH.length());
+        socketHandler.writeUTF(formattedCurrentDirectory);
     }
 
     private void authentication(SocketHandler socketHandler) throws IOException {
@@ -52,6 +83,7 @@ public class HandlerCommands implements Commands {
         String password = socketHandler.readUTF();
         if (USER_SERVICE.isValidUserData(login, password)) {
             currentDirectory = USER_SERVICE.getUserByLogin(login).getRootDirectory();
+            rootDirectory=currentDirectory.getPath();
             socketHandler.writeUTF(KeyCommands.DONE);
         } else {
             socketHandler.writeUTF(KeyCommands.ERROR);

@@ -17,6 +17,8 @@ public class KeyCommands {
     public static final String AUTHENTICATION = "authentication";
     public static final String HARD_DELIMITER = "^^^^^^^";
     public static final String ALREADY_EXIST = "exist";
+    public static final String GET_CURRENT_DIR = "get_current_dir";
+    public static final String CREATE_DIRECTORY = "create_dir";
 
     public static final int SIZE_OF_PACKAGE = 256;
 

@@ -33,13 +33,13 @@ public class HandlerCommands implements Commands {
         }
     }
 
-    public String sendFile(String filename) {
+    public String sendFile(String filePath, String fileName) {
         try {
-            File file = new File(filename);
+            File file = new File(filePath);
             if (file.isFile()) {
                 out.writeUTF(KeyCommands.UPLOAD);
-                out.writeUTF(file.getName());
-                if(in.readUTF().equals(KeyCommands.ALREADY_EXIST)){
+                out.writeUTF(fileName);
+                if (in.readUTF().equals(KeyCommands.ALREADY_EXIST)) {
                     return KeyCommands.ALREADY_EXIST;
                 }
                 long length = file.length();
@@ -110,7 +110,7 @@ public class HandlerCommands implements Commands {
     }
 
     @Override
-    public boolean delete(Long id, String type ) {
+    public boolean delete(Long id, String type) {
         try {
             out.writeUTF(type);
             out.writeLong(id);
@@ -147,6 +147,31 @@ public class HandlerCommands implements Commands {
             closeConnection();
         }
         return false;
+    }
+
+    @Override
+    public String getCurrentDirectory() {
+        try {
+            out.writeUTF(KeyCommands.GET_CURRENT_DIR);
+            return in.readUTF();
+        } catch (IOException e) {
+            showConnectionError();
+            closeConnection();
+        }
+        return KeyCommands.ERROR;
+    }
+
+    @Override
+    public String createDir(String dirName) {
+        try {
+            out.writeUTF(KeyCommands.CREATE_DIRECTORY);
+            out.writeUTF(dirName);
+            return in.readUTF();
+        } catch (IOException e) {
+            showConnectionError();
+            closeConnection();
+        }
+        return KeyCommands.ERROR;
     }
 
     private void closeConnection() {

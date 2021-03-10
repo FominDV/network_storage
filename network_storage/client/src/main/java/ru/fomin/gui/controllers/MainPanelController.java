@@ -38,7 +38,7 @@ public class MainPanelController {
     private Button btn_exit;
 
     @FXML
-    private TextField field_file_path;
+    private TextField field_directory_name;
 
     @FXML
     private Button btn_change_password;
@@ -59,10 +59,21 @@ public class MainPanelController {
     private Button btn_create_dir;
 
     @FXML
+    private Button btn_out_dir;
+
+    @FXML
+    private Button btn_into_dir;
+
+    @FXML
+    private Label label_current_dir;
+
+    @FXML
     void initialize() {
         commands = HandlerCommands.getCommands();
 
         updateFileList();
+
+        updateCurrentDirectory();
 
         btn_info.setOnAction(event -> showDeveloperInfo());
 
@@ -75,6 +86,35 @@ public class MainPanelController {
         btn_delete.setOnAction(event -> delete());
 
         btn_change_password.setOnAction(event -> showAndHideStages("/fxml/update_password.fxml", btn_change_password));
+
+        btn_create_dir.setOnAction(event -> createDirectory());
+    }
+
+    private void createDirectory() {
+        String dirName=field_directory_name.getText();
+        if(!hasText(dirName)){
+            showErrorMessage("You should insert name of new directory into the filed");
+            field_directory_name.setText("");
+            return;
+        }
+        if (dirName.contains(" ")||dirName.contains("\\")){
+            showErrorMessage("Name of directory should not contain spaces and '\\'");
+            field_directory_name.setText("");
+            return;
+        }
+
+        switch (commands.createDir(dirName)){
+            case KeyCommands.DONE:
+                updateFileList();
+                showInfoMessage(dirName+" was created");
+                break;
+            case KeyCommands.ALREADY_EXIST:
+                showErrorMessage(String.format("The directory %s already exist",dirName));
+                break;
+            default:
+                showConnectionError();
+        }
+        field_directory_name.setText("");
     }
 
     private void delete() {
@@ -113,6 +153,7 @@ public class MainPanelController {
         }
         if (!fileMap.containsKey(fileName)) {
             showErrorMessage("It is the directory\nYou can download only file\nChoose the file, please");
+            return;
         }
         File directory = directoryChooser.showDialog(null);
         if (!directory.isDirectory()) {
@@ -132,13 +173,20 @@ public class MainPanelController {
             showErrorMessage(String.format("Path \"%s\" is not file", file.toString()));
             return;
         }
-        if (!(feedback = commands.sendFile(file.toString())).equals(KeyCommands.DONE)) {
+        String fileName = file.getName();
+        if (fileName.contains(" ")) {
+            if (isConfirmChangeName(fileName)) {
+                fileName = fileName.replace(" ", "_");
+            } else {
+                return;
+            }
+        }
+        if (!(feedback = commands.sendFile(file.toString(), fileName)).equals(KeyCommands.DONE)) {
             showErrorMessage(feedback);
             return;
         }
         updateFileList();
-        field_file_path.setText("");
-        showInfoMessage(String.format("Upload %s is successful", file.getName()));
+        showInfoMessage(String.format("Upload %s is successful", fileName));
     }
 
     private void updateFileList() {
@@ -163,5 +211,12 @@ public class MainPanelController {
         list_files.setItems(observableList);
         multipleSelectionModel = list_files.getSelectionModel();
         if (multipleSelectionModel.getSelectedItem() == null) multipleSelectionModel.select(0);
+    }
+
+    private void updateCurrentDirectory() {
+        String currentDirectory;
+        if (!(currentDirectory = commands.getCurrentDirectory()).equals(KeyCommands.ERROR)) {
+            label_current_dir.setText(currentDirectory);
+        }
     }
 }

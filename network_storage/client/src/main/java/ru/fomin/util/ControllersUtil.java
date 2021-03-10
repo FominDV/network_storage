@@ -8,6 +8,7 @@ import javafx.scene.control.Labeled;
 import javafx.stage.Stage;
 
 import javax.swing.*;
+import java.io.File;
 import java.io.IOException;
 
 public class ControllersUtil {
@@ -18,6 +19,14 @@ public class ControllersUtil {
         JOptionPane.showMessageDialog(null,
                 "<html>Developer: Dmitriy Fomin<br>GitHub: https://github.com/FominDV <br> Email: 79067773397@yandex.ru<br>*All rights reserved*</html>",
                 "Developer info", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    public static boolean isConfirmChangeName(String fileName) {
+        int response = JOptionPane.showConfirmDialog(null,
+                "<html>Name should not contain spaces<br>Do you want replace spaces to '_'?</html>",
+                "Invalid name",
+                JOptionPane.YES_NO_OPTION);
+        return response == 0 ? true : false;
     }
 
     public static void showAndHideStages(String pathOfFXML, Labeled labeled) {
@@ -69,7 +78,7 @@ public class ControllersUtil {
         return str != null && str.length() != 0 ? true : false;
     }
 
-   public static boolean validation(String login, String password, String repeated_password) {
+    public static boolean validation(String login, String password, String repeated_password) {
         //Verify empty field
         if (!(hasText(login) && hasText(password) && hasText(repeated_password))) {
             showErrorMessage("All field should be fill");
@@ -97,7 +106,7 @@ public class ControllersUtil {
         return true;
     }
 
-    public static void showConnectionError(){
-        showErrorMessage("Show connection Error");
+    public static void showConnectionError() {
+        showErrorMessage("Error of server");
     }
 }

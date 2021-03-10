@@ -38,6 +38,12 @@ public class Directory {
     public Directory() {
     }
 
+    public Directory(User user, Directory parentDirectory, String path) {
+        this.user = user;
+        this.parentDirectory = parentDirectory;
+        this.path = path;
+    }
+
     public User getUser() {
         return user;
     }

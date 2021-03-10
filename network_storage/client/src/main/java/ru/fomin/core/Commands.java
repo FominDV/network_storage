@@ -4,11 +4,13 @@ import javafx.scene.control.Button;
 import ru.fomin.KeyCommands;
 
 public interface Commands {
-    String sendFile(String filename);
+    String sendFile(String filename, String fileName);
     void exitToAuthentication(Button button);
     String[] getFiles();
     boolean download(Long id, String path, String fileName);
     boolean delete(Long id, String type);
     String registration(String login, String password);
     boolean authentication(String login, String password);
+    String getCurrentDirectory();
+    String createDir(String dirName);
 }
