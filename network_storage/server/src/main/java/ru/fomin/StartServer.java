@@ -1,4 +1,4 @@
-package ru.fomin.core;
+package ru.fomin;
 
 import ru.fomin.network.SocketHandler;
 
@@ -7,11 +7,11 @@ import java.net.ServerSocket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class Server {
+public class StartServer {
 
     int port = 8189;
 
-    public Server() {
+    public StartServer() {
 
         ExecutorService service = Executors.newFixedThreadPool(4);
         try (ServerSocket server = new ServerSocket(port)) {
@@ -27,6 +27,6 @@ public class Server {
     }
 
     public static void main(String[] args) {
-        new Server();
+        new StartServer();
     }
 }
