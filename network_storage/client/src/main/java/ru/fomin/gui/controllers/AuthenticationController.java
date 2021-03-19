@@ -42,7 +42,9 @@ public class AuthenticationController {
 
     @FXML
     void initialize() {
+
         field_login.setText(login);
+
         field_password.setText(password);
 
         btn_login.setOnAction(event -> authentication());
@@ -55,6 +57,8 @@ public class AuthenticationController {
         });
 
         btnTCP_IP.setOnAction(event -> showAndHideStages("/fxml/connaction_properties.fxml", btnTCP_IP));
+
+        connect();
     }
 
     private void connect() {
@@ -91,12 +95,12 @@ public class AuthenticationController {
            showErrorMessage("All field should be fill");
            return;
        }
-       if (commands.authentication(login, password)) {
-           showAndHideStages("/fxml/main_panel.fxml", btn_login);
-       } else {
-           field_login.setText("");
-           field_password.setText("");
-           showErrorMessage("Invalid login or password");
-       }
+     commands.authentication(login, password);
+//           showAndHideStages("/fxml/main_panel.fxml", btn_login);
+//       } else {
+//           field_login.setText("");
+//           field_password.setText("");
+//           showErrorMessage("Invalid login or password");
+//       }
    }
 }

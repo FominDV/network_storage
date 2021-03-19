@@ -1,7 +1,6 @@
 package ru.fomin.core;
 
 import javafx.scene.control.Button;
-import ru.fomin.KeyCommands;
 
 public interface Commands {
     String sendFile(String filename, String fileName);
@@ -10,7 +9,7 @@ public interface Commands {
     boolean download(Long id, String path, String fileName);
     boolean delete(Long id, String type);
     String registration(String login, String password);
-    boolean authentication(String login, String password);
+    void authentication(String login, String password);
     String getCurrentDirectory();
     String createDir(String dirName);
 }

@@ -1,8 +1,11 @@
-package com.geekbrains.server;
+package ru.fomin.netty;
 
 
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.*;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelHandler;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
@@ -20,8 +23,8 @@ public class Server
   private EventLoopGroup mainGroup;
   private EventLoopGroup workerGroup;
 
-  static final int PORT = 8888;
-  static final String STORAGE_DIR = "server/server_storage";
+  static final int PORT = 8189;
+ public static final String STORAGE_DIR = "server/server_storage";
 
 
   public Server()
@@ -37,28 +40,22 @@ public class Server
   }
 
 
-  private void start()
-  throws InterruptedException
-  {
-	ChannelFuture future = sb.bind(PORT).sync();
-	future.channel().closeFuture().sync();
+  public void start() {
+	  try {
+		  System.out.println("Server was started");
+		  ChannelFuture future = sb.bind(PORT).sync();
+		  future.channel().closeFuture().sync();
+	  } catch (InterruptedException e) {
+		  e.printStackTrace();
+	  } finally {
+		  mainGroup.shutdownGracefully();
+		  workerGroup.shutdownGracefully();
+		  System.out.println("Server was stopped");
+	  }
   }
 
 
-  public static void main(String[] args)
-  throws Exception
-  {
-	Server server = new Server();
-	try
-	{
-	  server.start();
-	}
-	finally
-	{
-	  server.mainGroup.shutdownGracefully();
-	  server.workerGroup.shutdownGracefully();
-	}
-  }
+
 
 
   private static class SocketChannelInitializer

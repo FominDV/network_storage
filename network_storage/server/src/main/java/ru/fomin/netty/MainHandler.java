@@ -1,10 +1,11 @@
-package com.geekbrains.server;
+package ru.fomin.netty;
 
 
-import com.geekbrains.common.*;
+
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;
+import ru.fomin.*;
 
 import java.io.IOException;
 import java.nio.file.Files;

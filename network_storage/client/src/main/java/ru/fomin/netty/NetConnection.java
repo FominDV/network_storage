@@ -34,22 +34,22 @@ public class NetConnection
   {
 	sock = new Socket();
 	addr = new InetSocketAddress(HOST, PORT);
+
+	  OutputStream os = null;
+	  InputStream is = null;
+	  try {
+		  sock = new Socket();
+		  sock.connect(addr);
+		  os = sock.getOutputStream();
+		  is = sock.getInputStream();
+	  } catch (IOException e) {
+		  e.printStackTrace();
+	  }
+	  out = new ObjectEncoderOutputStream(os);
+	  in = new ObjectDecoderInputStream(is, MAX_OBJ_SIZE);
   }
 
 
-  public void open()
-  throws IOException
-  {
-	if (!sock.isClosed() && sock.isConnected()) return;
-
-	sock = new Socket();
-	sock.connect(addr);
-
-	OutputStream os = sock.getOutputStream();
-	InputStream is = sock.getInputStream();
-	out = new ObjectEncoderOutputStream(os);
-	in = new ObjectDecoderInputStream(is, MAX_OBJ_SIZE);
-  }
 
 
   public void close()

@@ -1,35 +1,48 @@
 package ru.fomin.core;
 
+import io.netty.handler.codec.serialization.ObjectDecoderInputStream;
+import io.netty.handler.codec.serialization.ObjectEncoderOutputStream;
 import javafx.application.Platform;
+import ru.fomin.AuthCommand;
+import ru.fomin.DataPackage;
 import ru.fomin.KeyCommands;
 import ru.fomin.gui.controllers.AuthenticationController;
 
 import javafx.scene.control.Button;
+import ru.fomin.netty.NetConnection;
 
 import static ru.fomin.util.ControllersUtil.*;
 
 import java.io.*;
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketAddress;
 
 public class HandlerCommands implements Commands {
 
     private static Commands commands;
     private AuthenticationController authenticationController;
-    private DataInputStream in;
-    private DataOutputStream out;
+    private ObjectEncoderOutputStream out;
+    private ObjectDecoderInputStream in;
+    private SocketAddress addr;
     private Socket socket;
     static String ip = "127.0.0.1";
     static int port = 8189;
+    private static final int MAX_OBJ_SIZE = 10 * 1024 * 1024;
 
     public HandlerCommands(AuthenticationController authenticationController) {
         this.authenticationController = authenticationController;
+        socket = new Socket();
+        addr = new InetSocketAddress(ip, port);
         try {
-            socket = new Socket(ip, port);
-            in = new DataInputStream(socket.getInputStream());
-            out = new DataOutputStream(socket.getOutputStream());
+            socket = new Socket(ip,port);
+            OutputStream os = socket.getOutputStream();
+            InputStream is = socket.getInputStream();
+            out = new ObjectEncoderOutputStream(os);
+            in = new ObjectDecoderInputStream(is, MAX_OBJ_SIZE);
             commands = this;
         } catch (IOException e) {
-            authenticationController.changeIsConnected();
+            e.printStackTrace();
         }
     }
 
@@ -136,17 +149,9 @@ public class HandlerCommands implements Commands {
     }
 
     @Override
-    public boolean authentication(String login, String password) {
-        try {
-            out.writeUTF(KeyCommands.AUTHENTICATION);
-            out.writeUTF(login);
-            out.writeUTF(password);
-            return in.readUTF().equals(KeyCommands.DONE);
-        } catch (IOException e) {
-            showConnectionError();
-            closeConnection();
-        }
-        return false;
+    public void authentication(String login, String password) {
+            DataPackage com = new AuthCommand(login.trim(), password.trim());
+            sendToServer(com);
     }
 
     @Override
@@ -202,5 +207,32 @@ public class HandlerCommands implements Commands {
 
     public static void setPort(int port) {
         HandlerCommands.port = port;
+    }
+
+    ////////////////////////////////////
+    public void sendToServer(DataPackage data) {
+        try
+        {
+            out.writeObject(data);
+            out.flush();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    DataPackage getResponseFromServer()
+            throws NetConnection.ServerResponseException
+    {
+        try
+        {
+            Object obj = in.readObject();
+            return (DataPackage) obj;
+        }
+        catch (ClassNotFoundException | IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 }
