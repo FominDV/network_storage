@@ -9,12 +9,15 @@ import javafx.stage.FileChooser;
 import ru.fomin.core.Commands;
 import ru.fomin.core.HandlerCommands;
 import ru.fomin.KeyCommands;
+import ru.fomin.need.classes.Constants;
 import ru.fomin.need.commands.CurrentDirectoryEntityList;
 import ru.fomin.need.commands.FileManipulationResponse;
 
 import static ru.fomin.util.ControllersUtil.*;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 
 public class MainPanelController {
@@ -26,6 +29,7 @@ public class MainPanelController {
     private MultipleSelectionModel<String> multipleSelectionModel;
     private FileChooser fileChooser = new FileChooser();
     private DirectoryChooser directoryChooser = new DirectoryChooser();
+    private Long remoteDirectoryId;
 
     @FXML
     private Label title;
@@ -154,14 +158,19 @@ public class MainPanelController {
             return;
         }
         File directory = directoryChooser.showDialog(null);
+        if(directory==null){
+            return;
+        }
         if (!directory.isDirectory()) {
             showErrorMessage("It is not valid directory");
             return;
         }
-        Long id = fileMap.get(fileName);
-        if (commands.download(id, directory.toString(), fileName)) {
-            showInfoMessage(String.format("Download %s is successful", fileName));
+        String realFileName = fileName.substring(Constants.getFileNamePrefix().length());
+        if(Files.exists(Paths.get(directory.toString(),realFileName)) && !isConfirmOverrideFile(realFileName)){
+            return;
         }
+        Long id = fileMap.get(fileName);
+        commands.download(id, directory.toString());
     }
 
     private void upload() {
@@ -173,7 +182,7 @@ public class MainPanelController {
             showErrorMessage(String.format("Path \"%s\" is not file", file.toString()));
             return;
         }
-        commands.sendFile(file);
+        commands.sendFile(file, remoteDirectoryId);
         commands.getCurrentDirectoryEntity();
     }
 
@@ -182,6 +191,7 @@ public class MainPanelController {
         fileMap = com.getFileMap();
         directoryMap = com.getDirectoryMap();
         label_current_dir.setText(com.getCurrentDirectory());
+        remoteDirectoryId=com.getCurrentDirectoryId();
 
         //Creating list of all files and nested directories
         List<String> filesList = new ArrayList<>();

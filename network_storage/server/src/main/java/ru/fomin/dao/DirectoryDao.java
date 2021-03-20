@@ -40,4 +40,13 @@ public class DirectoryDao {
         session.close();
         return files;
     }
+
+    public Directory getDirectoryById(Long id){
+        Session session = SessionFactory.getSession();
+        session.beginTransaction();
+        Directory directory=session.get(Directory.class,id);
+        session.getTransaction().commit();
+        session.close();
+        return directory;
+    }
 }

@@ -96,7 +96,6 @@ public class AuthenticationController {
         try {
             connect();
         } catch (IOException e) {
-            e.printStackTrace();
             showConnectionError();
             return;
         }

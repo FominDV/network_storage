@@ -157,7 +157,7 @@ public class HandlerCommands implements Commands {
 
     synchronized private void sendFile(SocketHandler socketHandler) throws IOException {
         Long id = socketHandler.readLong();
-        String filePath = currentDirectory.getPath() + File.separator + FILE_DATA_SERVICE.getFileById(id).getName();
+        String filePath = currentDirectory.getPath() + File.separator + FILE_DATA_SERVICE.getFileDataById(id).getName();
         File file = new File(filePath);
         socketHandler.writeLong(file.length());
         FileInputStream fis = new FileInputStream(file);

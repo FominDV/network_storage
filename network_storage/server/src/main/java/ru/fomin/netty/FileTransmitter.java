@@ -1,5 +1,6 @@
-package ru.fomin.core;
+package ru.fomin.netty;
 
+import io.netty.channel.ChannelHandlerContext;
 import ru.fomin.need.classes.FileSendOptimizer;
 
 import java.io.File;
@@ -9,30 +10,28 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.PriorityBlockingQueue;
 
-import static java.lang.Thread.currentThread;
-import static java.lang.Thread.sleep;
+public class FileTransmitter implements Runnable{
 
-public class FileTransmitter implements Runnable {
-    private final HandlerCommands handlerCommands;
+    private final ChannelHandlerContext context;
     private final PriorityBlockingQueue<File> queue;
     private final Map<File, Long> fileDestinationMap;
     private final FileSendOptimizer fileSendOptimizer;
+   private boolean isActive = true;
 
     private static final int MAX_COUNT = 100;
 
 
-    public FileTransmitter(HandlerCommands handlerCommands) {
-        this.handlerCommands = handlerCommands;
+    public FileTransmitter(ChannelHandlerContext context) {
+        this.context=context;
         queue = new PriorityBlockingQueue<>(MAX_COUNT, Comparator.comparingLong(File::length));
         fileDestinationMap = new HashMap<>();
         fileSendOptimizer = new FileSendOptimizer();
     }
 
-
     @Override
     public void run() {
         try {
-            while (!currentThread().isInterrupted()) {
+            while (isActive) {
                 if (queue.size() == 0) {
                     Thread.sleep(1000);
                     continue;
@@ -40,7 +39,7 @@ public class FileTransmitter implements Runnable {
                 File file = queue.take();
                 Path path = file.toPath();
                 fileSendOptimizer.sendFile(path, fileDestinationMap.get(file),
-                        dataPackage -> handlerCommands.sendToServer(dataPackage));
+                        dataPackage -> context.writeAndFlush(dataPackage));
                 fileDestinationMap.remove(file);
             }
         } catch (InterruptedException e) {
@@ -48,13 +47,14 @@ public class FileTransmitter implements Runnable {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
-
-    public void addFile(File file, Long directoryId) {
+    public void addFile(File file, Long specialId) {
         queue.put(file);
-        fileDestinationMap.put(file, directoryId);
+        fileDestinationMap.put(file, specialId);
     }
 
+    public void disable(){
+        isActive = false;
+    }
 }

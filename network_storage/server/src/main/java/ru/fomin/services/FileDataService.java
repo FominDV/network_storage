@@ -4,6 +4,8 @@ import ru.fomin.dao.FileDataDao;
 import ru.fomin.entities.Directory;
 import ru.fomin.entities.FileData;
 
+import java.io.File;
+
 public class FileDataService {
 
     private static final FileDataDao FILE_DATA_DAO = new FileDataDao();
@@ -26,7 +28,12 @@ public class FileDataService {
     }
 
 
-    public FileData getFileById(Long id) {
+    public FileData getFileDataById(Long id) {
         return FILE_DATA_DAO.getFile(id);
+    }
+
+    public File getFileById(Long id) {
+        FileData fileData = getFileDataById(id);
+        return new File(fileData.getDirectory().getPath() + File.separator + fileData.getName());
     }
 }

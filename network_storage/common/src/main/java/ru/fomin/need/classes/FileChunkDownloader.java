@@ -15,12 +15,7 @@ public class FileChunkDownloader {
     private String filename;
     private OutputStream out;
 
-    public FileChunkDownloader(Path directory) {
-        this.directory = directory;
-    }
-
-
-    public void writeFileChunk(FileChunkPackage pack, Runnable saveFullAction) throws IOException {
+    public void writeFileChunk(FileChunkPackage pack, Runnable saveFullAction, Path directory) throws IOException {
         filename=pack.getFilename();
         try {
             if (pack.isFirst()) {

@@ -1,5 +1,6 @@
-/network_storage/.idea/
+network_storage/.idea
 network_storage/target
 network_storage/client/target
-network_storage/server/target
 network_storage/common/target
+network_storage/server/target
+network_storage/main_repository/*

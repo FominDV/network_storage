@@ -5,60 +5,59 @@ import java.nio.file.Path;
 
 
 public class FileChunkPackage
-		extends DataPackage
-{
+        extends DataPackage {
 
-  private final String filename;
-  private final byte[] data;
-  private final int num;
-  private final boolean last;
+    private final String filename;
+    private final byte[] data;
+    private final int num;
+    private final boolean last;
 
-
-  public FileChunkPackage(Path path, byte[] chunk, int num)
-  {
-	filename = path.getFileName().toString();
-	data = chunk;
-	this.num = num;
-	last = false;
-  }
+    private final Long directoryId;
 
 
-  public FileChunkPackage(Path path, byte[] chunk)
-  {
-	filename = path.getFileName().toString();
-	data = chunk;
-	this.num = -1;
-	last = true;
-  }
+    public FileChunkPackage(Path path, byte[] chunk, int num, Long directoryId) {
+        filename = path.getFileName().toString();
+        data = chunk;
+        this.num = num;
+        last = false;
+        this.directoryId = directoryId;
+    }
 
 
-  public String getFilename()
-  {
-	return filename;
-  }
+    public FileChunkPackage(Path path, byte[] chunk, Long directoryId) {
+        filename = path.getFileName().toString();
+        data = chunk;
+        this.num = -1;
+        last = true;
+        this.directoryId = directoryId;
+    }
 
 
-  public int getNum()
-  {
-	return num;
-  }
+    public String getFilename() {
+        return filename;
+    }
 
 
-  public byte[] getData()
-  {
-	return data;
-  }
+    public int getNum() {
+        return num;
+    }
 
 
-  public boolean isLast()
-  {
-	return last;
-  }
+    public byte[] getData() {
+        return data;
+    }
 
 
-  public boolean isFirst()
-  {
-	return num == 1;
-  }
+    public boolean isLast() {
+        return last;
+    }
 
+
+    public boolean isFirst() {
+        return num == 1;
+    }
+
+    public Long getDirectoryId() {
+        return directoryId;
+    }
 }

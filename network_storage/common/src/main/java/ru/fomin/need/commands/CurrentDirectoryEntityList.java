@@ -9,11 +9,13 @@ public class CurrentDirectoryEntityList extends DataPackage {
     private Map<String, Long> fileMap;
     private Map<String, Long> directoryMap;
     private String currentDirectory;
+    private Long currentDirectoryId;
 
-    public CurrentDirectoryEntityList(Map<String, Long> fileMap, Map<String, Long> directoryMap, String currentDirectory) {
+    public CurrentDirectoryEntityList(Map<String, Long> fileMap, Map<String, Long> directoryMap, String currentDirectory, Long currentDirectoryId) {
         this.fileMap = fileMap;
         this.directoryMap = directoryMap;
         this.currentDirectory = currentDirectory;
+        this.currentDirectoryId = currentDirectoryId;
     }
 
     public String getCurrentDirectory() {
@@ -40,4 +42,7 @@ public class CurrentDirectoryEntityList extends DataPackage {
         this.directoryMap = directoryMap;
     }
 
+    public Long getCurrentDirectoryId() {
+        return currentDirectoryId;
+    }
 }

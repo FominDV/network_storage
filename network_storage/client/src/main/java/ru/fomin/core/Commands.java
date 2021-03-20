@@ -6,10 +6,10 @@ import ru.fomin.gui.controllers.MainPanelController;
 import java.io.File;
 
 public interface Commands {
-    void sendFile(File file);
+    void sendFile(File file, Long directoryId);
     void exitToAuthentication(Button button);
     void getCurrentDirectoryEntity();
-    boolean download(Long id, String path, String fileName);
+    void download(Long id, String path);
     boolean delete(Long id, String type);
     String registration(String login, String password);
     void authentication(String login, String password);

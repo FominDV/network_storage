@@ -17,6 +17,7 @@ import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
+import java.nio.file.Paths;
 import java.util.concurrent.ExecutorService;
 
 public class HandlerCommands implements Commands {
@@ -24,6 +25,7 @@ public class HandlerCommands implements Commands {
     private final ExecutorService executorService;
     private static Commands commands;
     private final FileTransmitter fileTransmitter;
+    private final ResponseHandler responseHandler;
 
     private AuthenticationController authenticationController;
     private MainPanelController mainPanelController;
@@ -48,7 +50,8 @@ public class HandlerCommands implements Commands {
             out = new ObjectEncoderOutputStream(os);
             in = new ObjectDecoderInputStream(is, MAX_OBJ_SIZE);
             commands = this;
-            executorService.execute(new ResponseHandler(this));
+            responseHandler = new ResponseHandler(this);
+            executorService.execute(responseHandler);
             fileTransmitter = new FileTransmitter(this);
             executorService.execute(fileTransmitter);
         } catch (IOException e) {
@@ -57,8 +60,8 @@ public class HandlerCommands implements Commands {
     }
 
     @Override
-    public void sendFile(File file) {
-        fileTransmitter.addFile(file);
+    public void sendFile(File file, Long directoryId) {
+        fileTransmitter.addFile(file, directoryId);
     }
 
     @Override
@@ -73,36 +76,16 @@ public class HandlerCommands implements Commands {
     @Override
     public void getCurrentDirectoryEntity() {
         try {
-            out.writeObject(new GetCurrentFilesListCommand());
+            out.writeObject(new FileManipulationRequest(FileManipulationRequest.Request.GET_FILES_LIST));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public boolean download(Long id, String path, String fileName) {
-        int sizeOfPackage = KeyCommands.SIZE_OF_PACKAGE;
-        try {
-            out.writeUTF(KeyCommands.DOWNLOAD);
-            out.writeLong(id);
-            File file = new File(path + File.separator + fileName);
-            if (!file.exists()) {
-                file.createNewFile();
-            }
-            long size = in.readLong();
-            long countOfPackages = (size + sizeOfPackage - 1) / sizeOfPackage;
-            FileOutputStream fileOutputStream = new FileOutputStream(file);
-            byte[] buffer = new byte[sizeOfPackage];
-            for (long i = 0; i < countOfPackages; i++) {
-                int read = in.read(buffer);
-                fileOutputStream.write(buffer, 0, read);
-            }
-            fileOutputStream.close();
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
+    public void download(Long id, String path) {
+        responseHandler.putDownloadingFilesMap(id, Paths.get(path));
+        sendToServer(new FileManipulationRequest(FileManipulationRequest.Request.DOWNLOAD, id));
     }
 
     @Override
@@ -219,5 +202,13 @@ public class HandlerCommands implements Commands {
 
     public void getFileManipulationResponse(FileManipulationResponse response) {
         mainPanelController.getFileManipulationResponse(response);
+    }
+
+    public void downloadingSuccessful(String filename){
+       showInfoMessage(String.format("Downloading file \"%s\" is successfully",filename));
+    }
+
+    public void downloadingError(String fileName) {
+        showErrorMessage(String.format("Downloading file \"%s\" is failed",fileName));
     }
 }

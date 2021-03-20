@@ -4,6 +4,8 @@ import ru.fomin.dao.DirectoryDao;
 import ru.fomin.entities.Directory;
 import ru.fomin.entities.FileData;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 public class DirectoryService {
@@ -35,5 +37,13 @@ public class DirectoryService {
         return getFiles(directory.getId()).
                 stream().
                 anyMatch(file -> file.getName().equals(fileName));
+    }
+
+    public Path getDirectoryPathById(Long id){
+        return Paths.get(getDirectoryById(id).getPath());
+    }
+
+    public Directory getDirectoryById(Long id){
+       return DIRECTORY_DAO.getDirectoryById(id);
     }
 }

@@ -21,13 +21,16 @@ public class ControllersUtil {
                 "Developer info", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    public static boolean isConfirmChangeName(String fileName) {
+
+
+    public static boolean isConfirmOverrideFile(String fileName) {
         int response = JOptionPane.showConfirmDialog(null,
-                "<html>Name should not contain spaces<br>Do you want replace spaces to '_'?</html>",
+                String.format("<html>File with the name \"%s\" already exist.<br>Do you want override this file?</html>", fileName),
                 "Invalid name",
                 JOptionPane.YES_NO_OPTION);
         return response == 0 ? true : false;
     }
+
 
     public static void showAndHideStages(String pathOfFXML, Labeled labeled) {
         Platform.runLater(() -> labeled.getScene().getWindow().hide());

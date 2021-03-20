@@ -7,30 +7,32 @@ import java.nio.file.Path;
 
 
 public class FileDataPackage
-		extends DataPackage
-{
+        extends DataPackage {
 
-  protected final String filename;
-  protected final byte[] data;
-
-
-  public FileDataPackage(Path path)
-  throws IOException
-  {
-	filename = path.getFileName().toString();
-	data = Files.readAllBytes(path);
-  }
+    protected final String filename;
+    protected final byte[] data;
+    private Long directoryId;
 
 
-  public String getFilename()
-  {
-	return filename;
-  }
+    public FileDataPackage(Path path, Long directoryId)
+            throws IOException {
+        filename = path.getFileName().toString();
+        this.directoryId = directoryId;
+        data = Files.readAllBytes(path);
+    }
 
 
-  public byte[] getData()
-  {
-	return data;
-  }
+    public String getFilename() {
+        return filename;
+    }
+
+
+    public byte[] getData() {
+        return data;
+    }
+
+    public Long getDirectoryId() {
+        return directoryId;
+    }
 
 }
