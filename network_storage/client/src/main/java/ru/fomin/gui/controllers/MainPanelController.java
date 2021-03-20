@@ -1,5 +1,6 @@
 package ru.fomin.gui.controllers;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -8,13 +9,13 @@ import javafx.stage.FileChooser;
 import ru.fomin.core.Commands;
 import ru.fomin.core.HandlerCommands;
 import ru.fomin.KeyCommands;
-import ru.fomin.need.CurrentDirectoryEntityList;
+import ru.fomin.need.commands.CurrentDirectoryEntityList;
+import ru.fomin.need.commands.FileManipulationResponse;
 
 import static ru.fomin.util.ControllersUtil.*;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class MainPanelController {
 
@@ -68,9 +69,6 @@ public class MainPanelController {
     @FXML
     void initialize() {
         commands = HandlerCommands.getCommands();
-//        updateDirectoryEntity();
-//
-//        updateCurrentDirectory();
 
         btn_info.setOnAction(event -> showDeveloperInfo());
 
@@ -91,25 +89,25 @@ public class MainPanelController {
     }
 
     private void createDirectory() {
-        String dirName=field_directory_name.getText();
-        if(!hasText(dirName)){
+        String dirName = field_directory_name.getText();
+        if (!hasText(dirName)) {
             showErrorMessage("You should insert name of new directory into the filed");
             field_directory_name.setText("");
             return;
         }
-        if (dirName.contains(" ")||dirName.contains("\\")){
+        if (dirName.contains(" ") || dirName.contains("\\")) {
             showErrorMessage("Name of directory should not contain spaces and '\\'");
             field_directory_name.setText("");
             return;
         }
 
-        switch (commands.createDir(dirName)){
+        switch (commands.createDir(dirName)) {
             case KeyCommands.DONE:
-               // updateDirectoryEntity();
-                showInfoMessage(dirName+" was created");
+                // updateDirectoryEntity();
+                showInfoMessage(dirName + " was created");
                 break;
             case KeyCommands.ALREADY_EXIST:
-                showErrorMessage(String.format("The directory %s already exist",dirName));
+                showErrorMessage(String.format("The directory %s already exist", dirName));
                 break;
             default:
                 showConnectionError();
@@ -168,34 +166,56 @@ public class MainPanelController {
 
     private void upload() {
         File file = fileChooser.showOpenDialog(null);
-        String feedback;
+        if (file == null) {
+            return;
+        }
         if (!file.isFile()) {
             showErrorMessage(String.format("Path \"%s\" is not file", file.toString()));
             return;
         }
-        String fileName = file.getName();
-        if (fileName.contains(" ")) {
-            if (isConfirmChangeName(fileName)) {
-                fileName = fileName.replace(" ", "_");
-            } else {
-                return;
-            }
-        }
-        if (!(feedback = commands.sendFile(file.toString(), fileName)).equals(KeyCommands.DONE)) {
-            showErrorMessage(feedback);
-            return;
-        }
+        commands.sendFile(file);
         commands.getCurrentDirectoryEntity();
-        showInfoMessage(String.format("Upload %s is successful", fileName));
     }
-
-
 
 
     public void updateDirectoryEntity(CurrentDirectoryEntityList com) {
-        fileMap=com.getFileMap();
-        directoryMap=com.getDirectoryMap();
+        fileMap = com.getFileMap();
+        directoryMap = com.getDirectoryMap();
         label_current_dir.setText(com.getCurrentDirectory());
+
+        //Creating list of all files and nested directories
+        List<String> filesList = new ArrayList<>();
+        filesList.addAll(fileMap.keySet());
+        filesList.addAll(directoryMap.keySet());
+
+        observableList = FXCollections.observableArrayList(filesList);
+        list_files.setItems(observableList);
+        multipleSelectionModel = list_files.getSelectionModel();
+        if (multipleSelectionModel.getSelectedItem() == null) multipleSelectionModel.select(0);
     }
 
+    public void getFileManipulationResponse(FileManipulationResponse response) {
+        String fileName = response.getFileName();
+        switch (response.getResponse()) {
+            case DIR_ALREADY_EXIST:
+                showErrorMessage(String.format("Directory with the name \"%s\" already exist", fileName));
+                break;
+            case FILE_ALREADY_EXIST:
+                showErrorMessage(String.format("File with the name \"%s\" already exist", fileName));
+                break;
+            case FILE_UPLOADED:
+                fileMap.put(fileName, response.getId());
+                observableList.add(fileName);
+                showInfoMessage(String.format("Uploading of file \"%s\" is successful", fileName));
+                break;
+            case DIR_CREATED:
+                directoryMap.put(fileName, response.getId());
+                observableList.add(fileName);
+                showInfoMessage(String.format("The directory \"%s\" was created", fileName));
+                break;
+            default:
+                showErrorMessage(String.format("Unknown response \"%s\" from server", response.getResponse()));
+                commands.exitToAuthentication(btn_info);
+        }
+    }
 }

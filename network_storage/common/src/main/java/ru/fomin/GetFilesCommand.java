@@ -1,7 +1,7 @@
 package ru.fomin;
 
 
-import ru.fomin.need.DataPackage;
+import ru.fomin.need.commands.DataPackage;
 
 import java.util.List;
 

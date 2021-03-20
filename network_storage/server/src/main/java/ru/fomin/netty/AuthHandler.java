@@ -4,8 +4,8 @@ package ru.fomin.netty;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;
-import ru.fomin.need.AuthCommand;
-import ru.fomin.need.AuthResult;
+import ru.fomin.need.commands.AuthCommand;
+import ru.fomin.need.commands.AuthResult;
 import ru.fomin.services.UserService;
 
 

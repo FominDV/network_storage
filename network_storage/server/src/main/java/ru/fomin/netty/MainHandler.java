@@ -4,11 +4,10 @@ package ru.fomin.netty;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;
-import ru.fomin.*;
 import ru.fomin.entities.Directory;
 import ru.fomin.entities.FileData;
-import ru.fomin.need.CurrentDirectoryEntityList;
-import ru.fomin.need.GetCurrentFilesListCommand;
+import ru.fomin.need.commands.*;
+import ru.fomin.need.classes.FileChunkDownloader;
 import ru.fomin.services.DirectoryService;
 import ru.fomin.services.FileDataService;
 import ru.fomin.services.UserService;
@@ -32,18 +31,17 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
 
     private static final String MAIN_PATH = "main_repository";
     private Directory currentDirectory;
-    private FileChunkSaver saver;
+    private FileChunkDownloader fileChunkDownloader;
 
 
     public void setUserDir(Directory directory) {
         currentDirectory = directory;
-        saver = new FileChunkSaver(Paths.get(currentDirectory.getPath()));
+        fileChunkDownloader = new FileChunkDownloader(Paths.get(currentDirectory.getPath()));
     }
 
 
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg)
-            throws Exception {
+    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         try {
             if (msg instanceof GetCurrentFilesListCommand) {
                 sendFileList(ctx);
@@ -57,35 +55,52 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
 //                return;
 //            }
 //
-//            if (msg instanceof FileDataPackage) {
-//                saveFile((FileDataPackage) msg);
-//                sendFileList(ctx);
-//                return;
-//            }
-//
-//            if (msg instanceof FileChunkPackage) {
-//                Runnable action = () ->
-//                {
-//                    try {
-//                        sendFileList(ctx);
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-//                };
-//                saver.writeFileChunk((FileChunkPackage) msg, action);
-//            }
+            if (msg instanceof FileDataPackage) {
+                downloadSmallFile(ctx, (FileDataPackage) msg);
+                return;
+            }
+
+            if (msg instanceof FileChunkPackage) {
+                downloadBigFile(ctx, (FileChunkPackage) msg);
+            }
         } finally {
             ReferenceCountUtil.release(msg);
         }
+
     }
 
+    private void downloadSmallFile(ChannelHandlerContext ctx, FileDataPackage pack) throws IOException {
+        String fileName = pack.getFilename();
+        if (isFileExist(ctx, fileName)){
+            return;
+        }
+        Path path = Paths.get(currentDirectory.getPath() + File.separator + fileName);
+        Files.write(path, pack.getData());
+        Long id = FILE_DATA_SERVICE.createFile(fileName, currentDirectory);
+        ctx.writeAndFlush(new FileManipulationResponse(FileManipulationResponse.Response.FILE_UPLOADED, fileName, id));
+    }
 
-//    private void saveFile(FileDataPackage pack)
-//            throws IOException {
-//        Path path = userDir.resolve(pack.getFilename());
-//        Files.write(path, pack.getData());
-//    }
+    private void downloadBigFile(ChannelHandlerContext ctx, FileChunkPackage pack) throws IOException {
+        String fileName = pack.getFilename();
+        if (isFileExist(ctx, fileName)){
+            return;
+        }
+        Runnable action = () -> {
+            Long id = FILE_DATA_SERVICE.createFile(fileName, currentDirectory);
+            ctx.writeAndFlush(new FileManipulationResponse(FileManipulationResponse.Response.FILE_UPLOADED, fileName, id));
+        };
+        fileChunkDownloader.writeFileChunk(pack, action);
+    }
 
+    //Verify existing of file and send error message
+    private boolean isFileExist(ChannelHandlerContext ctx, String fileName){
+        if (DIRECTORY_SERVICE.isFileExist(fileName, currentDirectory)) {
+            ctx.writeAndFlush(new FileManipulationResponse(FileManipulationResponse.Response.FILE_ALREADY_EXIST, fileName));
+            return true;
+        }else {
+            return false;
+        }
+    }
 
 //    private void deleteFiles(DeleteFilesCommand com)
 //            throws IOException {

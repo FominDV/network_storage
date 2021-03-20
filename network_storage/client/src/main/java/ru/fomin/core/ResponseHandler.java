@@ -1,13 +1,13 @@
 package ru.fomin.core;
 
 import javafx.application.Platform;
-import ru.fomin.need.AuthResult;
-import ru.fomin.need.DataPackage;
-import ru.fomin.need.CurrentDirectoryEntityList;
+import ru.fomin.need.commands.AuthResult;
+import ru.fomin.need.commands.DataPackage;
+import ru.fomin.need.commands.CurrentDirectoryEntityList;
+import ru.fomin.need.commands.FileManipulationResponse;
 
 
 import static java.lang.Thread.currentThread;
-import static ru.fomin.util.ControllersUtil.showAndHideStages;
 
 public class ResponseHandler implements Runnable {
 
@@ -29,33 +29,18 @@ public class ResponseHandler implements Runnable {
     }
 
     private void processResponse(DataPackage response) {
-
-        if (response instanceof AuthResult) {
-            AuthResult authResult = (AuthResult) response;
-            Platform.runLater(() -> {
+        Platform.runLater(() -> {
+            if (response instanceof AuthResult) {
+                AuthResult authResult = (AuthResult) response;
                 handlerCommands.authenticationResponse(authResult);
-            });
+            } else if (response instanceof CurrentDirectoryEntityList) {
 
-        } else if (response instanceof CurrentDirectoryEntityList) {
+                CurrentDirectoryEntityList com = (CurrentDirectoryEntityList) response;
 
-            CurrentDirectoryEntityList com = (CurrentDirectoryEntityList) response;
-
-           handlerCommands.updateDirectoryEntity(com);
-        }
-
-//        if (response instanceof FileDataPackage)
-//        {
-//            FileDataPackage pack = (FileDataPackage) response;
-//            Path path = Paths.get(STORAGE_DIR + "/" + pack.getFilename());
-//            Files.write(path, pack.getData());
-//            callbackFileData.run();
-//            return;
-//        }
-//
-//        if (response instanceof FileChunkPackage)
-//        {
-//            saver.writeFileChunk((FileChunkPackage) response,
-//                    () -> callbackFileData.run());
-//        }
+                handlerCommands.updateDirectoryEntity(com);
+            } else if (response instanceof FileManipulationResponse) {
+                handlerCommands.getFileManipulationResponse((FileManipulationResponse) response);
+            }
+        });
     }
 }

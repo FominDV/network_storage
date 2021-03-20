@@ -6,9 +6,8 @@ package ru.fomin.netty;
 import io.netty.handler.codec.serialization.ObjectDecoderInputStream;
 import io.netty.handler.codec.serialization.ObjectEncoderOutputStream;
 import ru.fomin.*;
-import ru.fomin.need.AuthCommand;
-import ru.fomin.need.DataPackage;
-import ru.fomin.need.CurrentDirectoryEntityList;
+import ru.fomin.need.commands.AuthCommand;
+import ru.fomin.need.commands.DataPackage;
 
 import java.io.IOException;
 import java.io.InputStream;

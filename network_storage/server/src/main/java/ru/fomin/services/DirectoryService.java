@@ -30,4 +30,10 @@ public class DirectoryService {
             return true;
         }
     }
+
+    public boolean isFileExist(String fileName, Directory directory){
+        return getFiles(directory.getId()).
+                stream().
+                anyMatch(file -> file.getName().equals(fileName));
+    }
 }

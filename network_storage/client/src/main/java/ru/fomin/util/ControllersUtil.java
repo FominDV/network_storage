@@ -46,14 +46,14 @@ public class ControllersUtil {
         JOptionPane.showMessageDialog(null, message, "ERROR", JOptionPane.ERROR_MESSAGE);
     }
 
-    static void showStage(String pathOfFXML) {
+   public static void showStage(String pathOfFXML) {
         Stage stage = getStage(pathOfFXML);
         stage.setResizable(false);
         stage.setOnCloseRequest(event -> event.consume());
         stage.show();
     }
 
-    static void hideStage(String pathOfFXML) {
+   public static void hideStage(String pathOfFXML) {
         getStage(pathOfFXML).hide();
     }
 

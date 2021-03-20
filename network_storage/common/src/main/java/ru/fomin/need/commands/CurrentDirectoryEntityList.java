@@ -1,10 +1,6 @@
-package ru.fomin.need;
+package ru.fomin.need.commands;
 
 
-import ru.fomin.need.DataPackage;
-
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 

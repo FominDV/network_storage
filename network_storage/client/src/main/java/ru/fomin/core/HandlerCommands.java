@@ -8,7 +8,7 @@ import ru.fomin.gui.controllers.AuthenticationController;
 
 import javafx.scene.control.Button;
 import ru.fomin.gui.controllers.MainPanelController;
-import ru.fomin.need.*;
+import ru.fomin.need.commands.*;
 
 import static java.util.concurrent.Executors.newFixedThreadPool;
 import static ru.fomin.util.ControllersUtil.*;
@@ -23,6 +23,7 @@ public class HandlerCommands implements Commands {
 
     private final ExecutorService executorService;
     private static Commands commands;
+    private final FileTransmitter fileTransmitter;
 
     private AuthenticationController authenticationController;
     private MainPanelController mainPanelController;
@@ -48,38 +49,16 @@ public class HandlerCommands implements Commands {
             in = new ObjectDecoderInputStream(is, MAX_OBJ_SIZE);
             commands = this;
             executorService.execute(new ResponseHandler(this));
+            fileTransmitter = new FileTransmitter(this);
+            executorService.execute(fileTransmitter);
         } catch (IOException e) {
             throw new IOException();
         }
     }
 
-    public String sendFile(String filePath, String fileName) {
-        try {
-            File file = new File(filePath);
-            if (file.isFile()) {
-                out.writeUTF(KeyCommands.UPLOAD);
-                out.writeUTF(fileName);
-                if (in.readUTF().equals(KeyCommands.ALREADY_EXIST)) {
-                    return KeyCommands.ALREADY_EXIST;
-                }
-                long length = file.length();
-                out.writeLong(length);
-                FileInputStream fis = new FileInputStream(file);
-                int read = 0;
-                byte[] buffer = new byte[KeyCommands.SIZE_OF_PACKAGE];
-                while ((read = fis.read(buffer)) != -1) {
-                    out.write(buffer, 0, read);
-                }
-                out.flush();
-                String status = in.readUTF();
-                return status;
-            } else {
-                return "File is not exists";
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return "Something error";
+    @Override
+    public void sendFile(File file) {
+        fileTransmitter.addFile(file);
     }
 
     @Override
@@ -159,18 +138,6 @@ public class HandlerCommands implements Commands {
     }
 
     @Override
-    public String getCurrentDirectory() {
-        try {
-            out.writeUTF(KeyCommands.GET_CURRENT_DIR);
-            return in.readUTF();
-        } catch (IOException e) {
-            showConnectionError();
-            closeConnection();
-        }
-        return KeyCommands.ERROR;
-    }
-
-    @Override
     public String createDir(String dirName) {
         try {
             out.writeUTF(KeyCommands.CREATE_DIRECTORY);
@@ -224,29 +191,33 @@ public class HandlerCommands implements Commands {
         }
     }
 
-    public DataPackage getResponseFromServer()  {
-        try
-        {
+
+
+    public DataPackage getResponseFromServer() {
+        try {
             Object obj = in.readObject();
             return (DataPackage) obj;
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+        } catch (IOException | ClassNotFoundException e) {
+            authenticationController.changeIsConnected();
+            closeConnection();
         }
-           return null;
+        return null;
     }
 
-    public void authenticationResponse(AuthResult authResult){
-            authenticationController.authenticationResponse(authResult);
+    public void authenticationResponse(AuthResult authResult) {
+        authenticationController.authenticationResponse(authResult);
     }
 
-    public void updateDirectoryEntity(CurrentDirectoryEntityList com){
+    public void updateDirectoryEntity(CurrentDirectoryEntityList com) {
         mainPanelController.updateDirectoryEntity(com);
     }
 
     @Override
     public void setMainPanelController(MainPanelController mainPanelController) {
         this.mainPanelController = mainPanelController;
+    }
+
+    public void getFileManipulationResponse(FileManipulationResponse response) {
+        mainPanelController.getFileManipulationResponse(response);
     }
 }
