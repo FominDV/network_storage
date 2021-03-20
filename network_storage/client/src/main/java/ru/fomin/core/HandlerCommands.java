@@ -3,23 +3,23 @@ package ru.fomin.core;
 import io.netty.handler.codec.serialization.ObjectDecoderInputStream;
 import io.netty.handler.codec.serialization.ObjectEncoderOutputStream;
 import javafx.application.Platform;
-import ru.fomin.AuthCommand;
-import ru.fomin.DataPackage;
-import ru.fomin.KeyCommands;
+import ru.fomin.*;
 import ru.fomin.gui.controllers.AuthenticationController;
 
 import javafx.scene.control.Button;
-import ru.fomin.netty.NetConnection;
 
+import static java.util.concurrent.Executors.newFixedThreadPool;
 import static ru.fomin.util.ControllersUtil.*;
 
 import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
+import java.util.concurrent.ExecutorService;
 
 public class HandlerCommands implements Commands {
 
+    private final ExecutorService executorService;
     private static Commands commands;
     private AuthenticationController authenticationController;
     private ObjectEncoderOutputStream out;
@@ -32,16 +32,19 @@ public class HandlerCommands implements Commands {
 
     public HandlerCommands(AuthenticationController authenticationController) {
         this.authenticationController = authenticationController;
+        executorService = newFixedThreadPool(2);
         socket = new Socket();
         addr = new InetSocketAddress(ip, port);
         try {
-            socket = new Socket(ip,port);
+            socket = new Socket(ip, port);
             OutputStream os = socket.getOutputStream();
             InputStream is = socket.getInputStream();
             out = new ObjectEncoderOutputStream(os);
             in = new ObjectDecoderInputStream(is, MAX_OBJ_SIZE);
             commands = this;
+            executorService.execute(new ResponseHandler(this));
         } catch (IOException e) {
+            authenticationController.changeIsConnected();
             e.printStackTrace();
         }
     }
@@ -150,8 +153,8 @@ public class HandlerCommands implements Commands {
 
     @Override
     public void authentication(String login, String password) {
-            DataPackage com = new AuthCommand(login.trim(), password.trim());
-            sendToServer(com);
+        DataPackage com = new AuthCommand(login.trim(), password.trim());
+        sendToServer(com);
     }
 
     @Override
@@ -181,6 +184,7 @@ public class HandlerCommands implements Commands {
 
     private void closeConnection() {
         try {
+            executorService.shutdownNow();
             in.close();
             out.close();
             socket.close();
@@ -211,28 +215,29 @@ public class HandlerCommands implements Commands {
 
     ////////////////////////////////////
     public void sendToServer(DataPackage data) {
-        try
-        {
+        try {
             out.writeObject(data);
             out.flush();
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    DataPackage getResponseFromServer()
-            throws NetConnection.ServerResponseException
-    {
+    public DataPackage getResponseFromServer()  {
         try
         {
             Object obj = in.readObject();
             return (DataPackage) obj;
-        }
-        catch (ClassNotFoundException | IOException e)
-        {
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+           return null;
     }
+
+    public void authenticationResponse(AuthResult authResult){
+            authenticationController.authenticationResponse(authResult);
+    }
+
 }

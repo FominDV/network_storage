@@ -27,8 +27,7 @@ public class Server
  public static final String STORAGE_DIR = "server/server_storage";
 
 
-  public Server()
-  {
+  public Server(){
 	sb = new ServerBootstrap();
 	mainGroup = new NioEventLoopGroup();
 	workerGroup = new NioEventLoopGroup();
@@ -37,6 +36,11 @@ public class Server
 	sb.channel(NioServerSocketChannel.class);
 	sb.childHandler(new SocketChannelInitializer());
 	sb.childOption(SO_KEEPALIVE, true);
+	  try {
+		  Class.forName("ru.fomin.dao.SessionFactory");
+	  } catch (ClassNotFoundException e) {
+		  e.printStackTrace();
+	  }
   }
 
 

@@ -34,6 +34,9 @@ public class ConnectionPropertiesController {
 
     @FXML
     void initialize() {
+
+        label_port.setText(String.valueOf(HandlerCommands.getPort()));
+        label_ip.setText(HandlerCommands.getIp());
         field_ip.setText(HandlerCommands.getIp());
         field_port.setText(String.valueOf(HandlerCommands.getPort()));
 

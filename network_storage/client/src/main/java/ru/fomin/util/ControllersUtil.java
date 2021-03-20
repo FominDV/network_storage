@@ -31,13 +31,15 @@ public class ControllersUtil {
 
     public static void showAndHideStages(String pathOfFXML, Labeled labeled) {
         Platform.runLater(() -> labeled.getScene().getWindow().hide());
-        Stage stage = getStage(pathOfFXML);
-        stage.setResizable(false);
-        stage.setOnCloseRequest(event -> {
-            Platform.exit();
-            System.exit(0);
-        });
-        stage.show();
+            Stage stage = getStage(pathOfFXML);
+            stage.setResizable(false);
+            stage.setOnCloseRequest(event -> {
+                Platform.exit();
+                System.exit(0);
+            });
+            stage.show();
+
+
     }
 
     public static void showErrorMessage(String message) {
@@ -57,6 +59,7 @@ public class ControllersUtil {
 
     public static Stage getStage(String pathOfFXML) {
         FXMLLoader loader = new FXMLLoader();
+
         loader.setLocation(ControllersUtil.class.getResource(pathOfFXML));
         try {
             loader.load();

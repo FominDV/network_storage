@@ -41,19 +41,10 @@ public class AuthHandler
         try {
             if (msg instanceof AuthCommand) {
                 AuthCommand com = (AuthCommand) msg;
-
                 autorized = USER_SERVICE.isValidUserData(com.login, com.password);
-
                 if (autorized) {
-                    Path dir = Paths.get(STORAGE_DIR, com.login);
-                    if (!exists(dir)) {
-
-                        createDirectory(Paths.get(STORAGE_DIR));
-                        createDirectory(dir);
-                    }
                     MainHandler handler = ctx.pipeline().get(MainHandler.class);
-                    handler.setUserDir(dir);
-
+                    handler.setUserDir(USER_SERVICE.getRootDirectoryPathByLogin(com.login));
                     ctx.writeAndFlush(AuthResult.ok());
                 } else {
                     ctx.writeAndFlush(AuthResult.fail());
