@@ -16,7 +16,8 @@ public interface Commands {
     void delete(Long id, FileManipulationRequest.Request type);
     void registration(String login, String password);
     void authentication(String login, String password);
-    void createDir(String dirName);
+    void createDir(String dirName, Long remoteDirectoryId);
+    void renameDir(String dirName, Long remoteDirectoryId);
     void setMainPanelController(MainPanelController mainPanelController);
     void setRegistrationController(RegistrationController registrationController);
     void setUpdatePasswordController(UpdatePasswordController updatePasswordController);

@@ -9,13 +9,10 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import ru.fomin.core.Commands;
 import ru.fomin.core.HandlerCommands;
-import ru.fomin.KeyCommands;
 import ru.fomin.need.classes.Constants;
 import ru.fomin.need.commands.CurrentDirectoryEntityList;
 import ru.fomin.need.commands.FileManipulationRequest;
 import ru.fomin.need.commands.FileManipulationResponse;
-
-import javax.swing.text.html.HTMLDocument;
 
 import static ru.fomin.need.commands.FileManipulationRequest.Request.DELETE_DIR;
 import static ru.fomin.need.commands.FileManipulationRequest.Request.DELETE_FILE;
@@ -105,11 +102,7 @@ public class MainPanelController {
             field_directory_name.setText("");
             return;
         }
-        if (dirName.contains(" ") || dirName.contains("\\")) {
-            showErrorMessage("Name of directory should not contain spaces and '\\'");
-            field_directory_name.setText("");
-            return;
-        }
+        commands.createDir(dirName, remoteDirectoryId);
         field_directory_name.setText("");
     }
 

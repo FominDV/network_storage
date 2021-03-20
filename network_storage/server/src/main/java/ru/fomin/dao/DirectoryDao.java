@@ -11,19 +11,28 @@ import java.util.List;
 
 public class DirectoryDao {
 
-    public void create(Directory directory) {
+    /**
+     * Create new directory.
+     *
+     * @param - new directory for creating
+     * @return - id of new directory
+     */
+    public Long create(Directory directory) {
         Session session = SessionFactory.getSession();
         session.beginTransaction();
         session.save(directory);
+        Query query = session.createQuery("select max(d.id) from Directory d", Long.class);
+        Long id = (Long) query.getSingleResult();
         session.getTransaction().commit();
         session.close();
+        return id;
     }
 
     public List<FileData> getFiles(Long id) {
         Session session = SessionFactory.getSession();
         session.beginTransaction();
         Query query = session.createQuery("select d.files from Directory d where d.id=:id", Collection.class);
-        query.setParameter("id",id);
+        query.setParameter("id", id);
         List<FileData> files = query.getResultList();
         session.getTransaction().commit();
         session.close();
@@ -33,24 +42,24 @@ public class DirectoryDao {
     public List<Directory> getNestedDirectories(Long id) {
         Session session = SessionFactory.getSession();
         session.beginTransaction();
-        Query query = session.createQuery("select d.nestedDirectories from Directory d where d.id=:id",Collection.class);
-        query.setParameter("id",id);
+        Query query = session.createQuery("select d.nestedDirectories from Directory d where d.id=:id", Collection.class);
+        query.setParameter("id", id);
         List<Directory> files = query.getResultList();
         session.getTransaction().commit();
         session.close();
         return files;
     }
 
-    public Directory getDirectoryById(Long id){
+    public Directory getDirectoryById(Long id) {
         Session session = SessionFactory.getSession();
         session.beginTransaction();
-        Directory directory=session.get(Directory.class,id);
+        Directory directory = session.get(Directory.class, id);
         session.getTransaction().commit();
         session.close();
         return directory;
     }
 
-    public void deleteDirectory(Directory directory){
+    public void deleteDirectory(Directory directory) {
         Session session = SessionFactory.getSession();
         session.beginTransaction();
         session.delete(directory);

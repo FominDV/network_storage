@@ -110,15 +110,13 @@ public class HandlerCommands implements Commands {
     }
 
     @Override
-    public void createDir(String dirName) {
-        try {
-            out.writeUTF(KeyCommands.CREATE_DIRECTORY);
-            out.writeUTF(dirName);
-        } catch (IOException e) {
-            showConnectionError();
-            closeConnection();
-        }
+    public void createDir(String dirName, Long remoteDirectoryId) {
+        sendToServer(new DirectoryManipulationCommand(dirName,remoteDirectoryId, DirectoryManipulationCommand.Type.CREATE));
+    }
 
+    @Override
+    public void renameDir(String dirName, Long remoteDirectoryId) {
+        sendToServer(new DirectoryManipulationCommand(dirName,remoteDirectoryId, DirectoryManipulationCommand.Type.RENAME));
     }
 
     private void closeConnection() {

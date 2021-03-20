@@ -3,6 +3,8 @@ package ru.fomin.core;
 import javafx.application.Platform;
 import ru.fomin.need.classes.FileChunkDownloader;
 import ru.fomin.need.commands.*;
+import ru.fomin.need.file_packages.FileChunkPackage;
+import ru.fomin.need.file_packages.FileDataPackage;
 
 
 import java.io.File;

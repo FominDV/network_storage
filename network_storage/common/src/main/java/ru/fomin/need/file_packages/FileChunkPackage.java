@@ -1,5 +1,7 @@
-package ru.fomin.need.commands;
+package ru.fomin.need.file_packages;
 
+
+import ru.fomin.need.commands.DataPackage;
 
 import java.nio.file.Path;
 

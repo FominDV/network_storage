@@ -4,11 +4,14 @@ package ru.fomin.netty;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;
+import ru.fomin.KeyCommands;
 import ru.fomin.entities.Directory;
 import ru.fomin.entities.FileData;
 import ru.fomin.need.classes.Constants;
 import ru.fomin.need.commands.*;
 import ru.fomin.need.classes.FileChunkDownloader;
+import ru.fomin.need.file_packages.FileChunkPackage;
+import ru.fomin.need.file_packages.FileDataPackage;
 import ru.fomin.services.DirectoryService;
 import ru.fomin.services.FileDataService;
 import ru.fomin.services.UserService;
@@ -49,11 +52,13 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws IOException {
         try {
             if (msg instanceof FileManipulationRequest) {
-                requestHandle(ctx, (FileManipulationRequest) msg);
+                requestFileHandle(ctx, (FileManipulationRequest) msg);
             }else if (msg instanceof FileDataPackage) {
                 downloadSmallFile(ctx, (FileDataPackage) msg);
             }else if (msg instanceof FileChunkPackage) {
                 downloadBigFile(ctx, (FileChunkPackage) msg);
+            } else if(msg instanceof DirectoryManipulationCommand){
+                requestDirectoryHandle(ctx, (DirectoryManipulationCommand)msg);
             }
         } finally {
             ReferenceCountUtil.release(msg);
@@ -61,7 +66,37 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
 
     }
 
-    private void requestHandle(ChannelHandlerContext ctx, FileManipulationRequest request) throws IOException {
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+        if (fileTransmitter != null) {
+            fileTransmitter.disable();
+        }
+        cause.printStackTrace();
+        ctx.close();
+    }
+
+    private void requestDirectoryHandle(ChannelHandlerContext ctx, DirectoryManipulationCommand request) throws IOException {
+        String newDirectoryName=request.getNewDirectoryName();
+        Long newDirectoryId;
+        switch (request.getType()){
+            case CREATE:
+                String newDirectory = currentDirectory.getPath() + File.separator + newDirectoryName;
+                if ((newDirectoryId=DIRECTORY_SERVICE.createDirectory(currentDirectory, newDirectory))!=-1) {
+                    Files.createDirectory(Paths.get(newDirectory));
+                    ctx.writeAndFlush(new FileManipulationResponse(FileManipulationResponse.Response.DIR_CREATED,newDirectoryName,newDirectoryId));
+                } else {
+                    ctx.writeAndFlush(new FileManipulationResponse(FileManipulationResponse.Response.DIR_ALREADY_EXIST, newDirectoryName));
+                }
+                break;
+            case RENAME:
+
+                break;
+            default:
+                System.out.println(String.format("Unknown response \"%s\" from server", request.getType()));
+        }
+    }
+
+    private void requestFileHandle(ChannelHandlerContext ctx, FileManipulationRequest request) throws IOException {
         switch (request.getRequest()) {
             case GET_FILES_LIST:
                 sendFileList(ctx);
@@ -148,33 +183,6 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
         } else {
             return false;
         }
-    }
-
-//    private void deleteFiles(DeleteFilesCommand com)
-//            throws IOException {
-//        for (String fn : com.getFileNames()) {
-//            Path path = userDir.resolve(fn);
-//            Files.delete(path);
-//        }
-//    }
-
-
-//    private void sendFiles(ChannelHandlerContext ctx, GetFilesCommand com)
-//            throws Exception {
-//        for (String fn : com.getFileNames()) {
-//            Path path = userDir.resolve(fn);
-//            FileSendOptimizer.sendFile(path, ctx::writeAndFlush);
-//        }
-//    }
-
-
-    @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        if (fileTransmitter != null) {
-            fileTransmitter.disable();
-        }
-        cause.printStackTrace();
-        ctx.close();
     }
 
     private void sendFileList(ChannelHandlerContext ctx) throws IOException {
