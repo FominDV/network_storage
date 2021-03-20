@@ -1,6 +1,5 @@
 package ru.fomin.gui.controllers;
 
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -9,13 +8,12 @@ import javafx.stage.FileChooser;
 import ru.fomin.core.Commands;
 import ru.fomin.core.HandlerCommands;
 import ru.fomin.KeyCommands;
+import ru.fomin.need.CurrentDirectoryEntityList;
 
 import static ru.fomin.util.ControllersUtil.*;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class MainPanelController {
@@ -70,10 +68,9 @@ public class MainPanelController {
     @FXML
     void initialize() {
         commands = HandlerCommands.getCommands();
-
-        updateFileList();
-
-        updateCurrentDirectory();
+//        updateDirectoryEntity();
+//
+//        updateCurrentDirectory();
 
         btn_info.setOnAction(event -> showDeveloperInfo());
 
@@ -88,6 +85,9 @@ public class MainPanelController {
         btn_change_password.setOnAction(event -> showAndHideStages("/fxml/update_password.fxml", btn_change_password));
 
         btn_create_dir.setOnAction(event -> createDirectory());
+
+        commands.setMainPanelController(this);
+        commands.getCurrentDirectoryEntity();
     }
 
     private void createDirectory() {
@@ -105,7 +105,7 @@ public class MainPanelController {
 
         switch (commands.createDir(dirName)){
             case KeyCommands.DONE:
-                updateFileList();
+               // updateDirectoryEntity();
                 showInfoMessage(dirName+" was created");
                 break;
             case KeyCommands.ALREADY_EXIST:
@@ -185,38 +185,17 @@ public class MainPanelController {
             showErrorMessage(feedback);
             return;
         }
-        updateFileList();
+        commands.getCurrentDirectoryEntity();
         showInfoMessage(String.format("Upload %s is successful", fileName));
     }
 
-    private void updateFileList() {
-        fileMap.clear();
-        directoryMap.clear();
-        boolean isFile = true;
-        String[] filesData = commands.getFiles();
-        List<String> filesList = new ArrayList<>(filesData.length / 2);
-        for (int i = 0; i < filesData.length; i++) {
-            if (filesData[i].equals(KeyCommands.HARD_DELIMITER)) {
-                isFile = false;
-                continue;
-            }
-            filesList.add(filesData[i]);
-            if (isFile) {
-                fileMap.put(filesData[i], Long.parseLong(filesData[++i]));
-            } else {
-                directoryMap.put(filesData[i], Long.parseLong(filesData[++i]));
-            }
-        }
-        observableList = FXCollections.observableArrayList(filesList);
-        list_files.setItems(observableList);
-        multipleSelectionModel = list_files.getSelectionModel();
-        if (multipleSelectionModel.getSelectedItem() == null) multipleSelectionModel.select(0);
+
+
+
+    public void updateDirectoryEntity(CurrentDirectoryEntityList com) {
+        fileMap=com.getFileMap();
+        directoryMap=com.getDirectoryMap();
+        label_current_dir.setText(com.getCurrentDirectory());
     }
 
-    private void updateCurrentDirectory() {
-        String currentDirectory;
-        if (!(currentDirectory = commands.getCurrentDirectory()).equals(KeyCommands.ERROR)) {
-            label_current_dir.setText(currentDirectory);
-        }
-    }
 }

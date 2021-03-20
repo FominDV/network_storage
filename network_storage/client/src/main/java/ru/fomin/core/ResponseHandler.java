@@ -1,16 +1,13 @@
 package ru.fomin.core;
 
 import javafx.application.Platform;
-import ru.fomin.AuthResult;
-import ru.fomin.DataPackage;
-import ru.fomin.FileListCommand;
-import ru.fomin.gui.controllers.AuthenticationController;
-
-import java.io.IOException;
+import ru.fomin.need.AuthResult;
+import ru.fomin.need.DataPackage;
+import ru.fomin.need.CurrentDirectoryEntityList;
 
 
 import static java.lang.Thread.currentThread;
-import static ru.fomin.AuthResult.Result.OK;
+import static ru.fomin.util.ControllersUtil.showAndHideStages;
 
 public class ResponseHandler implements Runnable {
 
@@ -35,15 +32,15 @@ public class ResponseHandler implements Runnable {
 
         if (response instanceof AuthResult) {
             AuthResult authResult = (AuthResult) response;
+            Platform.runLater(() -> {
                 handlerCommands.authenticationResponse(authResult);
-        }
+            });
 
-        if (response instanceof FileListCommand) {
+        } else if (response instanceof CurrentDirectoryEntityList) {
 
-            FileListCommand com = (FileListCommand) response;
+            CurrentDirectoryEntityList com = (CurrentDirectoryEntityList) response;
 
-           // callbackFileList.accept(com.getFileNames());
-            return;
+           handlerCommands.updateDirectoryEntity(com);
         }
 
 //        if (response instanceof FileDataPackage)

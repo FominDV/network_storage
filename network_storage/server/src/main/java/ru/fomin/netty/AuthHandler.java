@@ -4,17 +4,9 @@ package ru.fomin.netty;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;
-import ru.fomin.AuthCommand;
-import ru.fomin.AuthResult;
-import ru.fomin.entities.User;
+import ru.fomin.need.AuthCommand;
+import ru.fomin.need.AuthResult;
 import ru.fomin.services.UserService;
-
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-import static java.nio.file.Files.createDirectory;
-import static java.nio.file.Files.exists;
-import static ru.fomin.netty.Server.STORAGE_DIR;
 
 
 public class AuthHandler
@@ -44,7 +36,7 @@ public class AuthHandler
                 autorized = USER_SERVICE.isValidUserData(com.login, com.password);
                 if (autorized) {
                     MainHandler handler = ctx.pipeline().get(MainHandler.class);
-                    handler.setUserDir(USER_SERVICE.getRootDirectoryPathByLogin(com.login));
+                    handler.setUserDir(USER_SERVICE.getRootDirectoryByLogin(com.login));
                     ctx.writeAndFlush(AuthResult.ok());
                 } else {
                     ctx.writeAndFlush(AuthResult.fail());

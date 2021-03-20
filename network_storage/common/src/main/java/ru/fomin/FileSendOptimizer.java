@@ -1,6 +1,8 @@
 package ru.fomin;
 
 
+import ru.fomin.need.DataPackage;
+
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.function.Consumer;

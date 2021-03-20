@@ -4,7 +4,6 @@ import ru.fomin.dao.UserDao;
 import ru.fomin.entities.Directory;
 import ru.fomin.entities.User;
 
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class UserService {
@@ -32,8 +31,8 @@ public class UserService {
        return USER_DAO.getUsersByLogin(login);
     }
 
-    public Path getRootDirectoryPathByLogin(String login){
+    public Directory getRootDirectoryByLogin(String login){
         User user = getUserByLogin(login);
-        return Paths.get(user.getRootDirectory().getPath());
+        return user.getRootDirectory();
     }
 }

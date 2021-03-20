@@ -1,4 +1,4 @@
-package ru.fomin;
+package ru.fomin.need;
 
 
 public class AuthCommand

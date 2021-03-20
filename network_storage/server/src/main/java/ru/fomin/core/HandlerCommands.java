@@ -22,7 +22,7 @@ public class HandlerCommands implements Commands {
     private static final UserService USER_SERVICE = new UserService();
     private static final DirectoryService DIRECTORY_SERVICE = new DirectoryService();
     private static final FileDataService FILE_DATA_SERVICE = new FileDataService();
-    private static final String MAIN_PATH = "main_repository";
+    private static final String MAIN_PATH = "main_repository" + File.separator;
 
     @Override
     synchronized public void handleRequest(String keyCommand, SocketHandler socketHandler) throws IOException {
@@ -59,22 +59,22 @@ public class HandlerCommands implements Commands {
         }
     }
 
-    private void deleteDirectory(SocketHandler socketHandler) throws IOException{
+    private void deleteDirectory(SocketHandler socketHandler) throws IOException {
 
     }
 
     private void createDirectory(SocketHandler socketHandler) throws IOException {
-        String newDirectory=currentDirectory.getPath()+File.separator+socketHandler.readUTF();
-        if(DIRECTORY_SERVICE.createDirectory(currentDirectory, newDirectory)){
+        String newDirectory = currentDirectory.getPath() + File.separator + socketHandler.readUTF();
+        if (DIRECTORY_SERVICE.createDirectory(currentDirectory, newDirectory)) {
             Files.createDirectory(Paths.get(newDirectory));
             socketHandler.writeUTF(KeyCommands.DONE);
-        }else {
+        } else {
             socketHandler.writeUTF(KeyCommands.ALREADY_EXIST);
         }
     }
 
     private void getCurrentDirectory(SocketHandler socketHandler) throws IOException {
-        String formattedCurrentDirectory=currentDirectory.getPath().substring(MAIN_PATH.length());
+        String formattedCurrentDirectory = currentDirectory.getPath().substring(MAIN_PATH.length());
         socketHandler.writeUTF(formattedCurrentDirectory);
     }
 
@@ -83,7 +83,7 @@ public class HandlerCommands implements Commands {
         String password = socketHandler.readUTF();
         if (USER_SERVICE.isValidUserData(login, password)) {
             currentDirectory = USER_SERVICE.getUserByLogin(login).getRootDirectory();
-            rootDirectory=currentDirectory.getPath();
+            rootDirectory = currentDirectory.getPath();
             socketHandler.writeUTF(KeyCommands.DONE);
         } else {
             socketHandler.writeUTF(KeyCommands.ERROR);
@@ -106,7 +106,7 @@ public class HandlerCommands implements Commands {
         Long id = currentDirectory.getId();
         List<FileData> currentFileList = DIRECTORY_SERVICE.getFiles(id);
         List<Directory> currentDirectoryList = DIRECTORY_SERVICE.getNestedDirectories(id);
-        if (currentFileList.size() == 0&&currentDirectoryList.size()==0) {
+        if (currentFileList.size() == 0 && currentDirectoryList.size() == 0) {
             socketHandler.writeUTF("");
             return;
         }
@@ -157,8 +157,8 @@ public class HandlerCommands implements Commands {
 
     synchronized private void sendFile(SocketHandler socketHandler) throws IOException {
         Long id = socketHandler.readLong();
-        String filePath =currentDirectory.getPath()+File.separator+ FILE_DATA_SERVICE.getFileById(id).getName();
-        File file=new File(filePath);
+        String filePath = currentDirectory.getPath() + File.separator + FILE_DATA_SERVICE.getFileById(id).getName();
+        File file = new File(filePath);
         socketHandler.writeLong(file.length());
         FileInputStream fis = new FileInputStream(file);
         int read = 0;
@@ -172,7 +172,7 @@ public class HandlerCommands implements Commands {
 
     synchronized private void deleteFile(SocketHandler socketHandler) throws IOException {
         Long id = socketHandler.readLong();
-        String fileName=FILE_DATA_SERVICE.deleteFile(id);
+        String fileName = FILE_DATA_SERVICE.deleteFile(id);
         Path path = Paths.get(currentDirectory.getPath(), fileName);
         Files.delete(path);
         socketHandler.writeUTF(KeyCommands.DONE);

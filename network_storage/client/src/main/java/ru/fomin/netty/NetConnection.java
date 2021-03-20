@@ -6,6 +6,9 @@ package ru.fomin.netty;
 import io.netty.handler.codec.serialization.ObjectDecoderInputStream;
 import io.netty.handler.codec.serialization.ObjectEncoderOutputStream;
 import ru.fomin.*;
+import ru.fomin.need.AuthCommand;
+import ru.fomin.need.DataPackage;
+import ru.fomin.need.CurrentDirectoryEntityList;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -74,13 +77,11 @@ public class NetConnection
   }
 
 
-  public void sendFileListCommand()
-  throws SendDataException
-  {
-	DataPackage com = new FileListCommand();
-	sendToServer(com);
-  }
-
+//  public void sendFileListCommand() throws SendDataException {
+//	DataPackage com = new CurrentDirectoryEntityList();
+//	sendToServer(com);
+//  }
+//
 
   public void sendDownloadFilesCommand(List<String> filenames)
   throws SendDataException

@@ -7,6 +7,8 @@ import ru.fomin.*;
 import ru.fomin.gui.controllers.AuthenticationController;
 
 import javafx.scene.control.Button;
+import ru.fomin.gui.controllers.MainPanelController;
+import ru.fomin.need.*;
 
 import static java.util.concurrent.Executors.newFixedThreadPool;
 import static ru.fomin.util.ControllersUtil.*;
@@ -21,7 +23,10 @@ public class HandlerCommands implements Commands {
 
     private final ExecutorService executorService;
     private static Commands commands;
+
     private AuthenticationController authenticationController;
+    private MainPanelController mainPanelController;
+
     private ObjectEncoderOutputStream out;
     private ObjectDecoderInputStream in;
     private SocketAddress addr;
@@ -30,7 +35,7 @@ public class HandlerCommands implements Commands {
     static int port = 8189;
     private static final int MAX_OBJ_SIZE = 10 * 1024 * 1024;
 
-    public HandlerCommands(AuthenticationController authenticationController) {
+    public HandlerCommands(AuthenticationController authenticationController) throws IOException {
         this.authenticationController = authenticationController;
         executorService = newFixedThreadPool(2);
         socket = new Socket();
@@ -44,8 +49,7 @@ public class HandlerCommands implements Commands {
             commands = this;
             executorService.execute(new ResponseHandler(this));
         } catch (IOException e) {
-            authenticationController.changeIsConnected();
-            e.printStackTrace();
+            throw new IOException();
         }
     }
 
@@ -88,15 +92,12 @@ public class HandlerCommands implements Commands {
     }
 
     @Override
-    public String[] getFiles() {
-        String files = "";
+    public void getCurrentDirectoryEntity() {
         try {
-            out.writeUTF(KeyCommands.GET_FILES);
-            files = in.readUTF();
+            out.writeObject(new GetCurrentFilesListCommand());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return files.isEmpty() ? new String[0] : files.split(KeyCommands.DELIMITER);
     }
 
     @Override
@@ -240,4 +241,12 @@ public class HandlerCommands implements Commands {
             authenticationController.authenticationResponse(authResult);
     }
 
+    public void updateDirectoryEntity(CurrentDirectoryEntityList com){
+        mainPanelController.updateDirectoryEntity(com);
+    }
+
+    @Override
+    public void setMainPanelController(MainPanelController mainPanelController) {
+        this.mainPanelController = mainPanelController;
+    }
 }

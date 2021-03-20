@@ -1,7 +1,10 @@
 package ru.fomin.entities;
 
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
+
+
+
+
+
 
 import javax.persistence.*;
 import java.util.List;

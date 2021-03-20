@@ -4,12 +4,13 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import ru.fomin.AuthResult;
+import ru.fomin.need.AuthResult;
 import ru.fomin.core.Commands;
 import ru.fomin.core.HandlerCommands;
 
 import static ru.fomin.util.ControllersUtil.*;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -53,14 +54,20 @@ public class AuthenticationController {
         btn_info.setOnAction(event -> showDeveloperInfo());
 
         btn_registration.setOnAction(event -> {
-            connect();
+            try {
+                connect();
+            } catch (IOException e) {
+                e.printStackTrace();
+                showConnectionError();
+                return;
+            }
             showAndHideStages("/fxml/registration.fxml", btn_registration);
         });
 
         btnTCP_IP.setOnAction(event -> showAndHideStages("/fxml/connaction_properties.fxml", btnTCP_IP));
     }
 
-    private void connect() {
+    private void connect() throws IOException {
         if (!isConnected) {
             isConnected = true;
             new HandlerCommands(this);
@@ -86,7 +93,13 @@ public class AuthenticationController {
     }
 
     private void authentication() {
-        connect();
+        try {
+            connect();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showConnectionError();
+            return;
+        }
         String login = field_login.getText();
         String password = field_password.getText();
         if (!(hasText(login) && hasText(password))) {
@@ -95,12 +108,11 @@ public class AuthenticationController {
             return;
         }
         commands.authentication(login, password);
-        showAndHideStages("/fxml/main_panel.fxml", btn_info);
     }
 
     public void authenticationResponse(AuthResult authResult) {
         if (authResult.getResult() == AuthResult.Result.OK) {
-          //  showAndHideStages("/fxml/main_panel.fxml", btn_login);
+            showAndHideStages("/fxml/main_panel.fxml", btn_login);
         } else {
             field_login.setText("");
             field_password.setText("");

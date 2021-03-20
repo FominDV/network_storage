@@ -1,8 +1,8 @@
-package ru.fomin;
+package ru.fomin.need;
 
 
-import static ru.fomin.AuthResult.Result.FAIL;
-import static ru.fomin.AuthResult.Result.OK;
+import static ru.fomin.need.AuthResult.Result.FAIL;
+import static ru.fomin.need.AuthResult.Result.OK;
 
 
 public class AuthResult
