@@ -49,20 +49,6 @@ public class RegistrationController {
             clearFields();
             return;
         }
-            switch (commands.registration(login, password)) {
-                case KeyCommands.DONE:
-                    ControllersUtil.showInfoMessage("Registration is successful\nYour login: " + login);
-                    AuthenticationController.setAuthenticationData(login, password);
-                    commands.exitToAuthentication(btn_cancel);
-                    break;
-                case KeyCommands.DUPLICATED_LOGIN:
-                    clearFields();
-                    ControllersUtil.showErrorMessage(String.format("Login %s already exist", login));
-                    break;
-                default:
-                    ControllersUtil.showErrorMessage("ERROR of server");
-            }
-
     }
 
     private void clearFields() {

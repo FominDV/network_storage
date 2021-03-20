@@ -15,9 +15,8 @@ import ru.fomin.services.UserService;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -82,8 +81,11 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
             case GET_FILES_LIST:
                 sendFileList(ctx);
                 break;
-            case DELETE:
-
+            case DELETE_FILE:
+                deleteFile(ctx, request.getId());
+                break;
+            case DELETE_DIR:
+                deleteDirectory(ctx, request.getId());
                 break;
             case DOWNLOAD:
                 upload(ctx, request.getId());
@@ -91,6 +93,33 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
             default:
                 System.out.println(String.format("Unknown response \"%s\" from server", request.getRequest()));
         }
+    }
+
+    private void deleteDirectory(ChannelHandlerContext ctx,Long id) throws IOException {
+        String directoryPathString = DIRECTORY_SERVICE.deleteDirectory(id);
+        Path directoryPath = Paths.get(directoryPathString);
+        Files.walkFileTree(directoryPath, new SimpleFileVisitor<Path>() {
+
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                Files.delete(file);
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                Files.delete(dir);
+                return FileVisitResult.CONTINUE;
+            }
+        });
+        ctx.writeAndFlush(new FileManipulationResponse(FileManipulationResponse.Response.DIRECTORY_REMOVED, directoryPathString.substring(MAIN_PATH.length()), id));
+    }
+
+    private void deleteFile(ChannelHandlerContext ctx,Long id) throws IOException {
+        String fileName = FILE_DATA_SERVICE.deleteFile(id);
+        Path path = Paths.get(currentDirectory.getPath(), fileName);
+        Files.delete(path);
+        ctx.writeAndFlush(new FileManipulationResponse(FileManipulationResponse.Response.FILE_REMOVED, fileName, id));
     }
 
     private void upload(ChannelHandlerContext ctx, Long fileId) {
@@ -104,7 +133,7 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
     private void downloadSmallFile(ChannelHandlerContext ctx, FileDataPackage pack) throws IOException {
         Long directoryId = pack.getDirectoryId();
         String fileName = pack.getFilename();
-        if (isFileExist(ctx, fileName,directoryId)) {
+        if (isFileExist(ctx, fileName, directoryId)) {
             return;
         }
         Path path = Paths.get(DIRECTORY_SERVICE.getDirectoryPathById(directoryId) + File.separator + fileName);
@@ -116,7 +145,7 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
     private void downloadBigFile(ChannelHandlerContext ctx, FileChunkPackage pack) throws IOException {
         String fileName = pack.getFilename();
         Long directoryId = pack.getDirectoryId();
-        if (isFileExist(ctx, fileName,directoryId)) {
+        if (isFileExist(ctx, fileName, directoryId)) {
             return;
         }
         Runnable action = () -> {

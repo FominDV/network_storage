@@ -17,7 +17,7 @@ public class FileManipulationResponse extends DataPackage {
     }
 
     public enum Response {
-        FILE_ALREADY_EXIST, DIR_ALREADY_EXIST, FILE_UPLOADED, DIR_CREATED
+        FILE_ALREADY_EXIST, DIR_ALREADY_EXIST, FILE_UPLOADED, DIR_CREATED, FILE_REMOVED, DIRECTORY_REMOVED
     }
 
     public Response getResponse() {

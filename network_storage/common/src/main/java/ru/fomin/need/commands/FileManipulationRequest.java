@@ -15,7 +15,7 @@ public class FileManipulationRequest extends DataPackage{
     }
 
     public enum Request{
-        DELETE, DOWNLOAD, GET_FILES_LIST
+       DELETE_DIR ,DELETE_FILE, DOWNLOAD, GET_FILES_LIST
     }
 
     public Request getRequest() {

@@ -89,28 +89,21 @@ public class HandlerCommands implements Commands {
     }
 
     @Override
-    public boolean delete(Long id, String type) {
-        try {
-            out.writeUTF(type);
-            out.writeLong(id);
-            return in.readUTF().equals(KeyCommands.DONE) ? true : false;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
+    public void delete(Long id, FileManipulationRequest.Request type) {
+        sendToServer(new FileManipulationRequest(type, id));
     }
 
     //Should return KeyCommands.DONE, KeyCommands.DUPLICATED_LOGIN or any error
     @Override
-    public String registration(String login, String password) {
+    public void registration(String login, String password) {
         try {
             out.writeUTF(KeyCommands.REGISTRATION);
             out.writeUTF(login);
             out.writeUTF(password);
-            return in.readUTF();
+
         } catch (IOException e) {
             e.printStackTrace();
-            return KeyCommands.ERROR;
+
         }
     }
 
@@ -121,16 +114,15 @@ public class HandlerCommands implements Commands {
     }
 
     @Override
-    public String createDir(String dirName) {
+    public void createDir(String dirName) {
         try {
             out.writeUTF(KeyCommands.CREATE_DIRECTORY);
             out.writeUTF(dirName);
-            return in.readUTF();
         } catch (IOException e) {
             showConnectionError();
             closeConnection();
         }
-        return KeyCommands.ERROR;
+
     }
 
     private void closeConnection() {

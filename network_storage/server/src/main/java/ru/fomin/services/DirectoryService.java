@@ -46,4 +46,13 @@ public class DirectoryService {
     public Directory getDirectoryById(Long id){
        return DIRECTORY_DAO.getDirectoryById(id);
     }
+
+    /**Remove directory with all entities of this directory.
+     * @param - id of directory
+     * @return - name of removed directory*/
+    public String deleteDirectory(Long id){
+        Directory directory = DIRECTORY_DAO.getDirectoryById(id);
+        DIRECTORY_DAO.deleteDirectory(directory);
+        return directory.getPath();
+    }
 }

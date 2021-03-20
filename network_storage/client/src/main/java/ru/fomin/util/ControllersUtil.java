@@ -22,25 +22,33 @@ public class ControllersUtil {
     }
 
 
-
     public static boolean isConfirmOverrideFile(String fileName) {
-        int response = JOptionPane.showConfirmDialog(null,
+        return isConfirm(
                 String.format("<html>File with the name \"%s\" already exist.<br>Do you want override this file?</html>", fileName),
-                "Invalid name",
-                JOptionPane.YES_NO_OPTION);
+                "FileExistException");
+    }
+
+    public static boolean isConfirmDeleteDirectory() {
+        return isConfirm(
+                "Are you sure you want to remove directory with all entity?",
+                "Warning");
+    }
+
+    private static boolean isConfirm(String message, String title) {
+        int response = JOptionPane.showConfirmDialog(null, message, title, JOptionPane.YES_NO_OPTION);
         return response == 0 ? true : false;
     }
 
 
     public static void showAndHideStages(String pathOfFXML, Labeled labeled) {
         Platform.runLater(() -> labeled.getScene().getWindow().hide());
-            Stage stage = getStage(pathOfFXML);
-            stage.setResizable(false);
-            stage.setOnCloseRequest(event -> {
-                Platform.exit();
-                System.exit(0);
-            });
-            stage.show();
+        Stage stage = getStage(pathOfFXML);
+        stage.setResizable(false);
+        stage.setOnCloseRequest(event -> {
+            Platform.exit();
+            System.exit(0);
+        });
+        stage.show();
 
 
     }
@@ -49,14 +57,14 @@ public class ControllersUtil {
         JOptionPane.showMessageDialog(null, message, "ERROR", JOptionPane.ERROR_MESSAGE);
     }
 
-   public static void showStage(String pathOfFXML) {
+    public static void showStage(String pathOfFXML) {
         Stage stage = getStage(pathOfFXML);
         stage.setResizable(false);
         stage.setOnCloseRequest(event -> event.consume());
         stage.show();
     }
 
-   public static void hideStage(String pathOfFXML) {
+    public static void hideStage(String pathOfFXML) {
         getStage(pathOfFXML).hide();
     }
 

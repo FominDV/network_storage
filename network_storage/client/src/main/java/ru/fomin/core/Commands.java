@@ -2,6 +2,7 @@ package ru.fomin.core;
 
 import javafx.scene.control.Button;
 import ru.fomin.gui.controllers.MainPanelController;
+import ru.fomin.need.commands.FileManipulationRequest;
 
 import java.io.File;
 
@@ -10,9 +11,9 @@ public interface Commands {
     void exitToAuthentication(Button button);
     void getCurrentDirectoryEntity();
     void download(Long id, String path);
-    boolean delete(Long id, String type);
-    String registration(String login, String password);
+    void delete(Long id, FileManipulationRequest.Request type);
+    void registration(String login, String password);
     void authentication(String login, String password);
-    String createDir(String dirName);
+    void createDir(String dirName);
     void setMainPanelController(MainPanelController mainPanelController);
 }

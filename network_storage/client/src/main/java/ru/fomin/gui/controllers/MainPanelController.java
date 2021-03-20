@@ -1,5 +1,6 @@
 package ru.fomin.gui.controllers;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -11,8 +12,13 @@ import ru.fomin.core.HandlerCommands;
 import ru.fomin.KeyCommands;
 import ru.fomin.need.classes.Constants;
 import ru.fomin.need.commands.CurrentDirectoryEntityList;
+import ru.fomin.need.commands.FileManipulationRequest;
 import ru.fomin.need.commands.FileManipulationResponse;
 
+import javax.swing.text.html.HTMLDocument;
+
+import static ru.fomin.need.commands.FileManipulationRequest.Request.DELETE_DIR;
+import static ru.fomin.need.commands.FileManipulationRequest.Request.DELETE_FILE;
 import static ru.fomin.util.ControllersUtil.*;
 
 import java.io.File;
@@ -104,18 +110,6 @@ public class MainPanelController {
             field_directory_name.setText("");
             return;
         }
-
-        switch (commands.createDir(dirName)) {
-            case KeyCommands.DONE:
-                // updateDirectoryEntity();
-                showInfoMessage(dirName + " was created");
-                break;
-            case KeyCommands.ALREADY_EXIST:
-                showErrorMessage(String.format("The directory %s already exist", dirName));
-                break;
-            default:
-                showConnectionError();
-        }
         field_directory_name.setText("");
     }
 
@@ -126,25 +120,22 @@ public class MainPanelController {
             return;
         }
         Long id;
-        String type;
+        FileManipulationRequest.Request type;
         if (fileMap.containsKey(fileName)) {
-            type = KeyCommands.DELETE_FILE;
+            type = DELETE_FILE;
             id = fileMap.get(fileName);
-        } else {
-            type = KeyCommands.DELETE_DIR;
-            id = directoryMap.get(fileName);
-        }
-        if (commands.delete(id, type)) {
-            observableList.remove(fileName);
-            if (type.equals(KeyCommands.DELETE_FILE)) {
-                fileMap.remove(fileName);
-            } else {
-                directoryMap.remove(fileName);
+        } else if (directoryMap.containsKey(fileName)) {
+            if (!isConfirmDeleteDirectory()) {
+                return;
             }
-            showInfoMessage(String.format("\"%s\" was deleted", fileName));
+            type = DELETE_DIR;
+            id = directoryMap.get(fileName);
         } else {
-            showErrorMessage("ERROR of connection or server\nPlease, try again");
+            showErrorMessage("Fatal error");
+            commands.exitToAuthentication(btn_info);
+            return;
         }
+        commands.delete(id, type);
     }
 
     private void download() {
@@ -158,7 +149,7 @@ public class MainPanelController {
             return;
         }
         File directory = directoryChooser.showDialog(null);
-        if(directory==null){
+        if (directory == null) {
             return;
         }
         if (!directory.isDirectory()) {
@@ -166,7 +157,7 @@ public class MainPanelController {
             return;
         }
         String realFileName = fileName.substring(Constants.getFileNamePrefix().length());
-        if(Files.exists(Paths.get(directory.toString(),realFileName)) && !isConfirmOverrideFile(realFileName)){
+        if (Files.exists(Paths.get(directory.toString(), realFileName)) && !isConfirmOverrideFile(realFileName)) {
             return;
         }
         Long id = fileMap.get(fileName);
@@ -191,7 +182,7 @@ public class MainPanelController {
         fileMap = com.getFileMap();
         directoryMap = com.getDirectoryMap();
         label_current_dir.setText(com.getCurrentDirectory());
-        remoteDirectoryId=com.getCurrentDirectoryId();
+        remoteDirectoryId = com.getCurrentDirectoryId();
 
         //Creating list of all files and nested directories
         List<String> filesList = new ArrayList<>();
@@ -204,8 +195,9 @@ public class MainPanelController {
         if (multipleSelectionModel.getSelectedItem() == null) multipleSelectionModel.select(0);
     }
 
-    public void getFileManipulationResponse(FileManipulationResponse response) {
+    public synchronized void getFileManipulationResponse(FileManipulationResponse response) {
         String fileName = response.getFileName();
+        Long id = response.getId();
         switch (response.getResponse()) {
             case DIR_ALREADY_EXIST:
                 showErrorMessage(String.format("Directory with the name \"%s\" already exist", fileName));
@@ -214,14 +206,38 @@ public class MainPanelController {
                 showErrorMessage(String.format("File with the name \"%s\" already exist", fileName));
                 break;
             case FILE_UPLOADED:
-                fileMap.put(fileName, response.getId());
-                observableList.add(fileName);
+                String fileSpecialName = Constants.getFileNamePrefix() + fileName;
+                fileMap.put(fileSpecialName, id);
+                observableList.add(fileSpecialName);
                 showInfoMessage(String.format("Uploading of file \"%s\" is successful", fileName));
                 break;
             case DIR_CREATED:
-                directoryMap.put(fileName, response.getId());
-                observableList.add(fileName);
+                String directorySpecialName = Constants.getDirectoryNamePrefix() + fileName;
+                directoryMap.put(directorySpecialName, id);
+                observableList.add(directorySpecialName);
                 showInfoMessage(String.format("The directory \"%s\" was created", fileName));
+                break;
+            case FILE_REMOVED:
+                for (Map.Entry<String, Long> entry : fileMap.entrySet()) {
+                    if (entry.getValue().equals(id)) {
+                        String removingFileName = entry.getKey();
+                        fileMap.remove(removingFileName);
+                        observableList.remove(removingFileName);
+                        break;
+                    }
+                }
+                showInfoMessage(String.format("The file \"%s\" was removed", fileName));
+                break;
+            case DIRECTORY_REMOVED:
+                for (Map.Entry<String, Long> entry : directoryMap.entrySet()) {
+                    if (entry.getValue().equals(id)) {
+                        String removingFileName = entry.getKey();
+                        directoryMap.remove(removingFileName);
+                        observableList.remove(removingFileName);
+                        break;
+                    }
+                }
+                showInfoMessage(String.format("The directory \"%s\" with all that it contains was removed", fileName));
                 break;
             default:
                 showErrorMessage(String.format("Unknown response \"%s\" from server", response.getResponse()));
