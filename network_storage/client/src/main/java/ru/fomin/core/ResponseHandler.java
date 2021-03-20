@@ -1,6 +1,5 @@
 package ru.fomin.core;
 
-import io.netty.channel.ChannelHandlerContext;
 import javafx.application.Platform;
 import ru.fomin.need.classes.FileChunkDownloader;
 import ru.fomin.need.commands.*;
@@ -42,7 +41,7 @@ public class ResponseHandler implements Runnable {
         Platform.runLater(() -> {
             if (response instanceof AuthResult) {
                 AuthResult authResult = (AuthResult) response;
-                handlerCommands.authenticationResponse(authResult);
+                handlerCommands.handleResponse(authResult);
             } else if (response instanceof CurrentDirectoryEntityList) {
                 CurrentDirectoryEntityList com = (CurrentDirectoryEntityList) response;
                 handlerCommands.updateDirectoryEntity(com);

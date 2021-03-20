@@ -1,45 +1,34 @@
 package ru.fomin.need.commands;
 
 
-import static ru.fomin.need.commands.AuthResult.Result.FAIL;
-import static ru.fomin.need.commands.AuthResult.Result.OK;
+import static ru.fomin.need.commands.AuthResult.Result.FAIL_AUTH;
+import static ru.fomin.need.commands.AuthResult.Result.OK_AUTH;
 
 
 public class AuthResult
-		extends DataPackage
-{
+        extends DataPackage {
 
-  private final Result result;
+    private final Result result;
+    private String login;
 
+    public AuthResult(Result result) {
+        this.result = result;
+    }
 
-  private AuthResult(Result result)
-  {
-	this.result = result;
-  }
+    public AuthResult(Result result, String login) {
+        this(result);
+        this.login = login;
+    }
 
+    public enum Result {
+        FAIL_AUTH, OK_AUTH, FAIL_REG, OK_REG
+    }
 
-  public Result getResult()
-  {
-	return result;
-  }
+    public Result getResult() {
+        return result;
+    }
 
-
-  public static AuthResult ok()
-  {
-	return new AuthResult(OK);
-  }
-
-
-  public static AuthResult fail()
-  {
-	return new AuthResult(FAIL);
-  }
-
-
-  public enum Result
-  {
-	FAIL,
-	OK
-  }
-
+    public String getLogin() {
+        return login;
+    }
 }

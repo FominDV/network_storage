@@ -109,8 +109,8 @@ public class AuthenticationController {
         commands.authentication(login, password);
     }
 
-    public void authenticationResponse(AuthResult authResult) {
-        if (authResult.getResult() == AuthResult.Result.OK) {
+    public void handleResponse(AuthResult.Result result) {
+        if (result == AuthResult.Result.OK_AUTH) {
             showAndHideStages("/fxml/main_panel.fxml", btn_login);
         } else {
             field_login.setText("");

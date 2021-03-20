@@ -2,6 +2,8 @@ package ru.fomin.core;
 
 import javafx.scene.control.Button;
 import ru.fomin.gui.controllers.MainPanelController;
+import ru.fomin.gui.controllers.RegistrationController;
+import ru.fomin.gui.controllers.UpdatePasswordController;
 import ru.fomin.need.commands.FileManipulationRequest;
 
 import java.io.File;
@@ -16,4 +18,7 @@ public interface Commands {
     void authentication(String login, String password);
     void createDir(String dirName);
     void setMainPanelController(MainPanelController mainPanelController);
+    void setRegistrationController(RegistrationController registrationController);
+    void setUpdatePasswordController(UpdatePasswordController updatePasswordController);
+
 }

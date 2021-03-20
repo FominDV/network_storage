@@ -34,7 +34,6 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
     private static final FileDataService FILE_DATA_SERVICE = new FileDataService();
     private FileTransmitter fileTransmitter;
     private final ExecutorService executorService = newSingleThreadExecutor();
-
     private static final String MAIN_PATH = "main_repository";
     private Directory currentDirectory;
     private FileChunkDownloader fileChunkDownloader;
@@ -51,24 +50,10 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
         try {
             if (msg instanceof FileManipulationRequest) {
                 requestHandle(ctx, (FileManipulationRequest) msg);
-                return;
-            }
-
-
-//            if (msg instanceof DeleteFilesCommand) {
-//                deleteFiles((DeleteFilesCommand) msg);
-//                sendFileList(ctx);
-//                return;
-//            }
-//
-            if (msg instanceof FileDataPackage) {
+            }else if (msg instanceof FileDataPackage) {
                 downloadSmallFile(ctx, (FileDataPackage) msg);
-                return;
-            }
-
-            if (msg instanceof FileChunkPackage) {
+            }else if (msg instanceof FileChunkPackage) {
                 downloadBigFile(ctx, (FileChunkPackage) msg);
-                return;
             }
         } finally {
             ReferenceCountUtil.release(msg);
@@ -204,4 +189,7 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
         ctx.writeAndFlush(new CurrentDirectoryEntityList(fileMap, directoryMap, currentDirectoryName, currentDirectory.getId()));
     }
 
+    public static String getMainPath() {
+        return MAIN_PATH;
+    }
 }

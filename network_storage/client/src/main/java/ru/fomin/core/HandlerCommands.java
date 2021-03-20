@@ -8,6 +8,8 @@ import ru.fomin.gui.controllers.AuthenticationController;
 
 import javafx.scene.control.Button;
 import ru.fomin.gui.controllers.MainPanelController;
+import ru.fomin.gui.controllers.RegistrationController;
+import ru.fomin.gui.controllers.UpdatePasswordController;
 import ru.fomin.need.commands.*;
 
 import static java.util.concurrent.Executors.newFixedThreadPool;
@@ -29,6 +31,8 @@ public class HandlerCommands implements Commands {
 
     private AuthenticationController authenticationController;
     private MainPanelController mainPanelController;
+    private RegistrationController registrationController;
+    private UpdatePasswordController updatePasswordController;
 
     private ObjectEncoderOutputStream out;
     private ObjectDecoderInputStream in;
@@ -96,20 +100,12 @@ public class HandlerCommands implements Commands {
     //Should return KeyCommands.DONE, KeyCommands.DUPLICATED_LOGIN or any error
     @Override
     public void registration(String login, String password) {
-        try {
-            out.writeUTF(KeyCommands.REGISTRATION);
-            out.writeUTF(login);
-            out.writeUTF(password);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-
-        }
+        sendToServer(new AuthRequest(login, password, AuthRequest.RequestType.REGISTRATION));
     }
 
     @Override
     public void authentication(String login, String password) {
-        DataPackage com = new AuthCommand(login.trim(), password.trim());
+        DataPackage com = new AuthRequest(login.trim(), password.trim(), AuthRequest.RequestType.AUTH);
         sendToServer(com);
     }
 
@@ -167,7 +163,6 @@ public class HandlerCommands implements Commands {
     }
 
 
-
     public DataPackage getResponseFromServer() {
         try {
             Object obj = in.readObject();
@@ -179,8 +174,13 @@ public class HandlerCommands implements Commands {
         return null;
     }
 
-    public void authenticationResponse(AuthResult authResult) {
-        authenticationController.authenticationResponse(authResult);
+    public void handleResponse(AuthResult authResult) {
+        AuthResult.Result result=authResult.getResult();
+        if (result == AuthResult.Result.FAIL_AUTH || result == AuthResult.Result.OK_AUTH) {
+            authenticationController.handleResponse(result);
+        } else {
+            registrationController.handleResponse(result, authResult.getLogin());
+        }
     }
 
     public void updateDirectoryEntity(CurrentDirectoryEntityList com) {
@@ -196,11 +196,21 @@ public class HandlerCommands implements Commands {
         mainPanelController.getFileManipulationResponse(response);
     }
 
-    public void downloadingSuccessful(String filename){
-       showInfoMessage(String.format("Downloading file \"%s\" is successfully",filename));
+    public void downloadingSuccessful(String filename) {
+        showInfoMessage(String.format("Downloading file \"%s\" is successfully", filename));
     }
 
     public void downloadingError(String fileName) {
-        showErrorMessage(String.format("Downloading file \"%s\" is failed",fileName));
+        showErrorMessage(String.format("Downloading file \"%s\" is failed", fileName));
+    }
+
+    @Override
+    public void setRegistrationController(RegistrationController registrationController) {
+        this.registrationController = registrationController;
+    }
+
+    @Override
+    public void setUpdatePasswordController(UpdatePasswordController updatePasswordController) {
+        this.updatePasswordController = updatePasswordController;
     }
 }
