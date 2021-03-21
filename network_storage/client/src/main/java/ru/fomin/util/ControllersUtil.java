@@ -119,6 +119,6 @@ public class ControllersUtil {
     }
 
     public static void showConnectionError() {
-        showErrorMessage("Connection was closed");
+        showErrorMessage("Unable to connect to the server");
     }
 }

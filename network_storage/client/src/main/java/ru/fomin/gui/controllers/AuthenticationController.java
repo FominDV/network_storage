@@ -55,29 +55,29 @@ public class AuthenticationController {
         btn_info.setOnAction(event -> showDeveloperInfo());
 
         btn_registration.setOnAction(event -> {
-            connect();
-            showAndHideStages("/fxml/registration.fxml", btn_registration);
+            if (connect()) {
+                showAndHideStages("/fxml/registration.fxml", btn_registration);
+            }
         });
 
         btnTCP_IP.setOnAction(event -> showAndHideStages("/fxml/connaction_properties.fxml", btnTCP_IP));
-
     }
 
-    private void connect() {
+    private boolean connect() {
         if (!isConnected) {
             isConnected = true;
             try {
                 new HandlerCommands();
             } catch (IOException e) {
                 isConnected = false;
-                e.printStackTrace();
+                //e.printStackTrace();
                 showConnectionError();
-                return;
+                return false;
             }
-
         }
         commands = HandlerCommands.getCommands();
         commands.setAuthenticationController(this);
+        return true;
     }
 
     public static void changeIsConnected() {
@@ -98,7 +98,9 @@ public class AuthenticationController {
     }
 
     private void authentication() {
-        connect();
+        if (!connect()) {
+            return;
+        }
         String login = field_login.getText();
         String password = field_password.getText();
         if (!(hasText(login) && hasText(password))) {
@@ -122,5 +124,4 @@ public class AuthenticationController {
     public static boolean isConnected() {
         return isConnected;
     }
-
 }

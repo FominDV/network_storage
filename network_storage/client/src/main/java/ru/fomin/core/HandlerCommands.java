@@ -173,16 +173,19 @@ public class HandlerCommands implements Commands {
         if (AuthenticationController.isConnected()) {
             closeConnection();
             if (mainPanelController != null) {
-                Platform.runLater(() ->hideWindow(mainPanelController.getLabeled()));
+                Platform.runLater(() -> hideWindow(mainPanelController.getLabeled()));
             }
             if (registrationController != null) {
-                Platform.runLater(() ->hideWindow(registrationController.getLabeled()));
+                Platform.runLater(() -> hideWindow(registrationController.getLabeled()));
             }
             if (updatePasswordController != null) {
-                Platform.runLater(() ->hideWindow(updatePasswordController.getLabeled()));
+                Platform.runLater(() -> hideWindow(updatePasswordController.getLabeled()));
             }
-            Platform.runLater(() ->showStage("/fxml/authentication.fxml"));
-          //  showConnectionError();
+            Platform.runLater(() -> {
+                showStage("/fxml/authentication.fxml");
+                showErrorMessage("Connection was lost");
+            });
+
         }
     }
 
@@ -228,6 +231,6 @@ public class HandlerCommands implements Commands {
 
     @Override
     public void setAuthenticationController(AuthenticationController authenticationController) {
-        this.authenticationController=authenticationController;
+        this.authenticationController = authenticationController;
     }
 }
