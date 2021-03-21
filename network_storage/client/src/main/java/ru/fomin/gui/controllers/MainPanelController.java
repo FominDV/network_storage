@@ -13,6 +13,7 @@ import ru.fomin.need.commands.CreatingAndUpdatingManipulationCommand;
 import ru.fomin.need.commands.CurrentDirectoryEntityList;
 import ru.fomin.need.commands.FileManipulationRequest;
 import ru.fomin.need.commands.FileManipulationResponse;
+import ru.fomin.util.ControllersUtil;
 
 import static ru.fomin.need.commands.FileManipulationRequest.Request.DELETE_DIR;
 import static ru.fomin.need.commands.FileManipulationRequest.Request.DELETE_FILE;
@@ -306,5 +307,9 @@ public class MainPanelController {
                 break;
             }
         }
+    }
+
+    public Labeled getLabeled() {
+        return btn_info;
     }
 }

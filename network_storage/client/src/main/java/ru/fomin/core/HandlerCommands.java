@@ -3,6 +3,7 @@ package ru.fomin.core;
 import io.netty.handler.codec.serialization.ObjectDecoderInputStream;
 import io.netty.handler.codec.serialization.ObjectEncoderOutputStream;
 import javafx.application.Platform;
+import javafx.scene.control.Labeled;
 import ru.fomin.gui.controllers.AuthenticationController;
 
 import javafx.scene.control.Button;
@@ -41,7 +42,7 @@ public class HandlerCommands implements Commands {
     static int port = 8189;
     private static final int MAX_OBJ_SIZE = 10 * 1024 * 1024;
 
-    public HandlerCommands(AuthenticationController authenticationController) throws IOException {
+    public HandlerCommands() throws IOException {
         this.authenticationController = authenticationController;
         executorService = newFixedThreadPool(2);
         socket = new Socket();
@@ -58,7 +59,6 @@ public class HandlerCommands implements Commands {
             fileTransmitter = new FileTransmitter(this);
             executorService.execute(fileTransmitter);
         } catch (IOException e) {
-            authenticationController.changeIsConnected();
             throw new IOException();
         }
     }
@@ -71,10 +71,7 @@ public class HandlerCommands implements Commands {
     @Override
     public void exitToAuthentication(Button button) {
         closeConnection();
-        authenticationController.changeIsConnected();
-        Platform.runLater(() -> {
-            showAndHideStages("/fxml/authentication.fxml", button);
-        });
+        Platform.runLater(() -> showAndHideStages("/fxml/authentication.fxml", button));
     }
 
     @Override
@@ -111,15 +108,16 @@ public class HandlerCommands implements Commands {
 
     @Override
     public void createDir(String dirName, Long remoteDirectoryId) {
-        sendToServer(new CreatingAndUpdatingManipulationCommand(dirName,remoteDirectoryId, CreatingAndUpdatingManipulationCommand.Type.CREATE));
+        sendToServer(new CreatingAndUpdatingManipulationCommand(dirName, remoteDirectoryId, CreatingAndUpdatingManipulationCommand.Type.CREATE));
     }
 
     @Override
     public void rename(String dirName, Long remoteDirectoryId, CreatingAndUpdatingManipulationCommand.Type type) {
-        sendToServer(new CreatingAndUpdatingManipulationCommand(dirName,remoteDirectoryId, type));
+        sendToServer(new CreatingAndUpdatingManipulationCommand(dirName, remoteDirectoryId, type));
     }
 
     private void closeConnection() {
+        AuthenticationController.changeIsConnected();
         try {
             executorService.shutdownNow();
             in.close();
@@ -156,7 +154,7 @@ public class HandlerCommands implements Commands {
             out.writeObject(data);
             out.flush();
         } catch (IOException e) {
-            e.printStackTrace();
+            exitOnFatalConnectionError();
         }
     }
 
@@ -166,14 +164,30 @@ public class HandlerCommands implements Commands {
             Object obj = in.readObject();
             return (DataPackage) obj;
         } catch (IOException | ClassNotFoundException e) {
-            authenticationController.changeIsConnected();
-            closeConnection();
+            exitOnFatalConnectionError();
         }
         return null;
     }
 
+    private void exitOnFatalConnectionError() {
+        if (AuthenticationController.isConnected()) {
+            closeConnection();
+            if (mainPanelController != null) {
+                Platform.runLater(() ->hideWindow(mainPanelController.getLabeled()));
+            }
+            if (registrationController != null) {
+                Platform.runLater(() ->hideWindow(registrationController.getLabeled()));
+            }
+            if (updatePasswordController != null) {
+                Platform.runLater(() ->hideWindow(updatePasswordController.getLabeled()));
+            }
+            Platform.runLater(() ->showStage("/fxml/authentication.fxml"));
+          //  showConnectionError();
+        }
+    }
+
     public void handleResponse(AuthResult authResult) {
-        AuthResult.Result result=authResult.getResult();
+        AuthResult.Result result = authResult.getResult();
         if (result == AuthResult.Result.FAIL_AUTH || result == AuthResult.Result.OK_AUTH) {
             authenticationController.handleResponse(result);
         } else {
@@ -210,5 +224,10 @@ public class HandlerCommands implements Commands {
     @Override
     public void setUpdatePasswordController(UpdatePasswordController updatePasswordController) {
         this.updatePasswordController = updatePasswordController;
+    }
+
+    @Override
+    public void setAuthenticationController(AuthenticationController authenticationController) {
+        this.authenticationController=authenticationController;
     }
 }

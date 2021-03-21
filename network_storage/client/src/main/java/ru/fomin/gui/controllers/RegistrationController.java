@@ -2,6 +2,7 @@ package ru.fomin.gui.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Labeled;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import ru.fomin.core.Commands;
@@ -13,7 +14,6 @@ public class RegistrationController {
 
     private boolean isWaitingResponse;
     private String currentPassword="";
-
     private Commands commands;
 
     @FXML
@@ -75,6 +75,10 @@ public class RegistrationController {
             ControllersUtil.showErrorMessage(String.format("Registration is failed\nLogin \"%s\" already exist", login));
             isWaitingResponse = false;
         }
+    }
+
+    public Labeled getLabeled() {
+        return btn_info;
     }
 }
 

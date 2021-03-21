@@ -15,7 +15,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class AuthenticationController {
-    private boolean isConnected = false;
+
+    private static boolean isConnected;
     private static String login = "Dmitriy777";
     private static String password = "Dmitriy777";
     private Commands commands;
@@ -54,28 +55,32 @@ public class AuthenticationController {
         btn_info.setOnAction(event -> showDeveloperInfo());
 
         btn_registration.setOnAction(event -> {
-            try {
-                connect();
-            } catch (IOException e) {
-                e.printStackTrace();
-                showConnectionError();
-                return;
-            }
+            connect();
             showAndHideStages("/fxml/registration.fxml", btn_registration);
         });
 
         btnTCP_IP.setOnAction(event -> showAndHideStages("/fxml/connaction_properties.fxml", btnTCP_IP));
+
     }
 
-    private void connect() throws IOException {
+    private void connect() {
         if (!isConnected) {
             isConnected = true;
-            new HandlerCommands(this);
-            commands = HandlerCommands.getCommands();
+            try {
+                new HandlerCommands();
+            } catch (IOException e) {
+                isConnected = false;
+                e.printStackTrace();
+                showConnectionError();
+                return;
+            }
+
         }
+        commands = HandlerCommands.getCommands();
+        commands.setAuthenticationController(this);
     }
 
-    public void changeIsConnected() {
+    public static void changeIsConnected() {
         isConnected = isConnected ? false : true;
     }
 
@@ -93,12 +98,7 @@ public class AuthenticationController {
     }
 
     private void authentication() {
-        try {
-            connect();
-        } catch (IOException e) {
-            showConnectionError();
-            return;
-        }
+        connect();
         String login = field_login.getText();
         String password = field_password.getText();
         if (!(hasText(login) && hasText(password))) {
@@ -119,7 +119,8 @@ public class AuthenticationController {
         }
     }
 
-    public  Button getElement(){
-        return btn_info;
+    public static boolean isConnected() {
+        return isConnected;
     }
+
 }

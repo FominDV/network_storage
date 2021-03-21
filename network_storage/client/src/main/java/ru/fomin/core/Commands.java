@@ -1,6 +1,7 @@
 package ru.fomin.core;
 
 import javafx.scene.control.Button;
+import ru.fomin.gui.controllers.AuthenticationController;
 import ru.fomin.gui.controllers.MainPanelController;
 import ru.fomin.gui.controllers.RegistrationController;
 import ru.fomin.gui.controllers.UpdatePasswordController;
@@ -22,5 +23,5 @@ public interface Commands {
     void setMainPanelController(MainPanelController mainPanelController);
     void setRegistrationController(RegistrationController registrationController);
     void setUpdatePasswordController(UpdatePasswordController updatePasswordController);
-
+    void setAuthenticationController(AuthenticationController authenticationController);
 }

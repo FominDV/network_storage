@@ -41,34 +41,30 @@ public class ControllersUtil {
 
 
     public static void showAndHideStages(String pathOfFXML, Labeled labeled) {
-        Platform.runLater(() -> labeled.getScene().getWindow().hide());
-        Stage stage = getStage(pathOfFXML);
-        stage.setResizable(false);
-        stage.setOnCloseRequest(event -> {
-            Platform.exit();
-            System.exit(0);
-        });
-        stage.show();
-
-
+        hideWindow(labeled);
+        showStage(pathOfFXML);
     }
+
+    public static void hideWindow(Labeled labeled){
+        Platform.runLater(() -> labeled.getScene().getWindow().hide());
+    }
+
 
     public static void showErrorMessage(String message) {
         JOptionPane.showMessageDialog(null, message, "ERROR", JOptionPane.ERROR_MESSAGE);
     }
 
     public static void showStage(String pathOfFXML) {
-        Stage stage = getStage(pathOfFXML);
-        stage.setResizable(false);
-        stage.setOnCloseRequest(event -> event.consume());
-        stage.show();
+        Platform.runLater(() -> {
+            Stage stage = getStage(pathOfFXML);
+            stage.setResizable(false);
+            stage.setOnCloseRequest(event -> {
+                Platform.exit();
+                System.exit(0);
+            });
+            stage.show();
+        });
     }
-
-    public static void hideStage(String pathOfFXML) {
-        getStage(pathOfFXML).hide();
-    }
-
-    public static void closeStage(String pathOfFXML){getStage(pathOfFXML).close();}
 
     public static Stage getStage(String pathOfFXML) {
         FXMLLoader loader = new FXMLLoader();
@@ -123,6 +119,6 @@ public class ControllersUtil {
     }
 
     public static void showConnectionError() {
-        showErrorMessage("Error of server");
+        showErrorMessage("Connection was closed");
     }
 }

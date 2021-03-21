@@ -44,9 +44,9 @@ public class FileTransmitter implements Runnable {
                 fileDestinationMap.remove(file);
             }
         } catch (InterruptedException e) {
-            e.printStackTrace();
+
         } catch (Exception e) {
-            e.printStackTrace();
+
         }
 
     }
