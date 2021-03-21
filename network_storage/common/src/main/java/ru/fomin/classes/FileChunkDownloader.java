@@ -11,7 +11,6 @@ import java.nio.file.Path;
 
 public class FileChunkDownloader {
 
-    private Path directory;
     private String filename;
     private OutputStream out;
 

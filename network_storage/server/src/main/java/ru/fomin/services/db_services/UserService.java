@@ -1,10 +1,8 @@
-package ru.fomin.services;
+package ru.fomin.services.db_services;
 
 import ru.fomin.dao.UserDao;
 import ru.fomin.entities.Directory;
 import ru.fomin.entities.User;
-
-import java.nio.file.Paths;
 
 public class UserService {
 

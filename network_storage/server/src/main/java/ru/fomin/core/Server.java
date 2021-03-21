@@ -23,7 +23,7 @@ public class Server
   private EventLoopGroup mainGroup;
   private EventLoopGroup workerGroup;
 
-  static final int PORT = 8189;
+ private static final int PORT = 8189;
  public static final String STORAGE_DIR = "server/server_storage";
 
 
@@ -62,12 +62,10 @@ public class Server
 
 
 
-  private static class SocketChannelInitializer
-		  extends ChannelInitializer<SocketChannel>
+  private static class SocketChannelInitializer extends ChannelInitializer<SocketChannel>
   {
 
 	private static final int MAX_OBJ_SIZE = 50 * 1024 * 1024;
-
 
 	@Override
 	protected void initChannel(SocketChannel ch)

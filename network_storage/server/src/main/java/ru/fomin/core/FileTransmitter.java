@@ -10,19 +10,19 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.PriorityBlockingQueue;
 
-public class FileTransmitter implements Runnable{
+import static java.lang.Thread.currentThread;
+
+public class FileTransmitter implements Runnable {
 
     private final ChannelHandlerContext context;
     private final PriorityBlockingQueue<File> queue;
     private final Map<File, Long> fileDestinationMap;
     private final FileSendOptimizer fileSendOptimizer;
-   private boolean isActive = true;
 
     private static final int MAX_COUNT = 100;
 
-
     public FileTransmitter(ChannelHandlerContext context) {
-        this.context=context;
+        this.context = context;
         queue = new PriorityBlockingQueue<>(MAX_COUNT, Comparator.comparingLong(File::length));
         fileDestinationMap = new HashMap<>();
         fileSendOptimizer = new FileSendOptimizer();
@@ -31,7 +31,7 @@ public class FileTransmitter implements Runnable{
     @Override
     public void run() {
         try {
-            while (isActive) {
+            while (!currentThread().isInterrupted()) {
                 if (queue.size() == 0) {
                     Thread.sleep(1000);
                     continue;
@@ -52,9 +52,5 @@ public class FileTransmitter implements Runnable{
     public void addFile(File file, Long specialId) {
         queue.put(file);
         fileDestinationMap.put(file, specialId);
-    }
-
-    public void disable(){
-        isActive = false;
     }
 }
