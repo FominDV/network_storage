@@ -35,7 +35,7 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
     private static final DirectoryService DIRECTORY_SERVICE = new DirectoryService();
     private static final FileDataService FILE_DATA_SERVICE = new FileDataService();
     private FileTransmitter fileTransmitter;
-    private final ExecutorService executorService = newSingleThreadExecutor();
+    private Thread fileTransmitterThread;
     private static final String MAIN_PATH = "main_repository";
     private Directory currentDirectory;
     private FileChunkDownloader fileChunkDownloader;
@@ -154,7 +154,9 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
     private void upload(ChannelHandlerContext ctx, Long fileId) {
         if (fileTransmitter == null) {
             fileTransmitter = new FileTransmitter(ctx);
-            executorService.execute(fileTransmitter);
+            fileTransmitterThread = new Thread(fileTransmitter);
+            fileTransmitterThread.setDaemon(true);
+            fileTransmitterThread.start();
         }
         fileTransmitter.addFile(FILE_DATA_SERVICE.getFileById(fileId), fileId);
     }
