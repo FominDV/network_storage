@@ -1,6 +1,5 @@
 package ru.fomin.gui.controllers;
 
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -10,6 +9,7 @@ import javafx.stage.FileChooser;
 import ru.fomin.core.Commands;
 import ru.fomin.core.HandlerCommands;
 import ru.fomin.need.classes.Constants;
+import ru.fomin.need.commands.CreatingAndUpdatingManipulationCommand;
 import ru.fomin.need.commands.CurrentDirectoryEntityList;
 import ru.fomin.need.commands.FileManipulationRequest;
 import ru.fomin.need.commands.FileManipulationResponse;
@@ -44,7 +44,7 @@ public class MainPanelController {
     private Button btn_exit;
 
     @FXML
-    private TextField field_directory_name;
+    private TextField field_resource_name;
 
     @FXML
     private Button btn_change_password;
@@ -74,6 +74,9 @@ public class MainPanelController {
     private Label label_current_dir;
 
     @FXML
+    private Button btn_rename;
+
+    @FXML
     void initialize() {
         commands = HandlerCommands.getCommands();
 
@@ -91,19 +94,65 @@ public class MainPanelController {
 
         btn_create_dir.setOnAction(event -> createDirectory());
 
+        btn_rename.setOnAction(event -> rename());
+
         commands.setMainPanelController(this);
         commands.getCurrentDirectoryEntity();
     }
 
+    private void rename() {
+        String resourceName = multipleSelectionModel.getSelectedItem();
+        if (!hasText(resourceName)) {
+            showErrorMessage("Resource for renaming was not chosen");
+            return;
+        }
+        String newName = field_resource_name.getText();
+        if (!hasText(newName)) {
+            showErrorMessage("You should insert new name of resource into the filed");
+            field_resource_name.setText("");
+            return;
+        }
+
+        Long id;
+        CreatingAndUpdatingManipulationCommand.Type type;
+        //Searching resource
+        if (fileMap.containsKey(resourceName)) {
+            //Verify duplicate names
+            if (fileMap.containsKey(Constants.getFileNamePrefix() + newName)) {
+                showErrorMessage(String.format("File with the name \"%s\" already exist", newName));
+                field_resource_name.setText("");
+                return;
+            }
+            type = CreatingAndUpdatingManipulationCommand.Type.RENAME_FILE;
+            id = fileMap.get(resourceName);
+        } else if (directoryMap.containsKey(resourceName)) {
+            //Verify duplicate names
+            if (directoryMap.containsKey(Constants.getDirectoryNamePrefix() + newName)) {
+                showErrorMessage(String.format("Directory with the name \"%s\" already exist", newName));
+                field_resource_name.setText("");
+                return;
+            }
+            type = CreatingAndUpdatingManipulationCommand.Type.RENAME_DIR;
+            id = directoryMap.get(resourceName);
+        } else {
+            showErrorMessage("Fatal error");
+            commands.exitToAuthentication(btn_info);
+            return;
+        }
+
+        commands.rename(newName, id, type);
+        field_resource_name.setText("");
+    }
+
     private void createDirectory() {
-        String dirName = field_directory_name.getText();
+        String dirName = field_resource_name.getText();
         if (!hasText(dirName)) {
             showErrorMessage("You should insert name of new directory into the filed");
-            field_directory_name.setText("");
+            field_resource_name.setText("");
             return;
         }
         commands.createDir(dirName, remoteDirectoryId);
-        field_directory_name.setText("");
+        field_resource_name.setText("");
     }
 
     private void delete() {
@@ -232,9 +281,30 @@ public class MainPanelController {
                 }
                 showInfoMessage(String.format("The directory \"%s\" with all that it contains was removed", fileName));
                 break;
+            case RENAME_DIR:
+                handleRenameResponse(directoryMap, "directory", id, fileName, Constants.getDirectoryNamePrefix());
+                break;
+            case RENAME_FILE:
+                handleRenameResponse(fileMap, "file", id, fileName, Constants.getFileNamePrefix());
+                break;
             default:
                 showErrorMessage(String.format("Unknown response \"%s\" from server", response.getResponse()));
                 commands.exitToAuthentication(btn_info);
+        }
+    }
+
+    private void handleRenameResponse(Map<String, Long> map, String resource, Long id, String newName, String prefix) {
+        for (Map.Entry<String, Long> entry : map.entrySet()) {
+            if (entry.getValue().equals(id)) {
+                String oldName = entry.getKey();
+                String newSpecialName = prefix + newName;
+                map.remove(oldName);
+                map.put(newSpecialName, id);
+                observableList.remove(oldName);
+                observableList.add(newSpecialName);
+                showInfoMessage(String.format("The %s \"%s\" was renamed to \"%s\"", resource, oldName, newName));
+                break;
+            }
         }
     }
 }

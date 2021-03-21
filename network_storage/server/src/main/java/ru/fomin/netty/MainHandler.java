@@ -4,7 +4,6 @@ package ru.fomin.netty;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;
-import ru.fomin.KeyCommands;
 import ru.fomin.entities.Directory;
 import ru.fomin.entities.FileData;
 import ru.fomin.need.classes.Constants;
@@ -53,12 +52,12 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
         try {
             if (msg instanceof FileManipulationRequest) {
                 requestFileHandle(ctx, (FileManipulationRequest) msg);
-            }else if (msg instanceof FileDataPackage) {
+            } else if (msg instanceof FileDataPackage) {
                 downloadSmallFile(ctx, (FileDataPackage) msg);
-            }else if (msg instanceof FileChunkPackage) {
+            } else if (msg instanceof FileChunkPackage) {
                 downloadBigFile(ctx, (FileChunkPackage) msg);
-            } else if(msg instanceof DirectoryManipulationCommand){
-                requestDirectoryHandle(ctx, (DirectoryManipulationCommand)msg);
+            } else if (msg instanceof CreatingAndUpdatingManipulationCommand) {
+                requestDirectoryHandle(ctx, (CreatingAndUpdatingManipulationCommand) msg);
             }
         } finally {
             ReferenceCountUtil.release(msg);
@@ -75,21 +74,31 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
         ctx.close();
     }
 
-    private void requestDirectoryHandle(ChannelHandlerContext ctx, DirectoryManipulationCommand request) throws IOException {
-        String newDirectoryName=request.getNewDirectoryName();
-        Long newDirectoryId;
-        switch (request.getType()){
+    private void requestDirectoryHandle(ChannelHandlerContext ctx, CreatingAndUpdatingManipulationCommand request) throws IOException {
+        String newName = request.getNewName();
+        Long id = request.getId();
+        switch (request.getType()) {
             case CREATE:
-                String newDirectory = currentDirectory.getPath() + File.separator + newDirectoryName;
-                if ((newDirectoryId=DIRECTORY_SERVICE.createDirectory(currentDirectory, newDirectory))!=-1) {
+                Long newDirectoryId;
+                String newDirectory = DIRECTORY_SERVICE.getDirectoryById(id).getPath() + File.separator + newName;
+                if ((newDirectoryId = DIRECTORY_SERVICE.createDirectory(currentDirectory, newDirectory)) != -1) {
                     Files.createDirectory(Paths.get(newDirectory));
-                    ctx.writeAndFlush(new FileManipulationResponse(FileManipulationResponse.Response.DIR_CREATED,newDirectoryName,newDirectoryId));
+                    ctx.writeAndFlush(new FileManipulationResponse(FileManipulationResponse.Response.DIR_CREATED, newName, newDirectoryId));
                 } else {
-                    ctx.writeAndFlush(new FileManipulationResponse(FileManipulationResponse.Response.DIR_ALREADY_EXIST, newDirectoryName));
+                    ctx.writeAndFlush(new FileManipulationResponse(FileManipulationResponse.Response.DIR_ALREADY_EXIST, newName));
                 }
                 break;
-            case RENAME:
-
+            case RENAME_DIR:
+                Path currentDirectoryPath = DIRECTORY_SERVICE.getDirectoryPathById(id);
+                Path newDirectoryPath = Paths.get(DIRECTORY_SERVICE.renameDirectory(id, newName));
+                Files.move(currentDirectoryPath, newDirectoryPath);
+                ctx.writeAndFlush(new FileManipulationResponse(FileManipulationResponse.Response.RENAME_DIR, newName, id));
+                break;
+            case RENAME_FILE:
+                Path currentFilePath = FILE_DATA_SERVICE.getFilePathById(id);
+                Path newFilePath = FILE_DATA_SERVICE.renameFileData(id, newName);
+                Files.move(currentFilePath, newFilePath);
+                ctx.writeAndFlush(new FileManipulationResponse(FileManipulationResponse.Response.RENAME_FILE, newName, id));
                 break;
             default:
                 System.out.println(String.format("Unknown response \"%s\" from server", request.getType()));
@@ -115,7 +124,7 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
         }
     }
 
-    private void deleteDirectory(ChannelHandlerContext ctx,Long id) throws IOException {
+    private void deleteDirectory(ChannelHandlerContext ctx, Long id) throws IOException {
         String directoryPathString = DIRECTORY_SERVICE.deleteDirectory(id);
         Path directoryPath = Paths.get(directoryPathString);
         Files.walkFileTree(directoryPath, new SimpleFileVisitor<Path>() {
@@ -135,7 +144,7 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
         ctx.writeAndFlush(new FileManipulationResponse(FileManipulationResponse.Response.DIRECTORY_REMOVED, directoryPathString.substring(MAIN_PATH.length()), id));
     }
 
-    private void deleteFile(ChannelHandlerContext ctx,Long id) throws IOException {
+    private void deleteFile(ChannelHandlerContext ctx, Long id) throws IOException {
         String fileName = FILE_DATA_SERVICE.deleteFile(id);
         Path path = Paths.get(currentDirectory.getPath(), fileName);
         Files.delete(path);

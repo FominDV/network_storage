@@ -59,10 +59,18 @@ public class DirectoryDao {
         return directory;
     }
 
-    public void deleteDirectory(Directory directory) {
+    public void delete(Directory directory) {
         Session session = SessionFactory.getSession();
         session.beginTransaction();
         session.delete(directory);
+        session.getTransaction().commit();
+        session.close();
+    }
+
+    public void update(Directory directory){
+        Session session = SessionFactory.getSession();
+        session.beginTransaction();
+        session.update(directory);
         session.getTransaction().commit();
         session.close();
     }

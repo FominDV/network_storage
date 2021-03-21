@@ -3,7 +3,6 @@ package ru.fomin.core;
 import io.netty.handler.codec.serialization.ObjectDecoderInputStream;
 import io.netty.handler.codec.serialization.ObjectEncoderOutputStream;
 import javafx.application.Platform;
-import ru.fomin.*;
 import ru.fomin.gui.controllers.AuthenticationController;
 
 import javafx.scene.control.Button;
@@ -111,12 +110,12 @@ public class HandlerCommands implements Commands {
 
     @Override
     public void createDir(String dirName, Long remoteDirectoryId) {
-        sendToServer(new DirectoryManipulationCommand(dirName,remoteDirectoryId, DirectoryManipulationCommand.Type.CREATE));
+        sendToServer(new CreatingAndUpdatingManipulationCommand(dirName,remoteDirectoryId, CreatingAndUpdatingManipulationCommand.Type.CREATE));
     }
 
     @Override
-    public void renameDir(String dirName, Long remoteDirectoryId) {
-        sendToServer(new DirectoryManipulationCommand(dirName,remoteDirectoryId, DirectoryManipulationCommand.Type.RENAME));
+    public void rename(String dirName, Long remoteDirectoryId, CreatingAndUpdatingManipulationCommand.Type type) {
+        sendToServer(new CreatingAndUpdatingManipulationCommand(dirName,remoteDirectoryId, type));
     }
 
     private void closeConnection() {

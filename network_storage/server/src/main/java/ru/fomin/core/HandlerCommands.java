@@ -52,7 +52,7 @@ public class HandlerCommands implements Commands {
                 getCurrentDirectory(socketHandler);
                 break;
             case KeyCommands.CREATE_DIRECTORY:
-               // createDirectory(socketHandler);
+               // create(socketHandler);
                 break;
             default:
                 socketHandler.writeUTF(KeyCommands.COMMAND_ERROR);
@@ -63,10 +63,10 @@ public class HandlerCommands implements Commands {
 
     }
 
-//    private void createDirectory(SocketHandler socketHandler) throws IOException {
+//    private void create(SocketHandler socketHandler) throws IOException {
 //        String newDirectory = currentDirectory.getPath() + File.separator + socketHandler.readUTF();
-//        if (DIRECTORY_SERVICE.createDirectory(currentDirectory, newDirectory)) {
-//            Files.createDirectory(Paths.get(newDirectory));
+//        if (DIRECTORY_SERVICE.create(currentDirectory, newDirectory)) {
+//            Files.create(Paths.get(newDirectory));
 //            socketHandler.writeUTF(KeyCommands.DONE);
 //        } else {
 //            socketHandler.writeUTF(KeyCommands.ALREADY_EXIST);

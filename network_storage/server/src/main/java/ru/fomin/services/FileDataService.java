@@ -5,6 +5,8 @@ import ru.fomin.entities.Directory;
 import ru.fomin.entities.FileData;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class FileDataService {
 
@@ -35,5 +37,17 @@ public class FileDataService {
     public File getFileById(Long id) {
         FileData fileData = getFileDataById(id);
         return new File(fileData.getDirectory().getPath() + File.separator + fileData.getName());
+    }
+
+    public Path getFilePathById(Long id) {
+        FileData fileData = getFileDataById(id);
+        return Paths.get(fileData.getDirectory().getPath() + File.separator + fileData.getName());
+    }
+
+    public Path renameFileData(Long id, String newFileName){
+        FileData fileData = getFileDataById(id);
+        fileData.setName(newFileName);
+        FILE_DATA_DAO.updateFile(fileData);
+        return Paths.get(fileData.getDirectory().getPath() + File.separator + newFileName);
     }
 }
