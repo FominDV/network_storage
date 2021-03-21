@@ -30,7 +30,5 @@ public class UpdatePasswordController {
         btn_info.setOnAction(event -> ControllersUtil.showDeveloperInfo());
 
         btn_cancel.setOnAction(event -> ControllersUtil.showAndHideStages("/fxml/main_panel.fxml", btn_cancel));
-
-
     }
 }

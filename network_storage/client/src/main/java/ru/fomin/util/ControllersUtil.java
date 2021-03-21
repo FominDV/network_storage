@@ -68,6 +68,8 @@ public class ControllersUtil {
         getStage(pathOfFXML).hide();
     }
 
+    public static void closeStage(String pathOfFXML){getStage(pathOfFXML).close();}
+
     public static Stage getStage(String pathOfFXML) {
         FXMLLoader loader = new FXMLLoader();
 

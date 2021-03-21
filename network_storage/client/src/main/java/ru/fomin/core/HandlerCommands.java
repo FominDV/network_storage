@@ -58,6 +58,7 @@ public class HandlerCommands implements Commands {
             fileTransmitter = new FileTransmitter(this);
             executorService.execute(fileTransmitter);
         } catch (IOException e) {
+            authenticationController.changeIsConnected();
             throw new IOException();
         }
     }
