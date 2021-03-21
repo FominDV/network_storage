@@ -1,12 +1,11 @@
-package ru.fomin.netty;
+package ru.fomin.core.handlers;
 
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;
-import ru.fomin.KeyCommands;
-import ru.fomin.need.commands.AuthRequest;
-import ru.fomin.need.commands.AuthResult;
+import ru.fomin.commands.AuthRequest;
+import ru.fomin.commands.AuthResult;
 import ru.fomin.services.UserService;
 
 import java.io.File;

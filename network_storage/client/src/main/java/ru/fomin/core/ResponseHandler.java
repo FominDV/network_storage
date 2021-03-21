@@ -1,10 +1,13 @@
 package ru.fomin.core;
 
 import javafx.application.Platform;
-import ru.fomin.need.classes.FileChunkDownloader;
-import ru.fomin.need.commands.*;
-import ru.fomin.need.file_packages.FileChunkPackage;
-import ru.fomin.need.file_packages.FileDataPackage;
+import ru.fomin.classes.FileChunkDownloader;
+import ru.fomin.commands.AuthResult;
+import ru.fomin.commands.CurrentDirectoryEntityList;
+import ru.fomin.commands.DataPackage;
+import ru.fomin.commands.FileManipulationResponse;
+import ru.fomin.file_packages.FileChunkPackage;
+import ru.fomin.file_packages.FileDataPackage;
 
 
 import java.io.File;

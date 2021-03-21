@@ -5,8 +5,8 @@ import ru.fomin.gui.controllers.AuthenticationController;
 import ru.fomin.gui.controllers.MainPanelController;
 import ru.fomin.gui.controllers.RegistrationController;
 import ru.fomin.gui.controllers.UpdatePasswordController;
-import ru.fomin.need.commands.CreatingAndUpdatingManipulationCommand;
-import ru.fomin.need.commands.FileManipulationRequest;
+import ru.fomin.commands.CreatingAndUpdatingManipulationCommand;
+import ru.fomin.commands.FileManipulationRequest;
 
 import java.io.File;
 

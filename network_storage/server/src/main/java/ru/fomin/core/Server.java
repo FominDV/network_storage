@@ -11,6 +11,8 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
+import ru.fomin.core.handlers.AuthHandler;
+import ru.fomin.core.handlers.MainHandler;
 
 import static io.netty.channel.ChannelOption.SO_KEEPALIVE;
 import static io.netty.handler.codec.serialization.ClassResolvers.cacheDisabled;

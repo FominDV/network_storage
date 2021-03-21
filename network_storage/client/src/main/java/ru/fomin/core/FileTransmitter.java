@@ -1,6 +1,6 @@
 package ru.fomin.core;
 
-import ru.fomin.need.classes.FileSendOptimizer;
+import ru.fomin.classes.FileSendOptimizer;
 
 import java.io.File;
 import java.nio.file.Path;

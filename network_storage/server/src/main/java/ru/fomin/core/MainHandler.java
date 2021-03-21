@@ -1,16 +1,20 @@
-package ru.fomin.netty;
+package ru.fomin.core.handlers;
 
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;
+import ru.fomin.commands.CreatingAndUpdatingManipulationCommand;
+import ru.fomin.commands.CurrentDirectoryEntityList;
+import ru.fomin.commands.FileManipulationRequest;
+import ru.fomin.commands.FileManipulationResponse;
 import ru.fomin.entities.Directory;
 import ru.fomin.entities.FileData;
-import ru.fomin.need.classes.Constants;
-import ru.fomin.need.commands.*;
-import ru.fomin.need.classes.FileChunkDownloader;
-import ru.fomin.need.file_packages.FileChunkPackage;
-import ru.fomin.need.file_packages.FileDataPackage;
+import ru.fomin.classes.Constants;
+import ru.fomin.classes.FileChunkDownloader;
+import ru.fomin.file_packages.FileChunkPackage;
+import ru.fomin.file_packages.FileDataPackage;
+import ru.fomin.core.server.FileTransmitter;
 import ru.fomin.services.DirectoryService;
 import ru.fomin.services.FileDataService;
 import ru.fomin.services.UserService;
@@ -22,7 +26,6 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
 
 import static java.util.concurrent.Executors.newFixedThreadPool;
 import static java.util.concurrent.Executors.newSingleThreadExecutor;

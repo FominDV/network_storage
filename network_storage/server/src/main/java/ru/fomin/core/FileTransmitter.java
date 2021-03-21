@@ -1,7 +1,7 @@
-package ru.fomin.netty;
+package ru.fomin.core.server;
 
 import io.netty.channel.ChannelHandlerContext;
-import ru.fomin.need.classes.FileSendOptimizer;
+import ru.fomin.classes.FileSendOptimizer;
 
 import java.io.File;
 import java.nio.file.Path;

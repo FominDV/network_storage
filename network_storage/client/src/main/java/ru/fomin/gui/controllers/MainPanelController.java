@@ -8,15 +8,14 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import ru.fomin.core.Commands;
 import ru.fomin.core.HandlerCommands;
-import ru.fomin.need.classes.Constants;
-import ru.fomin.need.commands.CreatingAndUpdatingManipulationCommand;
-import ru.fomin.need.commands.CurrentDirectoryEntityList;
-import ru.fomin.need.commands.FileManipulationRequest;
-import ru.fomin.need.commands.FileManipulationResponse;
-import ru.fomin.util.ControllersUtil;
+import ru.fomin.classes.Constants;
+import ru.fomin.commands.CreatingAndUpdatingManipulationCommand;
+import ru.fomin.commands.CurrentDirectoryEntityList;
+import ru.fomin.commands.FileManipulationRequest;
+import ru.fomin.commands.FileManipulationResponse;
 
-import static ru.fomin.need.commands.FileManipulationRequest.Request.DELETE_DIR;
-import static ru.fomin.need.commands.FileManipulationRequest.Request.DELETE_FILE;
+import static ru.fomin.commands.FileManipulationRequest.Request.DELETE_DIR;
+import static ru.fomin.commands.FileManipulationRequest.Request.DELETE_FILE;
 import static ru.fomin.util.ControllersUtil.*;
 
 import java.io.File;
