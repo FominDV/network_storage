@@ -1,4 +1,4 @@
-package ru.fomin.need.classes;
+package ru.fomin.classes;
 
 public class Constants {
 

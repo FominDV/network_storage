@@ -1,4 +1,4 @@
-package ru.fomin.core.handlers;
+package ru.fomin.core;
 
 
 import io.netty.channel.ChannelHandlerContext;
@@ -14,7 +14,6 @@ import ru.fomin.classes.Constants;
 import ru.fomin.classes.FileChunkDownloader;
 import ru.fomin.file_packages.FileChunkPackage;
 import ru.fomin.file_packages.FileDataPackage;
-import ru.fomin.core.server.FileTransmitter;
 import ru.fomin.services.DirectoryService;
 import ru.fomin.services.FileDataService;
 import ru.fomin.services.UserService;

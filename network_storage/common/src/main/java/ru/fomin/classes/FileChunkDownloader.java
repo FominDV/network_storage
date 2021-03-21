@@ -1,7 +1,7 @@
-package ru.fomin.need.classes;
+package ru.fomin.classes;
 
 
-import ru.fomin.need.file_packages.FileChunkPackage;
+import ru.fomin.file_packages.FileChunkPackage;
 
 import java.io.IOException;
 import java.io.OutputStream;

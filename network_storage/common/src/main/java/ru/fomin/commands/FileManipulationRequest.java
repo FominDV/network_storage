@@ -1,4 +1,4 @@
-package ru.fomin.need.commands;
+package ru.fomin.commands;
 
 public class FileManipulationRequest extends DataPackage{
 

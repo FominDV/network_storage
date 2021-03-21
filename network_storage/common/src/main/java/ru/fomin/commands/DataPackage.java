@@ -1,4 +1,4 @@
-package ru.fomin.need.commands;
+package ru.fomin.commands;
 
 
 import java.io.Serializable;

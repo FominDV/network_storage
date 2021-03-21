@@ -1,4 +1,4 @@
-package ru.fomin.core.server;
+package ru.fomin.core;
 
 import io.netty.channel.ChannelHandlerContext;
 import ru.fomin.classes.FileSendOptimizer;

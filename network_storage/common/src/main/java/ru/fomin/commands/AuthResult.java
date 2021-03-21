@@ -1,8 +1,4 @@
-package ru.fomin.need.commands;
-
-
-import static ru.fomin.need.commands.AuthResult.Result.FAIL_AUTH;
-import static ru.fomin.need.commands.AuthResult.Result.OK_AUTH;
+package ru.fomin.commands;
 
 
 public class AuthResult
