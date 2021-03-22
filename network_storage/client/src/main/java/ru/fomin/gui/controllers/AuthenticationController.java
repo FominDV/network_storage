@@ -5,8 +5,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import ru.fomin.commands.AuthResult;
-import ru.fomin.core.Commands;
-import ru.fomin.core.MainHandler;
+import ru.fomin.core.handlers.ResponseHandler;
+import ru.fomin.core.handlers.RequestHandler;
+import ru.fomin.core.network.NetworkConnection;
 
 import static ru.fomin.util.ControllersUtil.*;
 
@@ -16,10 +17,10 @@ import java.util.ResourceBundle;
 
 public class AuthenticationController {
 
-    private static boolean isConnected;
     private static String login = "Dmitriy777";
     private static String password = "Dmitriy777";
-    private Commands commands;
+    private RequestHandler requestHandler;
+    private NetworkConnection networkConnection;
 
     @FXML
     private ResourceBundle resources;
@@ -62,28 +63,22 @@ public class AuthenticationController {
 
         btnTCP_IP.setOnAction(event -> showAndHideStages("/fxml/connaction_properties.fxml", btnTCP_IP));
 
-        commands=MainHandler.getCommands();
+        requestHandler = RequestHandler.getInstance();
 
-        MainHandler.setAuthenticationController(this);
+        networkConnection=NetworkConnection.getInstance();
+
+        ResponseHandler.setAuthenticationController(this);
     }
 
     private boolean connect() {
-        if (!isConnected) {
-            isConnected = true;
             try {
-                commands.connect();
+                networkConnection.connect();
             } catch (IOException e) {
-                isConnected = false;
                 //e.printStackTrace();
                 showConnectionError();
                 return false;
             }
-        }
         return true;
-    }
-
-    public static void changeIsConnected() {
-        isConnected = isConnected ? false : true;
     }
 
     static void setAuthenticationData(String login, String password) {
@@ -95,14 +90,14 @@ public class AuthenticationController {
         if (!connect()) {
             return;
         }
-        String login = field_login.getText();
+        login = field_login.getText();
         String password = field_password.getText();
         if (!(hasText(login) && hasText(password))) {
             field_password.setText("");
             showErrorMessage("All field should be fill");
             return;
         }
-        commands.authentication(login, password);
+        requestHandler.authentication(login, password);
     }
 
     public void handleResponse(AuthResult.Result result) {
@@ -113,9 +108,5 @@ public class AuthenticationController {
             field_password.setText("");
             showErrorMessage("Invalid login or password");
         }
-    }
-
-    public static boolean isConnected() {
-        return isConnected;
     }
 }

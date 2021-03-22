@@ -4,13 +4,13 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.PasswordField;
-import ru.fomin.core.Commands;
-import ru.fomin.core.MainHandler;
+import ru.fomin.core.handlers.ResponseHandler;
+import ru.fomin.core.handlers.RequestHandler;
 import ru.fomin.util.ControllersUtil;
 
 public class UpdatePasswordController {
 
-    private Commands commands;
+    private RequestHandler requestHandler;
 
     @FXML
     private Button btn_info;
@@ -32,13 +32,13 @@ public class UpdatePasswordController {
 
     @FXML
     void initialize() {
-        commands = MainHandler.getCommands();
+        requestHandler = RequestHandler.getInstance();
 
         btn_info.setOnAction(event -> ControllersUtil.showDeveloperInfo());
 
         btn_cancel.setOnAction(event -> ControllersUtil.showAndHideStages("/fxml/main_panel.fxml", btn_cancel));
 
-        MainHandler.setUpdatePasswordController(this);
+        ResponseHandler.setUpdatePasswordController(this);
     }
 
     public Labeled getLabeled() {

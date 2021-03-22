@@ -4,8 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import ru.fomin.core.MainHandler;
-import ru.fomin.core.NetworkConnection;
+import ru.fomin.core.network.NetworkConnection;
 import ru.fomin.util.ControllersUtil;
 
 public class ConnectionPropertiesController {

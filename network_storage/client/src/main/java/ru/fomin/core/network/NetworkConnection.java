@@ -1,9 +1,9 @@
-package ru.fomin.core;
+package ru.fomin.core.network;
 
 import io.netty.handler.codec.serialization.ObjectDecoderInputStream;
 import io.netty.handler.codec.serialization.ObjectEncoderOutputStream;
 import ru.fomin.commands.DataPackage;
-import ru.fomin.gui.controllers.AuthenticationController;
+import ru.fomin.core.handlers.ResponseHandler;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,41 +11,42 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.concurrent.ExecutorService;
 
 import static java.util.concurrent.Executors.newFixedThreadPool;
 
 public class NetworkConnection {
 
+    private boolean isConnected;
     private static NetworkConnection instance;
     private static String ip = "127.0.0.1";
     private static int port = 8189;
-    private static MainHandler mainHandler;
 
     private static final int MAX_OBJ_SIZE = 10 * 1024 * 1024;
 
-    private final ExecutorService executorService;
-
-    private  FileTransmitter fileTransmitter;
-    private  ResponseHandler responseHandler;
-    private  ObjectEncoderOutputStream out;
-    private  ObjectDecoderInputStream in;
+    private ExecutorService executorService;
+    private FileTransmitter fileTransmitter;
+    private ResponseReceiver responseReceiver;
+    private ObjectEncoderOutputStream out;
+    private ObjectDecoderInputStream in;
     private Socket socket;
 
-    private NetworkConnection(){
-        executorService = newFixedThreadPool(2);
+    private NetworkConnection() {
     }
 
-    public static NetworkConnection getInstance(MainHandler mainHandler){
-        NetworkConnection.mainHandler=mainHandler;
-        if(instance==null){
-            instance=new NetworkConnection();
+    public static NetworkConnection getInstance() {
+        if (instance == null) {
+            instance = new NetworkConnection();
         }
         return instance;
     }
 
     public void connect() throws IOException {
+        if(isConnected){
+            return;
+        }
+        isConnected=true;
+        executorService = newFixedThreadPool(2);
         socket = new Socket();
         try {
             socket = new Socket(ip, port);
@@ -53,17 +54,18 @@ public class NetworkConnection {
             InputStream is = socket.getInputStream();
             out = new ObjectEncoderOutputStream(os);
             in = new ObjectDecoderInputStream(is, MAX_OBJ_SIZE);
-            responseHandler = new ResponseHandler(this,mainHandler);
-            executorService.execute(responseHandler);
+            responseReceiver = new ResponseReceiver();
+            executorService.execute(responseReceiver);
             fileTransmitter = new FileTransmitter(this);
             executorService.execute(fileTransmitter);
         } catch (IOException e) {
+            isConnected=false;
             throw new IOException();
         }
     }
 
     public void closeConnection() {
-        AuthenticationController.changeIsConnected();
+        isConnected=false;
         try {
             executorService.shutdownNow();
             in.close();
@@ -93,19 +95,19 @@ public class NetworkConnection {
         return null;
     }
 
-    private void exitOnFatalConnectionError(){
-        if (AuthenticationController.isConnected()) {
+    private void exitOnFatalConnectionError() {
+        if (isConnected) {
             closeConnection();
-            MainHandler.exitOnFatalConnectionError();
+            ResponseHandler.exitOnFatalConnectionError();
         }
     }
 
-    public void addFileToTransmitter(File file, Long directoryId){
+    public void addFileToTransmitter(File file, Long directoryId) {
         fileTransmitter.addFile(file, directoryId);
     }
 
-    public void putDownloadingFilesMapToResponseHandler(Long id, Path path){
-        responseHandler.putDownloadingFilesMap(id, path);
+    public void putDownloadingFilesMapToResponseHandler(Long id, Path path) {
+        responseReceiver.putDownloadingFilesMap(id, path);
     }
 
     public static String getIp() {

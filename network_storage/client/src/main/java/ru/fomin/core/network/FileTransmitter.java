@@ -1,4 +1,4 @@
-package ru.fomin.core;
+package ru.fomin.core.network;
 
 import ru.fomin.classes.FileSendOptimizer;
 
@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.concurrent.PriorityBlockingQueue;
 
 import static java.lang.Thread.currentThread;
-import static java.lang.Thread.sleep;
 
 public class FileTransmitter implements Runnable {
     private final NetworkConnection networkConnection;
@@ -50,7 +49,6 @@ public class FileTransmitter implements Runnable {
         }
 
     }
-
 
     public void addFile(File file, Long directoryId) {
         queue.put(file);
