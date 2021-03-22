@@ -6,8 +6,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
-import ru.fomin.core.handlers.ResponseHandler;
-import ru.fomin.core.handlers.RequestHandler;
+import ru.fomin.services.ResponseService;
+import ru.fomin.services.RequestService;
 import ru.fomin.classes.Constants;
 import ru.fomin.commands.CreatingAndUpdatingManipulationRequest;
 import ru.fomin.commands.CurrentDirectoryEntityList;
@@ -25,7 +25,7 @@ import java.util.*;
 
 public class MainPanelController {
 
-    private RequestHandler requestHandler;
+    private RequestService requestService;
     private Map<String, Long> fileMap = new HashMap<>();
     private Map<String, Long> directoryMap = new HashMap<>();
     private ObservableList<String> observableList;
@@ -78,11 +78,11 @@ public class MainPanelController {
 
     @FXML
     void initialize() {
-        requestHandler = RequestHandler.getInstance();
+        requestService = RequestService.getInstance();
 
         btn_info.setOnAction(event -> showDeveloperInfo());
 
-        btn_exit.setOnAction(event -> requestHandler.exitToAuthentication(btn_info));
+        btn_exit.setOnAction(event -> requestService.exitToAuthentication(btn_info));
 
         btn_upload.setOnAction(event -> upload());
 
@@ -96,8 +96,8 @@ public class MainPanelController {
 
         btn_rename.setOnAction(event -> rename());
 
-        ResponseHandler.setMainPanelController(this);
-        requestHandler.getCurrentDirectoryEntity();
+        ResponseService.setMainPanelController(this);
+        requestService.getCurrentDirectoryEntity();
     }
 
     private void rename() {
@@ -136,11 +136,11 @@ public class MainPanelController {
             id = directoryMap.get(resourceName);
         } else {
             showErrorMessage("Fatal error");
-            requestHandler.exitToAuthentication(btn_info);
+            requestService.exitToAuthentication(btn_info);
             return;
         }
 
-        requestHandler.rename(newName, id, type);
+        requestService.rename(newName, id, type);
         field_resource_name.setText("");
     }
 
@@ -151,7 +151,7 @@ public class MainPanelController {
             field_resource_name.setText("");
             return;
         }
-        requestHandler.createDir(dirName, remoteDirectoryId);
+        requestService.createDir(dirName, remoteDirectoryId);
         field_resource_name.setText("");
     }
 
@@ -174,10 +174,10 @@ public class MainPanelController {
             id = directoryMap.get(fileName);
         } else {
             showErrorMessage("Fatal error");
-            requestHandler.exitToAuthentication(btn_info);
+            requestService.exitToAuthentication(btn_info);
             return;
         }
-        requestHandler.delete(id, type);
+        requestService.delete(id, type);
     }
 
     private void download() {
@@ -203,7 +203,7 @@ public class MainPanelController {
             return;
         }
         Long id = fileMap.get(fileName);
-        requestHandler.download(id, directory.toString());
+        requestService.download(id, directory.toString());
     }
 
     private void upload() {
@@ -215,8 +215,8 @@ public class MainPanelController {
             showErrorMessage(String.format("Path \"%s\" is not file", file.toString()));
             return;
         }
-        requestHandler.sendFile(file, remoteDirectoryId);
-        requestHandler.getCurrentDirectoryEntity();
+        requestService.sendFile(file, remoteDirectoryId);
+        requestService.getCurrentDirectoryEntity();
     }
 
 
@@ -289,7 +289,7 @@ public class MainPanelController {
                 break;
             default:
                 showErrorMessage(String.format("Unknown response \"%s\" from server", response.getResponse()));
-                requestHandler.exitToAuthentication(btn_info);
+                requestService.exitToAuthentication(btn_info);
         }
     }
 

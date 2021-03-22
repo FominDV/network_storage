@@ -5,9 +5,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import ru.fomin.commands.AuthResult;
-import ru.fomin.core.handlers.ResponseHandler;
-import ru.fomin.core.handlers.RequestHandler;
-import ru.fomin.core.network.NetworkConnection;
+import ru.fomin.services.ResponseService;
+import ru.fomin.services.RequestService;
+import ru.fomin.network.NetworkConnection;
 
 import static ru.fomin.util.ControllersUtil.*;
 
@@ -19,7 +19,7 @@ public class AuthenticationController {
 
     private static String login = "Dmitriy777";
     private static String password = "Dmitriy777";
-    private RequestHandler requestHandler;
+    private RequestService requestService;
     private NetworkConnection networkConnection;
 
     @FXML
@@ -63,11 +63,11 @@ public class AuthenticationController {
 
         btnTCP_IP.setOnAction(event -> showAndHideStages("/fxml/connaction_properties.fxml", btnTCP_IP));
 
-        requestHandler = RequestHandler.getInstance();
+        requestService = RequestService.getInstance();
 
         networkConnection=NetworkConnection.getInstance();
 
-        ResponseHandler.setAuthenticationController(this);
+        ResponseService.setAuthenticationController(this);
     }
 
     private boolean connect() {
@@ -97,7 +97,7 @@ public class AuthenticationController {
             showErrorMessage("All field should be fill");
             return;
         }
-        requestHandler.authentication(login, password);
+        requestService.authentication(login, password);
     }
 
     public void handleResponse(AuthResult.Result result) {

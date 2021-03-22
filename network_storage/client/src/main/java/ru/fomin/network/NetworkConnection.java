@@ -1,9 +1,10 @@
-package ru.fomin.core.network;
+package ru.fomin.network;
 
 import io.netty.handler.codec.serialization.ObjectDecoderInputStream;
 import io.netty.handler.codec.serialization.ObjectEncoderOutputStream;
+import ru.fomin.classes.FileTransmitter;
 import ru.fomin.commands.DataPackage;
-import ru.fomin.core.handlers.ResponseHandler;
+import ru.fomin.services.ResponseService;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,11 +28,13 @@ public class NetworkConnection {
     private ExecutorService executorService;
     private FileTransmitter fileTransmitter;
     private ResponseReceiver responseReceiver;
+    private ResponseService responseService;
     private ObjectEncoderOutputStream out;
     private ObjectDecoderInputStream in;
     private Socket socket;
 
     private NetworkConnection() {
+        responseService = ResponseService.getInstance();
     }
 
     public static NetworkConnection getInstance() {
@@ -56,7 +59,7 @@ public class NetworkConnection {
             in = new ObjectDecoderInputStream(is, MAX_OBJ_SIZE);
             responseReceiver = new ResponseReceiver();
             executorService.execute(responseReceiver);
-            fileTransmitter = new FileTransmitter(this);
+            fileTransmitter = new FileTransmitter(dataPackage -> sendToServer(dataPackage));
             executorService.execute(fileTransmitter);
         } catch (IOException e) {
             isConnected=false;
@@ -98,7 +101,7 @@ public class NetworkConnection {
     private void exitOnFatalConnectionError() {
         if (isConnected) {
             closeConnection();
-            ResponseHandler.exitOnFatalConnectionError();
+            ResponseService.exitOnFatalConnectionError();
         }
     }
 
@@ -107,7 +110,7 @@ public class NetworkConnection {
     }
 
     public void putDownloadingFilesMapToResponseHandler(Long id, Path path) {
-        responseReceiver.putDownloadingFilesMap(id, path);
+        responseService.putDownloadingFilesMap(id, path);
     }
 
     public static String getIp() {

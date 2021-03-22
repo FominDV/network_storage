@@ -5,7 +5,7 @@ import ru.fomin.classes.Constants;
 import ru.fomin.commands.CurrentDirectoryEntityList;
 import ru.fomin.commands.FileManipulationRequest;
 import ru.fomin.commands.FileManipulationResponse;
-import ru.fomin.core.FileTransmitter;
+import ru.fomin.classes.FileTransmitter;
 import ru.fomin.core.MainHandler;
 import ru.fomin.entities.Directory;
 import ru.fomin.entities.FileData;
@@ -61,7 +61,7 @@ public class MainHandlerFileManipulationService {
 
     private void upload(ChannelHandlerContext ctx, Long fileId) {
         if (fileTransmitter == null) {
-            fileTransmitter = new FileTransmitter(ctx);
+            fileTransmitter = new FileTransmitter(dataPackage->ctx.writeAndFlush(dataPackage));
             fileTransmitterThread = new Thread(fileTransmitter);
             fileTransmitterThread.setDaemon(true);
             fileTransmitterThread.start();

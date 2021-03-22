@@ -1,29 +1,29 @@
-package ru.fomin.core.handlers;
+package ru.fomin.services;
 
 import javafx.application.Platform;
 import ru.fomin.commands.*;
 
 import javafx.scene.control.Button;
-import ru.fomin.core.network.NetworkConnection;
+import ru.fomin.network.NetworkConnection;
 
 import static ru.fomin.util.ControllersUtil.*;
 
 import java.io.*;
 import java.nio.file.Paths;
 
-public class RequestHandler {
+public class RequestService {
 
-    private static RequestHandler instance;
+    private static RequestService instance;
     private final NetworkConnection networkConnection;
 
 
-    private RequestHandler() {
+    private RequestService() {
         networkConnection = NetworkConnection.getInstance();
     }
 
-    public static RequestHandler getInstance() {
+    public static RequestService getInstance() {
         if (instance == null) {
-            instance= new RequestHandler();
+            instance= new RequestService();
         }
         return instance;
     }
