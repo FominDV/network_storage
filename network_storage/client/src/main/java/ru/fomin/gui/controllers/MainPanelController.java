@@ -7,9 +7,9 @@ import javafx.scene.control.*;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import ru.fomin.core.Commands;
-import ru.fomin.core.HandlerCommands;
+import ru.fomin.core.MainHandler;
 import ru.fomin.classes.Constants;
-import ru.fomin.commands.CreatingAndUpdatingManipulationCommand;
+import ru.fomin.commands.CreatingAndUpdatingManipulationRequest;
 import ru.fomin.commands.CurrentDirectoryEntityList;
 import ru.fomin.commands.FileManipulationRequest;
 import ru.fomin.commands.FileManipulationResponse;
@@ -78,7 +78,7 @@ public class MainPanelController {
 
     @FXML
     void initialize() {
-        commands = HandlerCommands.getCommands();
+        commands = MainHandler.getCommands();
 
         btn_info.setOnAction(event -> showDeveloperInfo());
 
@@ -96,7 +96,7 @@ public class MainPanelController {
 
         btn_rename.setOnAction(event -> rename());
 
-        commands.setMainPanelController(this);
+        MainHandler.setMainPanelController(this);
         commands.getCurrentDirectoryEntity();
     }
 
@@ -114,7 +114,7 @@ public class MainPanelController {
         }
 
         Long id;
-        CreatingAndUpdatingManipulationCommand.Type type;
+        CreatingAndUpdatingManipulationRequest.Type type;
         //Searching resource
         if (fileMap.containsKey(resourceName)) {
             //Verify duplicate names
@@ -123,7 +123,7 @@ public class MainPanelController {
                 field_resource_name.setText("");
                 return;
             }
-            type = CreatingAndUpdatingManipulationCommand.Type.RENAME_FILE;
+            type = CreatingAndUpdatingManipulationRequest.Type.RENAME_FILE;
             id = fileMap.get(resourceName);
         } else if (directoryMap.containsKey(resourceName)) {
             //Verify duplicate names
@@ -132,7 +132,7 @@ public class MainPanelController {
                 field_resource_name.setText("");
                 return;
             }
-            type = CreatingAndUpdatingManipulationCommand.Type.RENAME_DIR;
+            type = CreatingAndUpdatingManipulationRequest.Type.RENAME_DIR;
             id = directoryMap.get(resourceName);
         } else {
             showErrorMessage("Fatal error");

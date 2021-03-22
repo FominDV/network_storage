@@ -6,7 +6,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import ru.fomin.commands.AuthResult;
 import ru.fomin.core.Commands;
-import ru.fomin.core.HandlerCommands;
+import ru.fomin.core.MainHandler;
 
 import static ru.fomin.util.ControllersUtil.*;
 
@@ -61,13 +61,17 @@ public class AuthenticationController {
         });
 
         btnTCP_IP.setOnAction(event -> showAndHideStages("/fxml/connaction_properties.fxml", btnTCP_IP));
+
+        commands=MainHandler.getCommands();
+
+        MainHandler.setAuthenticationController(this);
     }
 
     private boolean connect() {
         if (!isConnected) {
             isConnected = true;
             try {
-                new HandlerCommands();
+                commands.connect();
             } catch (IOException e) {
                 isConnected = false;
                 //e.printStackTrace();
@@ -75,21 +79,11 @@ public class AuthenticationController {
                 return false;
             }
         }
-        commands = HandlerCommands.getCommands();
-        commands.setAuthenticationController(this);
         return true;
     }
 
     public static void changeIsConnected() {
         isConnected = isConnected ? false : true;
-    }
-
-    public void setTextToField_login(String login) {
-        field_login.setText(login);
-    }
-
-    public void setTextToField_password(String password) {
-        field_password.setText(password);
     }
 
     static void setAuthenticationData(String login, String password) {

@@ -4,7 +4,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import ru.fomin.core.HandlerCommands;
+import ru.fomin.core.MainHandler;
+import ru.fomin.core.NetworkConnection;
 import ru.fomin.util.ControllersUtil;
 
 public class ConnectionPropertiesController {
@@ -35,10 +36,10 @@ public class ConnectionPropertiesController {
     @FXML
     void initialize() {
 
-        label_port.setText(String.valueOf(HandlerCommands.getPort()));
-        label_ip.setText(HandlerCommands.getIp());
-        field_ip.setText(HandlerCommands.getIp());
-        field_port.setText(String.valueOf(HandlerCommands.getPort()));
+        label_port.setText(String.valueOf(NetworkConnection.getPort()));
+        label_ip.setText(NetworkConnection.getIp());
+        field_ip.setText(NetworkConnection.getIp());
+        field_port.setText(String.valueOf(NetworkConnection.getPort()));
 
         btn_info.setOnAction(event -> ControllersUtil.showDeveloperInfo());
 
@@ -48,8 +49,8 @@ public class ConnectionPropertiesController {
             String newIP = field_ip.getText();
             String newPort = field_port.getText();
             if (isValidConnectionProperties(newIP, newPort)) {
-                HandlerCommands.setIp(newIP);
-                HandlerCommands.setPort(Integer.parseInt(newPort));
+                NetworkConnection.setIp(newIP);
+                NetworkConnection.setPort(Integer.parseInt(newPort));
                 ControllersUtil.showInfoMessage(String.format("Successful\nIp: %s\nPort: %s", newIP, newPort));
                 ControllersUtil.showAndHideStages("/fxml/authentication.fxml", btn_cancel);
             } else {

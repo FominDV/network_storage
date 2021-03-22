@@ -1,12 +1,12 @@
 package ru.fomin.commands;
 
-public class CreatingAndUpdatingManipulationCommand extends DataPackage{
+public class CreatingAndUpdatingManipulationRequest extends DataPackage{
 
     private final String newName;
     private final Long id;
     private final Type type;
 
-    public CreatingAndUpdatingManipulationCommand(String newName, Long id, Type type) {
+    public CreatingAndUpdatingManipulationRequest(String newName, Long id, Type type) {
         this.newName = newName;
         this.id = id;
         this.type = type;

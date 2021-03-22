@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**Service for process FileManipulationRequest message from client.*/
 public class MainHandlerFileManipulationService {
 
     private final DirectoryService DIRECTORY_SERVICE;

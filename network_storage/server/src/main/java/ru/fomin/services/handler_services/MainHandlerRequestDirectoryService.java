@@ -1,7 +1,7 @@
 package ru.fomin.services.handler_services;
 
 import io.netty.channel.ChannelHandlerContext;
-import ru.fomin.commands.CreatingAndUpdatingManipulationCommand;
+import ru.fomin.commands.CreatingAndUpdatingManipulationRequest;
 import ru.fomin.commands.FileManipulationResponse;
 import ru.fomin.entities.Directory;
 import ru.fomin.services.db_services.DirectoryService;
@@ -13,6 +13,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+/**
+ * Service for process CreatingAndUpdatingManipulationRequest message from client.
+ */
 public class MainHandlerRequestDirectoryService {
 
     private final DirectoryService DIRECTORY_SERVICE;
@@ -23,7 +26,7 @@ public class MainHandlerRequestDirectoryService {
         this.FILE_DATA_SERVICE = FILE_DATA_SERVICE;
     }
 
-    public void requestDirectoryHandle(ChannelHandlerContext ctx, CreatingAndUpdatingManipulationCommand request, Directory currentDirectory) throws IOException {
+    public void requestDirectoryHandle(ChannelHandlerContext ctx, CreatingAndUpdatingManipulationRequest request, Directory currentDirectory) throws IOException {
         String newName = request.getNewName();
         Long id = request.getId();
         switch (request.getType()) {

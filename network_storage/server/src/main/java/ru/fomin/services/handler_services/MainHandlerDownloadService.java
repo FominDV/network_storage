@@ -14,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+/**Service for process FileDataPackage and FileChunkPackage messages from client.*/
 public class MainHandlerDownloadService {
 
     private final DirectoryService DIRECTORY_SERVICE;

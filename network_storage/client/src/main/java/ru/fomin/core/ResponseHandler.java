@@ -22,36 +22,37 @@ import static java.lang.Thread.currentThread;
 
 public class ResponseHandler implements Runnable {
 
-    private final HandlerCommands handlerCommands;
+    private final NetworkConnection networkConnection;
+    private final MainHandler mainHandler;
     private final Map<Long, Path> downloadingFilesMap;
     private static final FileChunkDownloader FILE_CHUNK_DOWNLOADER = new FileChunkDownloader();
 
-    public ResponseHandler(HandlerCommands handlerCommands) {
-        this.handlerCommands = handlerCommands;
+    public ResponseHandler(NetworkConnection networkConnection, MainHandler mainHandler) {
+        this.networkConnection=networkConnection;
+        this.mainHandler=mainHandler;
         downloadingFilesMap = new HashMap<>();
     }
 
     @Override
     public void run() {
         while (!currentThread().isInterrupted()) {
-            DataPackage response = handlerCommands.getResponseFromServer();
+            DataPackage response = networkConnection.getResponseFromServer();
             if (response != null) {
                 processResponse(response);
             }
         }
-
     }
 
     private void processResponse(DataPackage response) {
         Platform.runLater(() -> {
             if (response instanceof AuthResult) {
                 AuthResult authResult = (AuthResult) response;
-                handlerCommands.handleResponse(authResult);
+                mainHandler.handleResponse(authResult);
             } else if (response instanceof CurrentDirectoryEntityList) {
                 CurrentDirectoryEntityList com = (CurrentDirectoryEntityList) response;
-                handlerCommands.updateDirectoryEntity(com);
+                mainHandler.updateDirectoryEntity(com);
             } else if (response instanceof FileManipulationResponse) {
-                handlerCommands.getFileManipulationResponse((FileManipulationResponse) response);
+                mainHandler.getFileManipulationResponse((FileManipulationResponse) response);
             } else if(response instanceof FileDataPackage){
                 downloadSmallFile((FileDataPackage) response);
             } else if(response instanceof FileChunkPackage){
@@ -67,19 +68,19 @@ public class ResponseHandler implements Runnable {
         try {
             Files.write(path, pack.getData());
         } catch (IOException e) {
-            handlerCommands.downloadingError(fileName);
+            mainHandler.downloadingError(fileName);
         }
-        handlerCommands.downloadingSuccessful(fileName);
+        mainHandler.downloadingSuccessful(fileName);
     }
 
     private void downloadBigFile(FileChunkPackage pack)  {
         String fileName = pack.getFilename();
-        Runnable action = () -> handlerCommands.downloadingSuccessful(fileName);
+        Runnable action = () -> mainHandler.downloadingSuccessful(fileName);
         Path path =downloadingFilesMap.get(pack.getDirectoryId());
         try {
             FILE_CHUNK_DOWNLOADER.writeFileChunk(pack, action, path);
         } catch (IOException e) {
-            handlerCommands.downloadingError(fileName);
+            mainHandler.downloadingError(fileName);
         }
     }
 

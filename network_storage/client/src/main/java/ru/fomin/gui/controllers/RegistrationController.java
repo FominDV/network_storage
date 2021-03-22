@@ -6,7 +6,7 @@ import javafx.scene.control.Labeled;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import ru.fomin.core.Commands;
-import ru.fomin.core.HandlerCommands;
+import ru.fomin.core.MainHandler;
 import ru.fomin.commands.AuthResult;
 import ru.fomin.util.ControllersUtil;
 
@@ -36,7 +36,7 @@ public class RegistrationController {
 
     @FXML
     void initialize() {
-        commands = HandlerCommands.getCommands();
+        commands = MainHandler.getCommands();
 
         btn_info.setOnAction(event -> ControllersUtil.showDeveloperInfo());
 
@@ -44,7 +44,7 @@ public class RegistrationController {
 
         btn_registration.setOnAction(event -> registration());
 
-        commands.setRegistrationController(this);
+        MainHandler.setRegistrationController(this);
     }
 
     private void registration() {

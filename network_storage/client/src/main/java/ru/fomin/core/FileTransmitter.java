@@ -13,7 +13,7 @@ import static java.lang.Thread.currentThread;
 import static java.lang.Thread.sleep;
 
 public class FileTransmitter implements Runnable {
-    private final HandlerCommands handlerCommands;
+    private final NetworkConnection networkConnection;
     private final PriorityBlockingQueue<File> queue;
     private final Map<File, Long> fileDestinationMap;
     private final FileSendOptimizer fileSendOptimizer;
@@ -21,8 +21,8 @@ public class FileTransmitter implements Runnable {
     private static final int MAX_COUNT = 100;
 
 
-    public FileTransmitter(HandlerCommands handlerCommands) {
-        this.handlerCommands = handlerCommands;
+    public FileTransmitter(NetworkConnection networkConnection) {
+        this.networkConnection=networkConnection;
         queue = new PriorityBlockingQueue<>(MAX_COUNT, Comparator.comparingLong(File::length));
         fileDestinationMap = new HashMap<>();
         fileSendOptimizer = new FileSendOptimizer();
@@ -40,7 +40,7 @@ public class FileTransmitter implements Runnable {
                 File file = queue.take();
                 Path path = file.toPath();
                 fileSendOptimizer.sendFile(path, fileDestinationMap.get(file),
-                        dataPackage -> handlerCommands.sendToServer(dataPackage));
+                        dataPackage -> networkConnection.sendToServer(dataPackage));
                 fileDestinationMap.remove(file);
             }
         } catch (InterruptedException e) {

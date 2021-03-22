@@ -11,21 +11,26 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+/**Service for process AuthRequest message from client.*/
 public class AuthHandlerService {
 
+    //Services
     private final UserService USER_SERVICE;
-    private boolean authorized;
+
+    //For verifying authorization of client
+    private boolean isAuthorized;
 
     public AuthHandlerService() {
         USER_SERVICE = new UserService();
-        authorized = false;
+        isAuthorized = false;
     }
 
     public void authHandle(ChannelHandlerContext ctx, AuthRequest.RequestType type, String login, String password) throws IOException {
         switch (type) {
+            //If client want to authorize
             case AUTH:
-                authorized = USER_SERVICE.isValidUserData(login, password);
-                if (authorized) {
+                isAuthorized = USER_SERVICE.isValidUserData(login, password);
+                if (isAuthorized) {
                     MainHandler handler = ctx.pipeline().get(MainHandler.class);
                     handler.setUserDir(USER_SERVICE.getRootDirectoryByLogin(login));
                     ctx.writeAndFlush(new AuthResult(AuthResult.Result.OK_AUTH));
@@ -33,6 +38,7 @@ public class AuthHandlerService {
                     ctx.writeAndFlush(new AuthResult(AuthResult.Result.FAIL_AUTH));
                 }
                 break;
+                //If client want to create new account
             case REGISTRATION:
                 String root = MainHandler.getMainPath() + File.separator + login;
                 if (USER_SERVICE.createUser(login, password, root)) {
@@ -48,6 +54,6 @@ public class AuthHandlerService {
     }
 
     public boolean isAuthorized() {
-        return authorized;
+        return isAuthorized;
     }
 }

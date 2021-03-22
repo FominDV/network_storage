@@ -3,30 +3,18 @@ package ru.fomin.core;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;
-import ru.fomin.commands.CreatingAndUpdatingManipulationCommand;
-import ru.fomin.commands.CurrentDirectoryEntityList;
+import ru.fomin.commands.CreatingAndUpdatingManipulationRequest;
 import ru.fomin.commands.FileManipulationRequest;
-import ru.fomin.commands.FileManipulationResponse;
 import ru.fomin.entities.Directory;
-import ru.fomin.entities.FileData;
-import ru.fomin.classes.Constants;
-import ru.fomin.classes.FileChunkDownloader;
 import ru.fomin.file_packages.FileChunkPackage;
 import ru.fomin.file_packages.FileDataPackage;
 import ru.fomin.services.db_services.DirectoryService;
 import ru.fomin.services.db_services.FileDataService;
-import ru.fomin.services.db_services.UserService;
 import ru.fomin.services.handler_services.MainHandlerDownloadService;
 import ru.fomin.services.handler_services.MainHandlerFileManipulationService;
 import ru.fomin.services.handler_services.MainHandlerRequestDirectoryService;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.*;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import static java.util.concurrent.Executors.newFixedThreadPool;
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
@@ -60,8 +48,8 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
                 mainHandlerDownloadService.downloadSmallFile(ctx, (FileDataPackage) msg);
             } else if (msg instanceof FileChunkPackage) {
                 mainHandlerDownloadService.downloadBigFile(ctx, (FileChunkPackage) msg);
-            } else if (msg instanceof CreatingAndUpdatingManipulationCommand) {
-                mainHandlerRequestDirectoryService.requestDirectoryHandle(ctx, (CreatingAndUpdatingManipulationCommand) msg, currentDirectory);
+            } else if (msg instanceof CreatingAndUpdatingManipulationRequest) {
+                mainHandlerRequestDirectoryService.requestDirectoryHandle(ctx, (CreatingAndUpdatingManipulationRequest) msg, currentDirectory);
             }
         } finally {
             ReferenceCountUtil.release(msg);
