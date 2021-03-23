@@ -8,8 +8,10 @@ import ru.fomin.services.handler_services.AuthHandlerService;
 
 import java.io.IOException;
 
+/**
+ * Verifies authorizing, makes authenticate and creates new client data.
+ */
 public class AuthHandler extends ChannelInboundHandlerAdapter {
-
 
     private final AuthHandlerService authHandlerService;
 
@@ -19,6 +21,7 @@ public class AuthHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws IOException {
+        //if client is already authorized this request will be delegated to next handler
         if (authHandlerService.isAuthorized()) {
             ctx.fireChannelRead(msg);
             return;

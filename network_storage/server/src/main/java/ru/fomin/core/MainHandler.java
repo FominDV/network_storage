@@ -19,11 +19,14 @@ import java.io.IOException;
 import static java.util.concurrent.Executors.newFixedThreadPool;
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
 
+/**
+ * Processes requests from client after successful authorization.
+ */
 public class MainHandler extends ChannelInboundHandlerAdapter {
 
     //services
-    private final DirectoryService DIRECTORY_SERVICE;
-    private final FileDataService FILE_DATA_SERVICE;
+    private final DirectoryService directoryService;
+    private final FileDataService fileDataService;
     private final MainHandlerFileManipulationService mainHandlerFileManipulationService;
     private final MainHandlerRequestDirectoryService mainHandlerRequestDirectoryService;
     private final MainHandlerDownloadService mainHandlerDownloadService;
@@ -32,11 +35,11 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
     private Directory currentDirectory;
 
     public MainHandler() {
-        DIRECTORY_SERVICE = new DirectoryService();
-        FILE_DATA_SERVICE = new FileDataService();
-        mainHandlerFileManipulationService = new MainHandlerFileManipulationService(DIRECTORY_SERVICE, FILE_DATA_SERVICE);
-        mainHandlerRequestDirectoryService = new MainHandlerRequestDirectoryService(DIRECTORY_SERVICE, FILE_DATA_SERVICE);
-        mainHandlerDownloadService = new MainHandlerDownloadService(DIRECTORY_SERVICE, FILE_DATA_SERVICE);
+        directoryService = new DirectoryService();
+        fileDataService = new FileDataService();
+        mainHandlerFileManipulationService = new MainHandlerFileManipulationService(directoryService, fileDataService);
+        mainHandlerRequestDirectoryService = new MainHandlerRequestDirectoryService(directoryService, fileDataService);
+        mainHandlerDownloadService = new MainHandlerDownloadService(directoryService, fileDataService);
     }
 
     @Override
@@ -54,7 +57,6 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
         } finally {
             ReferenceCountUtil.release(msg);
         }
-
     }
 
     @Override

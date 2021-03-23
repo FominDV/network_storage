@@ -12,6 +12,9 @@ import java.util.Collection;
 
 public class FileDataDao {
 
+    /**
+     * Creates new file and returns id of new file.
+     */
     public Long create(FileData file) {
         Session session = SessionFactory.getSession();
         session.beginTransaction();
@@ -40,7 +43,7 @@ public class FileDataDao {
         return fileData;
     }
 
-    public void updateFile(FileData fileData){
+    public void updateFile(FileData fileData) {
         Session session = SessionFactory.getSession();
         session.beginTransaction();
         session.update(fileData);
