@@ -19,11 +19,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**Service for process FileManipulationRequest message from client.*/
+/**
+ * Service for process FileManipulationRequest message from client.
+ */
 public class MainHandlerFileManipulationService {
 
+    //services
     private final DirectoryService DIRECTORY_SERVICE;
     private final FileDataService FILE_DATA_SERVICE;
+
     private FileTransmitter fileTransmitter;
     private Thread fileTransmitterThread;
 
@@ -32,9 +36,12 @@ public class MainHandlerFileManipulationService {
         this.FILE_DATA_SERVICE = FILE_DATA_SERVICE;
     }
 
-
+    /**
+     * Verifies type of request and delegate it to needed method.
+     */
     public void requestFileHandle(ChannelHandlerContext ctx, FileManipulationRequest request, Directory currentDirectory) throws IOException {
         switch (request.getRequest()) {
+            //returns all files and nested directories from current directory
             case GET_FILES_LIST:
                 sendFileList(ctx, currentDirectory);
                 break;
@@ -44,6 +51,7 @@ public class MainHandlerFileManipulationService {
             case DELETE_DIR:
                 deleteDirectory(ctx, request.getId());
                 break;
+            //transfer file from server to client
             case DOWNLOAD:
                 upload(ctx, request.getId());
                 break;
@@ -53,7 +61,9 @@ public class MainHandlerFileManipulationService {
     }
 
     private void deleteFile(ChannelHandlerContext ctx, Long id, Directory currentDirectory) throws IOException {
+        //deletes from DB
         String fileName = FILE_DATA_SERVICE.deleteFile(id);
+        //deletes real file
         Path path = Paths.get(currentDirectory.getPath(), fileName);
         Files.delete(path);
         ctx.writeAndFlush(new FileManipulationResponse(FileManipulationResponse.Response.FILE_REMOVED, fileName, id));
@@ -61,7 +71,7 @@ public class MainHandlerFileManipulationService {
 
     private void upload(ChannelHandlerContext ctx, Long fileId) {
         if (fileTransmitter == null) {
-            fileTransmitter = new FileTransmitter(dataPackage->ctx.writeAndFlush(dataPackage));
+            fileTransmitter = new FileTransmitter(dataPackage -> ctx.writeAndFlush(dataPackage));
             fileTransmitterThread = new Thread(fileTransmitter);
             fileTransmitterThread.setDaemon(true);
             fileTransmitterThread.start();
@@ -81,8 +91,13 @@ public class MainHandlerFileManipulationService {
         ctx.writeAndFlush(new CurrentDirectoryEntityList(fileMap, directoryMap, currentDirectoryName, currentDirectory.getId()));
     }
 
+    /**
+     * Deletes directory and all that it contains.
+     */
     private void deleteDirectory(ChannelHandlerContext ctx, Long id) throws IOException {
+        //deletes from DB
         String directoryPathString = DIRECTORY_SERVICE.deleteDirectory(id);
+        //deletes real file
         Path directoryPath = Paths.get(directoryPathString);
         Files.walkFileTree(directoryPath, new SimpleFileVisitor<Path>() {
 

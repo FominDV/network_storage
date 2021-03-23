@@ -49,7 +49,7 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
             } else if (msg instanceof FileChunkPackage) {
                 mainHandlerDownloadService.downloadBigFile(ctx, (FileChunkPackage) msg);
             } else if (msg instanceof CreatingAndUpdatingManipulationRequest) {
-                mainHandlerRequestDirectoryService.requestDirectoryHandle(ctx, (CreatingAndUpdatingManipulationRequest) msg, currentDirectory);
+                mainHandlerRequestDirectoryService.requestDirectoryHandle(ctx, (CreatingAndUpdatingManipulationRequest) msg);
             }
         } finally {
             ReferenceCountUtil.release(msg);

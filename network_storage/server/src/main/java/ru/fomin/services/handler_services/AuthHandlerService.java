@@ -11,7 +11,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-/**Service for process AuthRequest message from client.*/
+/**
+ * Service for process AuthRequest message from client.
+ */
 public class AuthHandlerService {
 
     //Services
@@ -25,6 +27,9 @@ public class AuthHandlerService {
         isAuthorized = false;
     }
 
+    /**
+     * Processes request from client when he is not authorized yet.
+     */
     public void authHandle(ChannelHandlerContext ctx, AuthRequest.RequestType type, String login, String password) throws IOException {
         switch (type) {
             //If client want to authorize
@@ -38,9 +43,10 @@ public class AuthHandlerService {
                     ctx.writeAndFlush(new AuthResult(AuthResult.Result.FAIL_AUTH));
                 }
                 break;
-                //If client want to create new account
+            //If client want to create new account
             case REGISTRATION:
                 String root = MainHandler.getMainPath() + File.separator + login;
+                //Verifies existing duplicate login
                 if (USER_SERVICE.createUser(login, password, root)) {
                     Files.createDirectory(Paths.get(root));
                     ctx.writeAndFlush(new AuthResult(AuthResult.Result.OK_REG, login));

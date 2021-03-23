@@ -18,22 +18,29 @@ import java.nio.file.Paths;
  */
 public class MainHandlerRequestDirectoryService {
 
-    private final DirectoryService DIRECTORY_SERVICE;
-    private final FileDataService FILE_DATA_SERVICE;
+    //services
+    private final DirectoryService directoryService;
+    private final FileDataService fileDataService;
 
-    public MainHandlerRequestDirectoryService(DirectoryService DIRECTORY_SERVICE, FileDataService FILE_DATA_SERVICE) {
-        this.DIRECTORY_SERVICE = DIRECTORY_SERVICE;
-        this.FILE_DATA_SERVICE = FILE_DATA_SERVICE;
+    public MainHandlerRequestDirectoryService(DirectoryService directoryService, FileDataService fileDataService) {
+        this.directoryService = directoryService;
+        this.fileDataService = fileDataService;
     }
 
-    public void requestDirectoryHandle(ChannelHandlerContext ctx, CreatingAndUpdatingManipulationRequest request, Directory currentDirectory) throws IOException {
+    /**
+     * Verifies type of request and processes it.
+     */
+    public void requestDirectoryHandle(ChannelHandlerContext ctx, CreatingAndUpdatingManipulationRequest request) throws IOException {
         String newName = request.getNewName();
         Long id = request.getId();
         switch (request.getType()) {
+            //create new directory
             case CREATE:
                 Long newDirectoryId;
-                String newDirectory = DIRECTORY_SERVICE.getDirectoryById(id).getPath() + File.separator + newName;
-                if ((newDirectoryId = DIRECTORY_SERVICE.createDirectory(currentDirectory, newDirectory)) != -1) {
+                Directory parentDirectory = directoryService.getDirectoryById(id);
+                String newDirectory = parentDirectory.getPath() + File.separator + newName;
+                //This method returns '-1' if directory with this name already exist into this parent directory
+                if ((newDirectoryId = directoryService.createDirectory(parentDirectory, newDirectory)) != -1) {
                     Files.createDirectory(Paths.get(newDirectory));
                     ctx.writeAndFlush(new FileManipulationResponse(FileManipulationResponse.Response.DIR_CREATED, newName, newDirectoryId));
                 } else {
@@ -41,14 +48,14 @@ public class MainHandlerRequestDirectoryService {
                 }
                 break;
             case RENAME_DIR:
-                Path currentDirectoryPath = DIRECTORY_SERVICE.getDirectoryPathById(id);
-                Path newDirectoryPath = Paths.get(DIRECTORY_SERVICE.renameDirectory(id, newName));
+                Path currentDirectoryPath = directoryService.getDirectoryPathById(id);
+                Path newDirectoryPath = Paths.get(directoryService.renameDirectory(id, newName));
                 Files.move(currentDirectoryPath, newDirectoryPath);
                 ctx.writeAndFlush(new FileManipulationResponse(FileManipulationResponse.Response.RENAME_DIR, newName, id));
                 break;
             case RENAME_FILE:
-                Path currentFilePath = FILE_DATA_SERVICE.getFilePathById(id);
-                Path newFilePath = FILE_DATA_SERVICE.renameFileData(id, newName);
+                Path currentFilePath = fileDataService.getFilePathById(id);
+                Path newFilePath = fileDataService.renameFileData(id, newName);
                 Files.move(currentFilePath, newFilePath);
                 ctx.writeAndFlush(new FileManipulationResponse(FileManipulationResponse.Response.RENAME_FILE, newName, id));
                 break;
