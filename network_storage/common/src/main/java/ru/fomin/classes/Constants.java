@@ -1,7 +1,11 @@
 package ru.fomin.classes;
 
+/**
+ * Constants for client and serves side.
+ */
 public class Constants {
 
+    //parts of name for view in GUI
     private static final String FILE_NAME_PREFIX = "file: ";
     private static final String DIRECTORY_NAME_PREFIX = "directory: ";
 

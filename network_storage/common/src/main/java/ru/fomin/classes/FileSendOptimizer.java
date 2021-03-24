@@ -19,7 +19,6 @@ public class FileSendOptimizer {
 
 
     public void sendFile(Path path, Long directoryId, Consumer<DataPackage> sendAction) throws IOException {
-
         if (size(path) < CHUNK_SIZE * 8) {
             sendFull(path, directoryId, sendAction);
         } else {
