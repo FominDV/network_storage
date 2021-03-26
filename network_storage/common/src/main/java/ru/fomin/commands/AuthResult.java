@@ -1,6 +1,8 @@
 package ru.fomin.commands;
 
-
+/**
+ * DTO with result of authentication or registration request.
+ */
 public class AuthResult
         extends DataPackage {
 

@@ -43,7 +43,7 @@ public class FileTransmitter implements Runnable {
         fileDestinationMap = new HashMap<>();
         fileSendOptimizer = new FileSendOptimizer();
     }
-    
+
     @Override
     public void run() {
         try {
@@ -63,7 +63,6 @@ public class FileTransmitter implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     /**

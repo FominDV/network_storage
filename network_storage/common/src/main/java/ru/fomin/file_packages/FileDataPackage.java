@@ -7,14 +7,15 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-
+/**
+ * DTO for transfer file by one piece.
+ */
 public class FileDataPackage
         extends DataPackage {
 
     protected final String filename;
     protected final byte[] data;
     private Long directoryId;
-
 
     public FileDataPackage(Path path, Long directoryId)
             throws IOException {
@@ -23,11 +24,9 @@ public class FileDataPackage
         data = Files.readAllBytes(path);
     }
 
-
     public String getFilename() {
         return filename;
     }
-
 
     public byte[] getData() {
         return data;
@@ -36,5 +35,4 @@ public class FileDataPackage
     public Long getDirectoryId() {
         return directoryId;
     }
-
 }

@@ -5,7 +5,9 @@ import ru.fomin.commands.DataPackage;
 
 import java.nio.file.Path;
 
-
+/**
+ * DTO for transfer file by chunks
+ */
 public class FileChunkPackage
         extends DataPackage {
 
@@ -13,9 +15,7 @@ public class FileChunkPackage
     private final byte[] data;
     private final int num;
     private final boolean last;
-
     private final Long directoryId;
-
 
     public FileChunkPackage(Path path, byte[] chunk, int num, Long directoryId) {
         filename = path.getFileName().toString();
@@ -25,7 +25,6 @@ public class FileChunkPackage
         this.directoryId = directoryId;
     }
 
-
     public FileChunkPackage(Path path, byte[] chunk, Long directoryId) {
         filename = path.getFileName().toString();
         data = chunk;
@@ -34,31 +33,25 @@ public class FileChunkPackage
         this.directoryId = directoryId;
     }
 
-
     public String getFilename() {
         return filename;
     }
-
 
     public int getNum() {
         return num;
     }
 
-
     public byte[] getData() {
         return data;
     }
-
 
     public boolean isLast() {
         return last;
     }
 
-
     public boolean isFirst() {
         return num == 1;
     }
-
     public Long getDirectoryId() {
         return directoryId;
     }
