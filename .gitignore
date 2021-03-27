@@ -1,5 +1,5 @@
 /.idea
-/target
+*/target
 /main_repository/*
-/out
-/*.iml
+*/out
+*.iml
