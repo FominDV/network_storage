@@ -4,14 +4,26 @@ import org.hibernate.Session;
 import ru.fomin.entities.Directory;
 import ru.fomin.entities.FileData;
 
+import javax.persistence.Query;
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Collection;
+
 public class FileDataDao {
 
-    public void create(FileData file) {
+    /**
+     * Creates new file and returns id of new file.
+     */
+    public Long create(FileData file) {
         Session session = SessionFactory.getSession();
         session.beginTransaction();
         session.save(file);
+        Query query = session.createQuery("select max(d.id) from FileData d", Long.class);
+        Long id = (Long) query.getSingleResult();
         session.getTransaction().commit();
         session.close();
+        return id;
     }
 
     public void deleteFile(FileData fileData) {
@@ -25,9 +37,17 @@ public class FileDataDao {
     public FileData getFile(Long id) {
         Session session = SessionFactory.getSession();
         session.beginTransaction();
-        FileData fileData=session.get(FileData.class,id);
+        FileData fileData = session.get(FileData.class, id);
         session.getTransaction().commit();
         session.close();
         return fileData;
+    }
+
+    public void updateFile(FileData fileData) {
+        Session session = SessionFactory.getSession();
+        session.beginTransaction();
+        session.update(fileData);
+        session.getTransaction().commit();
+        session.close();
     }
 }

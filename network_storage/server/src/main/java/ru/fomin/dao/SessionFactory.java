@@ -18,10 +18,6 @@ public class SessionFactory {
                 buildSessionFactory();
     }
 
-    public static org.hibernate.SessionFactory getSessionFactory() {
-        return SESSION_FACTORY;
-    }
-
     public static Session getSession() {
         return SESSION_FACTORY.openSession();
     }

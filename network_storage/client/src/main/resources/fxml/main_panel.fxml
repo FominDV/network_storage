@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="555.0" prefWidth="844.0" style="-fx-background-color: #c5c7f1;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.fomin.gui.controllers.MainPanelController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="579.0" prefWidth="844.0" style="-fx-background-color: #c5c7f1;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.fomin.controllers.MainPanelController">
     <children>
         <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="100.0" prefWidth="300.0" style="-fx-background-color: #771aff;">
             <children>
@@ -45,7 +45,7 @@
             </ImageView>
             </children>
         </AnchorPane>
-        <TextField fx:id="field_directory_name" focusTraversable="false" layoutX="311.0" layoutY="501.0" prefHeight="40.0" prefWidth="490.0" promptText="name of directory" style="-fx-border-color: #0c2dff; -fx-border-radius: 6;">
+        <TextField fx:id="field_resource_name" focusTraversable="false" layoutX="318.0" layoutY="521.0" prefHeight="40.0" prefWidth="490.0" promptText="name of resource" style="-fx-border-color: #0c2dff; -fx-border-radius: 6;">
             <font>
                 <Font name="Times New Roman Italic" size="18.0" />
             </font>
@@ -55,27 +55,27 @@
             <Font name="Impact" size="20.0" />
          </font>
       </Button>
-      <Button fx:id="btn_upload" layoutX="14.0" layoutY="240.0" mnemonicParsing="false" prefHeight="62.0" prefWidth="134.0" style="-fx-background-color: #7fcfff; -fx-border-color: #0c2dff; -fx-border-radius: 6;" text="Upload&#10;File&#10;" textAlignment="CENTER" textFill="#244bd7">
+      <Button fx:id="btn_upload" layoutX="14.0" layoutY="226.0" mnemonicParsing="false" prefHeight="62.0" prefWidth="134.0" style="-fx-background-color: #7fcfff; -fx-border-color: #0c2dff; -fx-border-radius: 6;" text="Upload&#10;File&#10;" textAlignment="CENTER" textFill="#244bd7">
          <font>
             <Font name="Impact" size="20.0" />
          </font>
       </Button>
-      <Button fx:id="btn_delete" layoutX="14.0" layoutY="328.0" mnemonicParsing="false" prefHeight="62.0" prefWidth="134.0" style="-fx-background-color: #7fcfff; -fx-border-color: #0c2dff; -fx-border-radius: 6;" text="Delete&#10;File&#10;" textAlignment="CENTER" textFill="#244bd7">
+      <Button fx:id="btn_delete" layoutX="14.0" layoutY="373.0" mnemonicParsing="false" prefHeight="62.0" prefWidth="134.0" style="-fx-background-color: #7fcfff; -fx-border-color: #0c2dff; -fx-border-radius: 6;" text="Delete&#10;" textAlignment="CENTER" textFill="#244bd7">
          <font>
             <Font name="Impact" size="20.0" />
          </font>
       </Button>
-      <Button fx:id="btn_download" layoutX="14.0" layoutY="419.0" mnemonicParsing="false" prefHeight="62.0" prefWidth="134.0" style="-fx-background-color: #7fcfff; -fx-border-color: #0c2dff; -fx-border-radius: 6;" text="Download&#10;File&#10;" textAlignment="CENTER" textFill="#244bd7">
+      <Button fx:id="btn_download" layoutX="14.0" layoutY="301.0" mnemonicParsing="false" prefHeight="62.0" prefWidth="134.0" style="-fx-background-color: #7fcfff; -fx-border-color: #0c2dff; -fx-border-radius: 6;" text="Download&#10;File&#10;" textAlignment="CENTER" textFill="#244bd7">
          <font>
             <Font name="Impact" size="20.0" />
          </font>
       </Button>
-      <ScrollPane layoutX="170.0" layoutY="167.0" prefHeight="322.0" prefWidth="638.0">
+      <ScrollPane layoutX="170.0" layoutY="170.0" prefHeight="336.0" prefWidth="638.0">
          <content>
-            <ListView fx:id="list_files" prefHeight="320.0" prefWidth="635.0" />
+            <ListView fx:id="list_files" prefHeight="334.0" prefWidth="635.0" />
          </content>
       </ScrollPane>
-      <Button fx:id="btn_create_dir" layoutX="17.0" layoutY="501.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="283.0" style="-fx-background-color: #7fcfff; -fx-border-color: #0c2dff; -fx-border-radius: 6;" text="Create new remote directory&#10;" textAlignment="CENTER" textFill="#244bd7">
+      <Button fx:id="btn_create_dir" layoutX="17.0" layoutY="521.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="283.0" style="-fx-background-color: #7fcfff; -fx-border-color: #0c2dff; -fx-border-radius: 6;" text="Create new remote directory&#10;" textAlignment="CENTER" textFill="#244bd7">
          <font>
             <Font name="Impact" size="20.0" />
          </font>
@@ -95,5 +95,10 @@
             <Font name="Impact" size="20.0" />
          </font>
       </Label>
+      <Button fx:id="btn_rename" layoutX="14.0" layoutY="444.0" mnemonicParsing="false" prefHeight="62.0" prefWidth="134.0" style="-fx-background-color: #7fcfff; -fx-border-color: #0c2dff; -fx-border-radius: 6;" text="Rename&#10;" textAlignment="CENTER" textFill="#244bd7">
+         <font>
+            <Font name="Impact" size="20.0" />
+         </font>
+      </Button>
     </children>
 </AnchorPane>
