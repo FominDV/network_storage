@@ -16,6 +16,9 @@ import java.util.concurrent.ExecutorService;
 
 import static java.util.concurrent.Executors.newFixedThreadPool;
 
+/**
+ * Class for creating connection to server, sending and accepting messages.
+ */
 public class NetworkConnection {
 
     private boolean isConnected;
@@ -44,11 +47,14 @@ public class NetworkConnection {
         return instance;
     }
 
+    /**
+     * Creating connection to server.
+     */
     public void connect() throws IOException {
-        if(isConnected){
+        if (isConnected) {
             return;
         }
-        isConnected=true;
+        isConnected = true;
         executorService = newFixedThreadPool(2);
         socket = new Socket();
         try {
@@ -62,14 +68,18 @@ public class NetworkConnection {
             fileTransmitter = new FileTransmitter(dataPackage -> sendToServer(dataPackage));
             executorService.execute(fileTransmitter);
         } catch (IOException e) {
-            isConnected=false;
+            isConnected = false;
             throw new IOException();
         }
     }
 
+    /**
+     * Closing connection to server.
+     */
     public void closeConnection() {
-        isConnected=false;
+        isConnected = false;
         try {
+            responseService.clearDownloadingFilesMap();
             executorService.shutdownNow();
             in.close();
             out.close();
@@ -98,6 +108,9 @@ public class NetworkConnection {
         return null;
     }
 
+    /**
+     * Closing connection and going out to authentication window.
+     */
     private void exitOnFatalConnectionError() {
         if (isConnected) {
             closeConnection();

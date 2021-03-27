@@ -8,52 +8,78 @@ import javafx.scene.control.Labeled;
 import javafx.stage.Stage;
 
 import javax.swing.*;
-import java.io.File;
 import java.io.IOException;
 
+/**
+ * Utility class for base helpful operations.
+ */
 public class ControllersUtil {
 
+    /*The password should be at least 8 characters long,
+     contain at least 1 large letter,
+     one small letter
+     and contain special character OR digit*/
     private static final String PASSWORD_PATTERN = "(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9@#$%]).{8,}";
 
+    /**
+     * Shows pop-up window with information about developer.
+     */
     public static void showDeveloperInfo() {
         JOptionPane.showMessageDialog(null,
                 "<html>Developer: Dmitriy Fomin<br>GitHub: https://github.com/FominDV <br> Email: 79067773397@yandex.ru<br>*All rights reserved*</html>",
                 "Developer info", JOptionPane.INFORMATION_MESSAGE);
     }
 
-
+    /**
+     * Shows pop-up window with question about overriding file when this name of file already exist.
+     */
     public static boolean isConfirmOverrideFile(String fileName) {
         return isConfirm(
                 String.format("<html>File with the name \"%s\" already exist.<br>Do you want override this file?</html>", fileName),
                 "FileExistException");
     }
 
+    /**
+     * Shows pop-up window for confirming removing directory.
+     */
     public static boolean isConfirmDeleteDirectory() {
         return isConfirm(
                 "Are you sure you want to remove directory with all entity?",
                 "Warning");
     }
 
+    /**
+     * Shows universal pop-up window for confirming.
+     *
+     * @param message - question to user
+     * @param title   - header of pop-up window
+     */
     private static boolean isConfirm(String message, String title) {
         int response = JOptionPane.showConfirmDialog(null, message, title, JOptionPane.YES_NO_OPTION);
         return response == 0 ? true : false;
     }
 
-
+    /**
+     * Universal method hiding window and showing other window.
+     *
+     * @param pathOfFXML - path to fxml of showing window
+     * @param labeled    - Labeled of window that will be hide
+     */
     public static void showAndHideStages(String pathOfFXML, Labeled labeled) {
         hideWindow(labeled);
         showStage(pathOfFXML);
     }
 
-    public static void hideWindow(Labeled labeled){
+    /**
+     * Hides window by it's Labeled.
+     */
+    public static void hideWindow(Labeled labeled) {
         Platform.runLater(() -> labeled.getScene().getWindow().hide());
     }
 
-
-    public static void showErrorMessage(String message) {
-        JOptionPane.showMessageDialog(null, message, "ERROR", JOptionPane.ERROR_MESSAGE);
-    }
-
+    /**
+     * Shows window by it's path to fxml.
+     */
     public static void showStage(String pathOfFXML) {
         Platform.runLater(() -> {
             Stage stage = getStage(pathOfFXML);
@@ -66,6 +92,27 @@ public class ControllersUtil {
         });
     }
 
+    /**
+     * Shows pop-up window with message of error.
+     *
+     * @param message - message of error
+     */
+    public static void showErrorMessage(String message) {
+        JOptionPane.showMessageDialog(null, message, "ERROR", JOptionPane.ERROR_MESSAGE);
+    }
+
+    /**
+     * Shows pop-up window with simple message.
+     *
+     * @param message - message for pop-up window
+     */
+    public static void showInfoMessage(String message) {
+        JOptionPane.showMessageDialog(null, message);
+    }
+
+    /**
+     * Returns stage of window by it's path to fxml.
+     */
     public static Stage getStage(String pathOfFXML) {
         FXMLLoader loader = new FXMLLoader();
 
@@ -82,15 +129,18 @@ public class ControllersUtil {
         return stage;
     }
 
-    public static void showInfoMessage(String message) {
-        JOptionPane.showMessageDialog(null, message);
-    }
-
+    /**
+     * Verifies string by length and existence.
+     */
     public static boolean hasText(String str) {
         return str != null && str.length() != 0 ? true : false;
     }
 
+    /**
+     * Verifies login and password for registration.
+     */
     public static boolean validation(String login, String password, String repeated_password) {
+
         //Verify empty field
         if (!(hasText(login) && hasText(password) && hasText(repeated_password))) {
             showErrorMessage("All field should be fill");
@@ -104,9 +154,21 @@ public class ControllersUtil {
             return false;
         }
 
+        //verifies password
+        return verifyPassword(password, repeated_password);
+    }
+
+    /**
+     * Verifies password for registration or changing password.
+     */
+    public static boolean verifyPassword(String password, String repeated_password) {
+
         //Verify password entity
         if (!password.matches(PASSWORD_PATTERN)) {
-            showErrorMessage("The password should be at least 8 characters long,\n contain at least 1 large letter,\n one small letter\n and contain special character OR digit.");
+            showErrorMessage("The password should be at least 8 characters long,\n" +
+                    " contain at least 1 large letter,\n" +
+                    " one small letter\n" +
+                    " and contain special character OR digit.");
             return false;
         }
 
@@ -115,9 +177,13 @@ public class ControllersUtil {
             showErrorMessage("The passwords don't match");
             return false;
         }
+
         return true;
     }
 
+    /**
+     * Shows pop-up window with message of connection error.
+     */
     public static void showConnectionError() {
         showErrorMessage("Unable to connect to the server");
     }

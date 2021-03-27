@@ -1,4 +1,4 @@
-package ru.fomin.gui.controllers;
+package ru.fomin.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -8,6 +8,9 @@ import ru.fomin.services.ResponseService;
 import ru.fomin.services.RequestService;
 import ru.fomin.util.ControllersUtil;
 
+/**
+ * Window for changing password.
+ */
 public class UpdatePasswordController {
 
     private RequestService requestService;

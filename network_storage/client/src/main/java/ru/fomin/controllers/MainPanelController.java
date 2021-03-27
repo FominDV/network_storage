@@ -1,4 +1,4 @@
-package ru.fomin.gui.controllers;
+package ru.fomin.controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -23,11 +23,17 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 
+/**
+ * Main work window for all operations with files.
+ */
 public class MainPanelController {
 
-    private RequestService requestService;
+    /*key - name of resource on client side
+      value - id of resource on server side*/
     private Map<String, Long> fileMap = new HashMap<>();
     private Map<String, Long> directoryMap = new HashMap<>();
+
+    private RequestService requestService;
     private ObservableList<String> observableList;
     private MultipleSelectionModel<String> multipleSelectionModel;
     private FileChooser fileChooser = new FileChooser();
@@ -97,9 +103,14 @@ public class MainPanelController {
         btn_rename.setOnAction(event -> rename());
 
         ResponseService.setMainPanelController(this);
+
+        //Request to server for setting list of file and nested directories;
         requestService.getCurrentDirectoryEntity();
     }
 
+    /**
+     * Rename chosen file or directory.
+     */
     private void rename() {
         String resourceName = multipleSelectionModel.getSelectedItem();
         if (!hasText(resourceName)) {
@@ -135,6 +146,7 @@ public class MainPanelController {
             type = CreatingAndUpdatingManipulationRequest.Type.RENAME_DIR;
             id = directoryMap.get(resourceName);
         } else {
+            //resource is not contained into maps
             showErrorMessage("Fatal error");
             requestService.exitToAuthentication(btn_info);
             return;
@@ -144,6 +156,9 @@ public class MainPanelController {
         field_resource_name.setText("");
     }
 
+    /**
+     * Creating new directory on server.
+     */
     private void createDirectory() {
         String dirName = field_resource_name.getText();
         if (!hasText(dirName)) {
@@ -155,6 +170,9 @@ public class MainPanelController {
         field_resource_name.setText("");
     }
 
+    /**
+     * Removing chosen file or directory on server.
+     */
     private void delete() {
         String fileName = multipleSelectionModel.getSelectedItem();
         if (!hasText(fileName)) {
@@ -164,15 +182,18 @@ public class MainPanelController {
         Long id;
         FileManipulationRequest.Request type;
         if (fileMap.containsKey(fileName)) {
+            //it is file
             type = DELETE_FILE;
             id = fileMap.get(fileName);
         } else if (directoryMap.containsKey(fileName)) {
+            //it is directory
             if (!isConfirmDeleteDirectory()) {
                 return;
             }
             type = DELETE_DIR;
             id = directoryMap.get(fileName);
         } else {
+            //resource is not contained into maps
             showErrorMessage("Fatal error");
             requestService.exitToAuthentication(btn_info);
             return;
@@ -180,6 +201,9 @@ public class MainPanelController {
         requestService.delete(id, type);
     }
 
+    /**
+     * Downloading chosen file from server.
+     */
     private void download() {
         String fileName = multipleSelectionModel.getSelectedItem();
         if (!hasText(fileName)) {
@@ -187,9 +211,11 @@ public class MainPanelController {
             return;
         }
         if (!fileMap.containsKey(fileName)) {
+            //it is not a file
             showErrorMessage("It is the directory\nYou can download only file\nChoose the file, please");
             return;
         }
+        //Choosing directory for downloading
         File directory = directoryChooser.showDialog(null);
         if (directory == null) {
             return;
@@ -206,6 +232,9 @@ public class MainPanelController {
         requestService.download(id, directory.toString());
     }
 
+    /**
+     * Uploading file to server.
+     */
     private void upload() {
         File file = fileChooser.showOpenDialog(null);
         if (file == null) {
@@ -219,7 +248,9 @@ public class MainPanelController {
         requestService.getCurrentDirectoryEntity();
     }
 
-
+    /**
+     * Updating list of files and nested directories on client side.
+     */
     public void updateDirectoryEntity(CurrentDirectoryEntityList com) {
         fileMap = com.getFileMap();
         directoryMap = com.getDirectoryMap();
@@ -237,6 +268,9 @@ public class MainPanelController {
         if (multipleSelectionModel.getSelectedItem() == null) multipleSelectionModel.select(0);
     }
 
+    /**
+     * Handling responses from server.
+     */
     public synchronized void getFileManipulationResponse(FileManipulationResponse response) {
         String fileName = response.getFileName();
         Long id = response.getId();
@@ -293,6 +327,9 @@ public class MainPanelController {
         }
     }
 
+    /**
+     * Updating maps because name of file or directory was changed.
+     */
     private void handleRenameResponse(Map<String, Long> map, String resource, Long id, String newName, String prefix) {
         for (Map.Entry<String, Long> entry : map.entrySet()) {
             if (entry.getValue().equals(id)) {

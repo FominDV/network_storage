@@ -15,22 +15,23 @@ public class FileChunkPackage
     private final byte[] data;
     private final int num;
     private final boolean last;
-    private final Long directoryId;
+    //id of file or directory
+    private final Long id;
 
-    public FileChunkPackage(Path path, byte[] chunk, int num, Long directoryId) {
+    public FileChunkPackage(Path path, byte[] chunk, int num, Long id) {
         filename = path.getFileName().toString();
         data = chunk;
         this.num = num;
         last = false;
-        this.directoryId = directoryId;
+        this.id = id;
     }
 
-    public FileChunkPackage(Path path, byte[] chunk, Long directoryId) {
+    public FileChunkPackage(Path path, byte[] chunk, Long id) {
         filename = path.getFileName().toString();
         data = chunk;
         this.num = -1;
         last = true;
-        this.directoryId = directoryId;
+        this.id = id;
     }
 
     public String getFilename() {
@@ -52,7 +53,7 @@ public class FileChunkPackage
     public boolean isFirst() {
         return num == 1;
     }
-    public Long getDirectoryId() {
-        return directoryId;
+    public Long getId() {
+        return id;
     }
 }

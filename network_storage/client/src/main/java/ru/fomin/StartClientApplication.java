@@ -6,6 +6,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+/**
+ * Starts application and shows window of authentication.
+ */
 public class StartClientApplication extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {

@@ -3,9 +3,11 @@ package ru.fomin.network;
 import ru.fomin.dto.DataPackage;
 import ru.fomin.services.ResponseService;
 
-
 import static java.lang.Thread.currentThread;
 
+/**
+ * Class for accepting all messages from server.
+ */
 public class ResponseReceiver implements Runnable {
 
     private final NetworkConnection networkConnection;

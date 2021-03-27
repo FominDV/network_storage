@@ -53,7 +53,7 @@ public class MainHandlerDownloadService {
      */
     public void downloadBigFile(ChannelHandlerContext ctx, FileChunkPackage pack) throws IOException {
         String fileName = pack.getFilename();
-        Long directoryId = pack.getDirectoryId();
+        Long directoryId = pack.getId();
         //Verifies existing of file with this name
         if (isFileExist(ctx, fileName, directoryId)) {
             return;

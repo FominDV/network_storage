@@ -1,4 +1,4 @@
-package ru.fomin.gui.controllers;
+package ru.fomin.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -15,15 +15,21 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * Window of authentication.
+ */
 public class AuthenticationController {
 
+    //initial values of login and password
     private static String login = "Dmitriy777";
     private static String password = "Dmitriy777";
+
     private RequestService requestService;
     private NetworkConnection networkConnection;
 
     @FXML
     private ResourceBundle resources;
+
     @FXML
     private Button btn_info;
 
@@ -65,25 +71,24 @@ public class AuthenticationController {
 
         requestService = RequestService.getInstance();
 
-        networkConnection=NetworkConnection.getInstance();
+        networkConnection = NetworkConnection.getInstance();
 
         ResponseService.setAuthenticationController(this);
     }
 
+    /**
+     * Create connection to server.
+     *
+     * @return - true if connection was created
+     */
     private boolean connect() {
-            try {
-                networkConnection.connect();
-            } catch (IOException e) {
-                //e.printStackTrace();
-                showConnectionError();
-                return false;
-            }
+        try {
+            networkConnection.connect();
+        } catch (IOException e) {
+            showConnectionError();
+            return false;
+        }
         return true;
-    }
-
-    static void setAuthenticationData(String login, String password) {
-        AuthenticationController.login = login;
-        AuthenticationController.password = password;
     }
 
     private void authentication() {
@@ -100,6 +105,9 @@ public class AuthenticationController {
         requestService.authentication(login, password);
     }
 
+    /**
+     * Handling response from server.
+     */
     public void handleResponse(AuthResult.Result result) {
         if (result == AuthResult.Result.OK_AUTH) {
             showAndHideStages("/fxml/main_panel.fxml", btn_login);
@@ -108,5 +116,10 @@ public class AuthenticationController {
             field_password.setText("");
             showErrorMessage("Invalid login or password");
         }
+    }
+
+    static void setAuthenticationData(String login, String password) {
+        AuthenticationController.login = login;
+        AuthenticationController.password = password;
     }
 }
