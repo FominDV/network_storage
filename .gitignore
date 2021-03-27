@@ -1,5 +1,5 @@
 /.idea
 /target
-network_storage/main_repository/*
+/main_repository/*
 /out
-*.iml
+/*.iml
