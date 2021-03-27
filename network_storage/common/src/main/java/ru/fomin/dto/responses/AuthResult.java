@@ -1,4 +1,6 @@
-package ru.fomin.commands;
+package ru.fomin.dto.responses;
+
+import ru.fomin.dto.DataPackage;
 
 /**
  * DTO with result of authentication or registration request.

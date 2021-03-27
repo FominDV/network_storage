@@ -4,7 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import ru.fomin.commands.AuthResult;
+import ru.fomin.dto.responses.AuthResult;
 import ru.fomin.services.ResponseService;
 import ru.fomin.services.RequestService;
 import ru.fomin.network.NetworkConnection;

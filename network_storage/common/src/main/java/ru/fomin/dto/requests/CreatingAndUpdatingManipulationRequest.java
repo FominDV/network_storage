@@ -1,6 +1,11 @@
-package ru.fomin.commands;
+package ru.fomin.dto.requests;
 
-public class CreatingAndUpdatingManipulationRequest extends DataPackage{
+import ru.fomin.dto.DataPackage;
+
+/**
+ * DTO with command for creating and renaming directory, and also renaming file.
+ */
+public class CreatingAndUpdatingManipulationRequest extends DataPackage {
 
     private final String newName;
     private final Long id;
@@ -12,7 +17,7 @@ public class CreatingAndUpdatingManipulationRequest extends DataPackage{
         this.type = type;
     }
 
-    public enum Type{
+    public enum Type {
         CREATE, RENAME_DIR, RENAME_FILE
     }
 

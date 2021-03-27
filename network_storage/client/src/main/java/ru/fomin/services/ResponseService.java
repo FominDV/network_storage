@@ -2,12 +2,12 @@ package ru.fomin.services;
 
 import javafx.application.Platform;
 import ru.fomin.classes.FileChunkDownloader;
-import ru.fomin.commands.AuthResult;
-import ru.fomin.commands.CurrentDirectoryEntityList;
-import ru.fomin.commands.DataPackage;
-import ru.fomin.commands.FileManipulationResponse;
-import ru.fomin.file_packages.FileChunkPackage;
-import ru.fomin.file_packages.FileDataPackage;
+import ru.fomin.dto.responses.AuthResult;
+import ru.fomin.dto.responses.CurrentDirectoryEntityList;
+import ru.fomin.dto.DataPackage;
+import ru.fomin.dto.responses.FileManipulationResponse;
+import ru.fomin.dto.file_packages.FileChunkPackage;
+import ru.fomin.dto.file_packages.FileDataPackage;
 import ru.fomin.gui.controllers.AuthenticationController;
 import ru.fomin.gui.controllers.MainPanelController;
 import ru.fomin.gui.controllers.RegistrationController;

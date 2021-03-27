@@ -3,7 +3,7 @@ package ru.fomin.network;
 import io.netty.handler.codec.serialization.ObjectDecoderInputStream;
 import io.netty.handler.codec.serialization.ObjectEncoderOutputStream;
 import ru.fomin.classes.FileTransmitter;
-import ru.fomin.commands.DataPackage;
+import ru.fomin.dto.DataPackage;
 import ru.fomin.services.ResponseService;
 
 import java.io.File;

@@ -1,9 +1,13 @@
-package ru.fomin.commands;
+package ru.fomin.dto.responses;
 
+
+import ru.fomin.dto.DataPackage;
 
 import java.util.Map;
 
-
+/**
+ * DTO for sending from server to client list of files and nested directories of current directory that is been using client now.
+ */
 public class CurrentDirectoryEntityList extends DataPackage {
 
     private Map<String, Long> fileMap;
@@ -22,24 +26,12 @@ public class CurrentDirectoryEntityList extends DataPackage {
         return currentDirectory;
     }
 
-    public void setCurrentDirectory(String currentDirectory) {
-        this.currentDirectory = currentDirectory;
-    }
-
     public Map<String, Long> getFileMap() {
         return fileMap;
     }
 
-    public void setFileMap(Map<String, Long> fileMap) {
-        this.fileMap = fileMap;
-    }
-
     public Map<String, Long> getDirectoryMap() {
         return directoryMap;
-    }
-
-    public void setDirectoryMap(Map<String, Long> directoryMap) {
-        this.directoryMap = directoryMap;
     }
 
     public Long getCurrentDirectoryId() {

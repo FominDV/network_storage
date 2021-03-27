@@ -1,8 +1,8 @@
 package ru.fomin.services.handler_services;
 
 import io.netty.channel.ChannelHandlerContext;
-import ru.fomin.commands.AuthRequest;
-import ru.fomin.commands.AuthResult;
+import ru.fomin.dto.requests.AuthRequest;
+import ru.fomin.dto.responses.AuthResult;
 import ru.fomin.core.MainHandler;
 import ru.fomin.services.db_services.UserService;
 

@@ -2,9 +2,9 @@ package ru.fomin.services.handler_services;
 
 import io.netty.channel.ChannelHandlerContext;
 import ru.fomin.classes.FileChunkDownloader;
-import ru.fomin.commands.FileManipulationResponse;
-import ru.fomin.file_packages.FileChunkPackage;
-import ru.fomin.file_packages.FileDataPackage;
+import ru.fomin.dto.responses.FileManipulationResponse;
+import ru.fomin.dto.file_packages.FileChunkPackage;
+import ru.fomin.dto.file_packages.FileDataPackage;
 import ru.fomin.services.db_services.DirectoryService;
 import ru.fomin.services.db_services.FileDataService;
 

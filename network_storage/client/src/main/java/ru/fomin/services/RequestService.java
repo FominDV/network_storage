@@ -1,9 +1,12 @@
 package ru.fomin.services;
 
 import javafx.application.Platform;
-import ru.fomin.commands.*;
+import ru.fomin.dto.*;
 
 import javafx.scene.control.Button;
+import ru.fomin.dto.requests.AuthRequest;
+import ru.fomin.dto.requests.CreatingAndUpdatingManipulationRequest;
+import ru.fomin.dto.requests.FileManipulationRequest;
 import ru.fomin.network.NetworkConnection;
 
 import static ru.fomin.util.ControllersUtil.*;

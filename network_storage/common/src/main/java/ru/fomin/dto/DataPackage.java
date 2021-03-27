@@ -1,11 +1,12 @@
-package ru.fomin.commands;
+package ru.fomin.dto;
 
 
 import java.io.Serializable;
 
-
-public abstract class DataPackage
-		implements Serializable
+/**
+ * Base class for all DTO.
+ */
+public abstract class DataPackage implements Serializable
 {
 
   @Override

@@ -2,9 +2,9 @@ package ru.fomin.services.handler_services;
 
 import io.netty.channel.ChannelHandlerContext;
 import ru.fomin.classes.Constants;
-import ru.fomin.commands.CurrentDirectoryEntityList;
-import ru.fomin.commands.FileManipulationRequest;
-import ru.fomin.commands.FileManipulationResponse;
+import ru.fomin.dto.responses.CurrentDirectoryEntityList;
+import ru.fomin.dto.requests.FileManipulationRequest;
+import ru.fomin.dto.responses.FileManipulationResponse;
 import ru.fomin.classes.FileTransmitter;
 import ru.fomin.core.MainHandler;
 import ru.fomin.entities.Directory;

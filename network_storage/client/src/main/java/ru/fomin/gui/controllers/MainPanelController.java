@@ -9,13 +9,13 @@ import javafx.stage.FileChooser;
 import ru.fomin.services.ResponseService;
 import ru.fomin.services.RequestService;
 import ru.fomin.classes.Constants;
-import ru.fomin.commands.CreatingAndUpdatingManipulationRequest;
-import ru.fomin.commands.CurrentDirectoryEntityList;
-import ru.fomin.commands.FileManipulationRequest;
-import ru.fomin.commands.FileManipulationResponse;
+import ru.fomin.dto.requests.CreatingAndUpdatingManipulationRequest;
+import ru.fomin.dto.responses.CurrentDirectoryEntityList;
+import ru.fomin.dto.requests.FileManipulationRequest;
+import ru.fomin.dto.responses.FileManipulationResponse;
 
-import static ru.fomin.commands.FileManipulationRequest.Request.DELETE_DIR;
-import static ru.fomin.commands.FileManipulationRequest.Request.DELETE_FILE;
+import static ru.fomin.dto.requests.FileManipulationRequest.Request.DELETE_DIR;
+import static ru.fomin.dto.requests.FileManipulationRequest.Request.DELETE_FILE;
 import static ru.fomin.util.ControllersUtil.*;
 
 import java.io.File;

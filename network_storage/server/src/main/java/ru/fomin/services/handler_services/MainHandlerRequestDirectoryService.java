@@ -1,8 +1,8 @@
 package ru.fomin.services.handler_services;
 
 import io.netty.channel.ChannelHandlerContext;
-import ru.fomin.commands.CreatingAndUpdatingManipulationRequest;
-import ru.fomin.commands.FileManipulationResponse;
+import ru.fomin.dto.requests.CreatingAndUpdatingManipulationRequest;
+import ru.fomin.dto.responses.FileManipulationResponse;
 import ru.fomin.entities.Directory;
 import ru.fomin.services.db_services.DirectoryService;
 import ru.fomin.services.db_services.FileDataService;

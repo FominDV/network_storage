@@ -1,9 +1,9 @@
 package ru.fomin.classes;
 
 
-import ru.fomin.commands.DataPackage;
-import ru.fomin.file_packages.FileChunkPackage;
-import ru.fomin.file_packages.FileDataPackage;
+import ru.fomin.dto.DataPackage;
+import ru.fomin.dto.file_packages.FileChunkPackage;
+import ru.fomin.dto.file_packages.FileDataPackage;
 
 import java.io.IOException;
 import java.io.InputStream;

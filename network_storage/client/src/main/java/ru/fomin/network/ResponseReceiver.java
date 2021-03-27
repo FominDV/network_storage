@@ -1,6 +1,6 @@
 package ru.fomin.network;
 
-import ru.fomin.commands.DataPackage;
+import ru.fomin.dto.DataPackage;
 import ru.fomin.services.ResponseService;
 
 

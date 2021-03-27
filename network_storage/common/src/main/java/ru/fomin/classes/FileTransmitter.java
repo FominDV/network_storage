@@ -1,7 +1,6 @@
 package ru.fomin.classes;
 
-import ru.fomin.classes.FileSendOptimizer;
-import ru.fomin.commands.DataPackage;
+import ru.fomin.dto.DataPackage;
 
 import java.io.File;
 import java.io.IOException;
