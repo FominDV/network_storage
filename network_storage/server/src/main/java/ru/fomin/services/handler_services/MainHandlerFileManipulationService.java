@@ -85,8 +85,8 @@ public class MainHandlerFileManipulationService {
         Long id = currentDirectory.getId();
         List<FileData> currentFileList = DIRECTORY_SERVICE.getFiles(id);
         List<Directory> currentDirectoryList = DIRECTORY_SERVICE.getNestedDirectories(id);
-        currentFileList.forEach(fileData -> fileMap.put(Constants.getFileNamePrefix() + fileData.getName(), fileData.getId()));
-        currentDirectoryList.forEach(directory -> directoryMap.put(Constants.getDirectoryNamePrefix() + directory.getPath().substring(currentDirectory.getPath().length() + 1), directory.getId()));
+        currentFileList.forEach(fileData -> fileMap.put(Constants.getFILE_NAME_PREFIX() + fileData.getName(), fileData.getId()));
+        currentDirectoryList.forEach(directory -> directoryMap.put(Constants.getDIRECTORY_NAME_PREFIX() + directory.getPath().substring(currentDirectory.getPath().length() + 1), directory.getId()));
         String currentDirectoryName = currentDirectory.getPath().substring(MainHandler.getMainPath().length());
         ctx.writeAndFlush(new CurrentDirectoryEntityList(fileMap, directoryMap, currentDirectoryName, currentDirectory.getId()));
     }

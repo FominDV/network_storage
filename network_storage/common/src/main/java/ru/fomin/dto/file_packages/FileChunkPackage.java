@@ -1,6 +1,7 @@
 package ru.fomin.dto.file_packages;
 
 
+import lombok.Value;
 import ru.fomin.dto.DataPackage;
 
 import java.nio.file.Path;
@@ -8,15 +9,16 @@ import java.nio.file.Path;
 /**
  * DTO for transfer file by chunks
  */
+@Value
 public class FileChunkPackage
         extends DataPackage {
 
-    private final String filename;
-    private final byte[] data;
-    private final int num;
-    private final boolean last;
+    String filename;
+    byte[] data;
+    int num;
+    boolean last;
     //id of file or directory
-    private final Long id;
+    Long id;
 
     public FileChunkPackage(Path path, byte[] chunk, int num, Long id) {
         filename = path.getFileName().toString();
@@ -34,26 +36,8 @@ public class FileChunkPackage
         this.id = id;
     }
 
-    public String getFilename() {
-        return filename;
-    }
-
-    public int getNum() {
-        return num;
-    }
-
-    public byte[] getData() {
-        return data;
-    }
-
-    public boolean isLast() {
-        return last;
-    }
-
     public boolean isFirst() {
         return num == 1;
     }
-    public Long getId() {
-        return id;
-    }
+
 }

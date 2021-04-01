@@ -1,5 +1,8 @@
 package ru.fomin.dto.responses;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import ru.fomin.dto.DataPackage;
 
 /**
@@ -9,21 +12,14 @@ import ru.fomin.dto.DataPackage;
  * and can contain response of fail operations,
  * that was failed because resource with this name already exist.
  */
+@Data
+@RequiredArgsConstructor
+@AllArgsConstructor
 public class FileManipulationResponse extends DataPackage {
 
-    private Response response;
-    private String fileName;
+    private final Response response;
+    private final String fileName;
     private Long id;
-
-    public FileManipulationResponse(Response response, String fileName) {
-        this.response = response;
-        this.fileName = fileName;
-    }
-
-    public FileManipulationResponse(Response response, String fileName, Long id) {
-        this(response, fileName);
-        this.id = id;
-    }
 
     public enum Response {
         FILE_ALREADY_EXIST,
@@ -36,15 +32,4 @@ public class FileManipulationResponse extends DataPackage {
         RENAME_FILE
     }
 
-    public Response getResponse() {
-        return response;
-    }
-
-    public String getFileName() {
-        return fileName;
-    }
-
-    public Long getId() {
-        return id;
-    }
 }

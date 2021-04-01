@@ -1,6 +1,9 @@
 package ru.fomin.dto.file_packages;
 
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.Value;
 import ru.fomin.dto.DataPackage;
 
 import java.io.IOException;
@@ -10,29 +13,17 @@ import java.nio.file.Path;
 /**
  * DTO for transfer file by one piece.
  */
-public class FileDataPackage
-        extends DataPackage {
+@Value
+public class FileDataPackage extends DataPackage {
 
-    protected final String filename;
-    protected final byte[] data;
-    private Long directoryId;
+    String filename;
+    byte[] data;
+    Long directoryId;
 
-    public FileDataPackage(Path path, Long directoryId)
-            throws IOException {
+    public FileDataPackage(Path path, Long directoryId) throws IOException {
         filename = path.getFileName().toString();
         this.directoryId = directoryId;
         data = Files.readAllBytes(path);
     }
 
-    public String getFilename() {
-        return filename;
-    }
-
-    public byte[] getData() {
-        return data;
-    }
-
-    public Long getDirectoryId() {
-        return directoryId;
-    }
 }

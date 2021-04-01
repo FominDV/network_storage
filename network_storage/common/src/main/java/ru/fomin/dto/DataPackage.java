@@ -1,6 +1,8 @@
 package ru.fomin.dto;
 
 
+import lombok.ToString;
+
 import java.io.Serializable;
 
 /**

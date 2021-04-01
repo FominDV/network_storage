@@ -1,5 +1,8 @@
 package ru.fomin.dto.requests;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import ru.fomin.dto.DataPackage;
 
 /**
@@ -8,29 +11,16 @@ import ru.fomin.dto.DataPackage;
  * downloading file from server
  * and getting all files and nested directories from the particular directory.
  */
+@Data
+@RequiredArgsConstructor
+@AllArgsConstructor
 public class FileManipulationRequest extends DataPackage {
 
-    private Request request;
+    private final Request request;
     private Long id;
-
-    public FileManipulationRequest(Request request) {
-        this.request = request;
-    }
-
-    public FileManipulationRequest(Request request, Long id) {
-        this.request = request;
-        this.id = id;
-    }
 
     public enum Request {
         DELETE_DIR, DELETE_FILE, DOWNLOAD, GET_FILES_LIST
     }
 
-    public Request getRequest() {
-        return request;
-    }
-
-    public Long getId() {
-        return id;
-    }
 }

@@ -129,7 +129,7 @@ public class MainPanelController {
         //Searching resource
         if (fileMap.containsKey(resourceName)) {
             //Verify duplicate names
-            if (fileMap.containsKey(Constants.getFileNamePrefix() + newName)) {
+            if (fileMap.containsKey(Constants.getFILE_NAME_PREFIX() + newName)) {
                 showErrorMessage(String.format("File with the name \"%s\" already exist", newName));
                 field_resource_name.setText("");
                 return;
@@ -138,7 +138,7 @@ public class MainPanelController {
             id = fileMap.get(resourceName);
         } else if (directoryMap.containsKey(resourceName)) {
             //Verify duplicate names
-            if (directoryMap.containsKey(Constants.getDirectoryNamePrefix() + newName)) {
+            if (directoryMap.containsKey(Constants.getDIRECTORY_NAME_PREFIX() + newName)) {
                 showErrorMessage(String.format("Directory with the name \"%s\" already exist", newName));
                 field_resource_name.setText("");
                 return;
@@ -224,7 +224,7 @@ public class MainPanelController {
             showErrorMessage("It is not valid directory");
             return;
         }
-        String realFileName = fileName.substring(Constants.getFileNamePrefix().length());
+        String realFileName = fileName.substring(Constants.getFILE_NAME_PREFIX().length());
         if (Files.exists(Paths.get(directory.toString(), realFileName)) && !isConfirmOverrideFile(realFileName)) {
             return;
         }
@@ -282,13 +282,13 @@ public class MainPanelController {
                 showErrorMessage(String.format("File with the name \"%s\" already exist", fileName));
                 break;
             case FILE_UPLOADED:
-                String fileSpecialName = Constants.getFileNamePrefix() + fileName;
+                String fileSpecialName = Constants.getFILE_NAME_PREFIX() + fileName;
                 fileMap.put(fileSpecialName, id);
                 observableList.add(fileSpecialName);
                 showInfoMessage(String.format("Uploading of file \"%s\" is successful", fileName));
                 break;
             case DIR_CREATED:
-                String directorySpecialName = Constants.getDirectoryNamePrefix() + fileName;
+                String directorySpecialName = Constants.getDIRECTORY_NAME_PREFIX() + fileName;
                 directoryMap.put(directorySpecialName, id);
                 observableList.add(directorySpecialName);
                 showInfoMessage(String.format("The directory \"%s\" was created", fileName));
@@ -316,10 +316,10 @@ public class MainPanelController {
                 showInfoMessage(String.format("The directory \"%s\" with all that it contains was removed", fileName));
                 break;
             case RENAME_DIR:
-                handleRenameResponse(directoryMap, "directory", id, fileName, Constants.getDirectoryNamePrefix());
+                handleRenameResponse(directoryMap, "directory", id, fileName, Constants.getDIRECTORY_NAME_PREFIX());
                 break;
             case RENAME_FILE:
-                handleRenameResponse(fileMap, "file", id, fileName, Constants.getFileNamePrefix());
+                handleRenameResponse(fileMap, "file", id, fileName, Constants.getFILE_NAME_PREFIX());
                 break;
             default:
                 showErrorMessage(String.format("Unknown response \"%s\" from server", response.getResponse()));
