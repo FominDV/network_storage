@@ -1,21 +1,24 @@
 package ru.fomin.dto.requests;
 
-import lombok.Getter;
-import lombok.Setter;
 import lombok.Value;
-import ru.fomin.dto.DataPackage;
 
 /**
  * DTO with command for authentication and registration.
  */
 @Value
-public class AuthRequest extends DataPackage {
+public class AuthRequest extends ChangePasswordRequest {
 
     String login;
-    String password;
     RequestType requestType;
+
+    public AuthRequest(String password, String login, RequestType requestType) {
+        super(password);
+        this.login = login;
+        this.requestType = requestType;
+    }
 
     public enum RequestType {
         AUTH, REGISTRATION
     }
+
 }
