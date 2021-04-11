@@ -1,7 +1,9 @@
-package ru.fomin.network;
+package ru.fomin.network.impl;
 
 import ru.fomin.dto.DataPackage;
 import ru.fomin.factory.Factory;
+import ru.fomin.network.ResponseSandler;
+import ru.fomin.services.ResponseProcessor;
 import ru.fomin.services.impl.ResponseService;
 
 import static java.lang.Thread.currentThread;
@@ -12,11 +14,11 @@ import static java.lang.Thread.currentThread;
 public class ResponseReceiver implements Runnable {
 
     private final ResponseSandler responseSandler;
-    private final ResponseService responseService;
+    private final ResponseProcessor responseProcessor;
 
     public ResponseReceiver() {
         responseSandler = Factory.getResponseSandler();
-        responseService = ResponseService.getInstance();
+        responseProcessor = Factory.getResponseProcessor();
     }
 
     @Override
@@ -24,7 +26,7 @@ public class ResponseReceiver implements Runnable {
         while (!currentThread().isInterrupted()) {
             DataPackage response = responseSandler.getResponseFromServer();
             if (response != null) {
-                responseService.processResponse(response);
+                responseProcessor.processResponse(response);
             }
         }
     }

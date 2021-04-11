@@ -5,6 +5,7 @@ import javafx.scene.control.Labeled;
 import ru.fomin.dto.*;
 
 import ru.fomin.dto.requests.AuthRequest;
+import ru.fomin.dto.requests.ChangePasswordRequest;
 import ru.fomin.dto.requests.CreatingAndUpdatingManipulationRequest;
 import ru.fomin.dto.requests.FileManipulationRequest;
 import ru.fomin.network.impl.NetworkConnection;
@@ -21,18 +22,18 @@ import java.nio.file.Paths;
 /**
  * Service for creating requests for server and processing some other commands from controllers.
  */
-public class ServiceService implements MainPanelService, RegistrationService, AuthenticationService, ChangingPasswordService {
+public class RequestService implements MainPanelService, RegistrationService, AuthenticationService, ChangingPasswordService {
 
-    private static ServiceService instance;
+    private static RequestService instance;
     private final NetworkConnection networkConnection;
 
-    private ServiceService() {
+    private RequestService() {
         networkConnection = NetworkConnection.getInstance();
     }
 
-    public static ServiceService getInstance() {
+    public static RequestService getInstance() {
         if (instance == null) {
-            instance = new ServiceService();
+            instance = new RequestService();
         }
         return instance;
     }
@@ -89,12 +90,12 @@ public class ServiceService implements MainPanelService, RegistrationService, Au
      */
     @Override
     public void registration(String login, String password) {
-        networkConnection.sendToServer(new AuthRequest(login, password, AuthRequest.RequestType.REGISTRATION));
+        networkConnection.sendToServer(new AuthRequest(password, login, AuthRequest.RequestType.REGISTRATION));
     }
 
     @Override
     public void authentication(String login, String password) {
-        DataPackage com = new AuthRequest(login.trim(), password.trim(), AuthRequest.RequestType.AUTH);
+        DataPackage com = new AuthRequest(password.trim(), login.trim(), AuthRequest.RequestType.AUTH);
         networkConnection.sendToServer(com);
     }
 
@@ -109,5 +110,10 @@ public class ServiceService implements MainPanelService, RegistrationService, Au
     @Override
     public void rename(String dirName, Long remoteDirectoryId, CreatingAndUpdatingManipulationRequest.Type type) {
         networkConnection.sendToServer(new CreatingAndUpdatingManipulationRequest(dirName, remoteDirectoryId, type));
+    }
+
+    @Override
+    public void changePassword(String currentPassword, String newPassword) {
+        networkConnection.sendToServer(new ChangePasswordRequest(newPassword, currentPassword));
     }
 }

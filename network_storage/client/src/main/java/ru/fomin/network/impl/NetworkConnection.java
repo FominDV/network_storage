@@ -1,10 +1,16 @@
-package ru.fomin.network;
+package ru.fomin.network.impl;
 
 import io.netty.handler.codec.serialization.ObjectDecoderInputStream;
 import io.netty.handler.codec.serialization.ObjectEncoderOutputStream;
+import lombok.Getter;
+import lombok.Setter;
 import ru.fomin.classes.FileTransmitter;
 import ru.fomin.dto.DataPackage;
-import ru.fomin.services.ResponseService;
+import ru.fomin.factory.Factory;
+import ru.fomin.network.Connection;
+import ru.fomin.network.ResponseSandler;
+import ru.fomin.services.NetworkConnectionService;
+import ru.fomin.services.impl.ResponseService;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,11 +25,17 @@ import static java.util.concurrent.Executors.newFixedThreadPool;
 /**
  * Class for creating connection to server, sending and accepting messages.
  */
-public class NetworkConnection {
+public class NetworkConnection implements Connection, ResponseSandler {
 
     private boolean isConnected;
     private static NetworkConnection instance;
+
+    @Setter
+    @Getter
     private static String ip = "127.0.0.1";
+
+    @Setter
+    @Getter
     private static int port = 8189;
 
     private static final int MAX_OBJ_SIZE = 10 * 1024 * 1024;
@@ -31,13 +43,13 @@ public class NetworkConnection {
     private ExecutorService executorService;
     private FileTransmitter fileTransmitter;
     private ResponseReceiver responseReceiver;
-    private ResponseService responseService;
+    private NetworkConnectionService networkConnectionService;
     private ObjectEncoderOutputStream out;
     private ObjectDecoderInputStream in;
     private Socket socket;
 
     private NetworkConnection() {
-        responseService = ResponseService.getInstance();
+        networkConnectionService = Factory.getNetworkConnectionService();
     }
 
     public static NetworkConnection getInstance() {
@@ -50,27 +62,18 @@ public class NetworkConnection {
     /**
      * Creating connection to server.
      */
+    @Override
     public void connect() throws IOException {
         if (isConnected) {
             return;
         }
         isConnected = true;
         executorService = newFixedThreadPool(2);
-        socket = new Socket();
-        try {
-            socket = new Socket(ip, port);
-            OutputStream os = socket.getOutputStream();
-            InputStream is = socket.getInputStream();
-            out = new ObjectEncoderOutputStream(os);
-            in = new ObjectDecoderInputStream(is, MAX_OBJ_SIZE);
-            responseReceiver = new ResponseReceiver();
-            executorService.execute(responseReceiver);
-            fileTransmitter = new FileTransmitter(dataPackage -> sendToServer(dataPackage));
-            executorService.execute(fileTransmitter);
-        } catch (IOException e) {
-            isConnected = false;
-            throw new IOException();
-        }
+        createSocketAndStreams();
+        responseReceiver = new ResponseReceiver();
+        executorService.execute(responseReceiver);
+        fileTransmitter = new FileTransmitter(dataPackage -> sendToServer(dataPackage));
+        executorService.execute(fileTransmitter);
     }
 
     /**
@@ -79,7 +82,7 @@ public class NetworkConnection {
     public void closeConnection() {
         isConnected = false;
         try {
-            responseService.clearDownloadingFilesMap();
+            networkConnectionService.clearDownloadingFilesMap();
             executorService.shutdownNow();
             in.close();
             out.close();
@@ -114,7 +117,7 @@ public class NetworkConnection {
     private void exitOnFatalConnectionError() {
         if (isConnected) {
             closeConnection();
-            ResponseService.exitOnFatalConnectionError();
+            networkConnectionService.exitOnFatalConnectionError();
         }
     }
 
@@ -123,22 +126,19 @@ public class NetworkConnection {
     }
 
     public void putDownloadingFilesMapToResponseHandler(Long id, Path path) {
-        responseService.putDownloadingFilesMap(id, path);
+        networkConnectionService.putDownloadingFilesMap(id, path);
     }
 
-    public static String getIp() {
-        return ip;
-    }
-
-    public static void setIp(String ip) {
-        NetworkConnection.ip = ip;
-    }
-
-    public static int getPort() {
-        return port;
-    }
-
-    public static void setPort(int port) {
-        NetworkConnection.port = port;
+    private void createSocketAndStreams() throws IOException {
+        try {
+            socket = new Socket(ip, port);
+            OutputStream os = socket.getOutputStream();
+            InputStream is = socket.getInputStream();
+            out = new ObjectEncoderOutputStream(os);
+            in = new ObjectDecoderInputStream(is, MAX_OBJ_SIZE);
+        } catch (IOException e) {
+            isConnected = false;
+            throw new IOException();
+        }
     }
 }

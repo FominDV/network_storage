@@ -1,8 +1,9 @@
-package ru.fomin.services;
+package ru.fomin.services.impl;
 
 import javafx.application.Platform;
 import ru.fomin.classes.FileChunkDownloader;
 import ru.fomin.dto.responses.AuthResult;
+import ru.fomin.dto.responses.ChangePasswordResponse;
 import ru.fomin.dto.responses.CurrentDirectoryEntityList;
 import ru.fomin.dto.DataPackage;
 import ru.fomin.dto.responses.FileManipulationResponse;
@@ -12,6 +13,8 @@ import ru.fomin.controllers.AuthenticationController;
 import ru.fomin.controllers.MainPanelController;
 import ru.fomin.controllers.RegistrationController;
 import ru.fomin.controllers.UpdatePasswordController;
+import ru.fomin.services.NetworkConnectionService;
+import ru.fomin.services.ResponseProcessor;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,7 +29,7 @@ import static ru.fomin.util.ControllersUtil.*;
 /**
  * Service for processing messages from server.
  */
-public class ResponseService {
+public class ResponseService implements ResponseProcessor, NetworkConnectionService {
 
     private static ResponseService instance;
     private static AuthenticationController authenticationController;
@@ -51,8 +54,45 @@ public class ResponseService {
     }
 
     /**
+     * Closes all windows and shows the authentication window.
+     */
+    @Override
+    public void exitOnFatalConnectionError() {
+        if (mainPanelController != null) {
+            Platform.runLater(() -> hideWindow(mainPanelController.getLabeled()));
+        }
+        if (registrationController != null) {
+            Platform.runLater(() -> hideWindow(registrationController.getLabeled()));
+        }
+        if (updatePasswordController != null) {
+            Platform.runLater(() -> hideWindow(updatePasswordController.getBtn_info()));
+        }
+        Platform.runLater(() -> {
+            showStage("/fxml/authentication.fxml");
+            showErrorMessage("Connection was lost");
+        });
+    }
+
+    /**
+     * Add new information to downloading file.
+     *
+     * @param id   - id of file
+     * @param path - path of file on client side
+     */
+    @Override
+    public void putDownloadingFilesMap(Long id, Path path) {
+        downloadingFilesMap.put(id, path);
+    }
+
+    @Override
+    public void clearDownloadingFilesMap() {
+        downloadingFilesMap.clear();
+    }
+
+    /**
      * Recognition message from server and delegate it to needed methods.
      */
+    @Override
     public void processResponse(DataPackage response) {
         Platform.runLater(() -> {
             if (response instanceof AuthResult) {
@@ -67,6 +107,8 @@ public class ResponseService {
                 downloadSmallFile((FileDataPackage) response);
             } else if (response instanceof FileChunkPackage) {
                 downloadBigFile((FileChunkPackage) response);
+            } else if (response instanceof ChangePasswordResponse) {
+                updatePasswordController.handleResponse(((ChangePasswordResponse) response).isSuccessful());
             }
         });
     }
@@ -108,7 +150,7 @@ public class ResponseService {
     /**
      * Handling informational message from server about authentication.
      */
-    public void handleAuthResponse(AuthResult authResult) {
+    private void handleAuthResponse(AuthResult authResult) {
         AuthResult.Result result = authResult.getResult();
         if (result == AuthResult.Result.FAIL_AUTH || result == AuthResult.Result.OK_AUTH) {
             authenticationController.handleResponse(result);
@@ -120,55 +162,22 @@ public class ResponseService {
     /**
      * Updating list of current directories and files.
      */
-    public void updateDirectoryEntity(CurrentDirectoryEntityList com) {
+    private void updateDirectoryEntity(CurrentDirectoryEntityList com) {
         mainPanelController.updateDirectoryEntity(com);
     }
 
     /**
      * Handling informational message from server about manipulations bu files.
      */
-    public void getFileManipulationResponse(FileManipulationResponse response) {
+    private void getFileManipulationResponse(FileManipulationResponse response) {
         mainPanelController.getFileManipulationResponse(response);
     }
 
-    /**
-     * Add new information to downloading file.
-     *
-     * @param id   - id of file
-     * @param path - path of file on client side
-     */
-    public void putDownloadingFilesMap(Long id, Path path) {
-        downloadingFilesMap.put(id, path);
-    }
-
-    public void clearDownloadingFilesMap() {
-        downloadingFilesMap.clear();
-    }
-
-    /**
-     * Closes all windows and shows the authentication window.
-     */
-    public static void exitOnFatalConnectionError() {
-        if (mainPanelController != null) {
-            Platform.runLater(() -> hideWindow(mainPanelController.getLabeled()));
-        }
-        if (registrationController != null) {
-            Platform.runLater(() -> hideWindow(registrationController.getLabeled()));
-        }
-        if (updatePasswordController != null) {
-            Platform.runLater(() -> hideWindow(updatePasswordController.getLabeled()));
-        }
-        Platform.runLater(() -> {
-            showStage("/fxml/authentication.fxml");
-            showErrorMessage("Connection was lost");
-        });
-    }
-
-    public void downloadingSuccessful(String filename) {
+    private void downloadingSuccessful(String filename) {
         showInfoMessage(String.format("Downloading file \"%s\" is successfully", filename));
     }
 
-    public void downloadingError(String fileName) {
+    private void downloadingError(String fileName) {
         showErrorMessage(String.format("Downloading file \"%s\" is failed", fileName));
     }
 
