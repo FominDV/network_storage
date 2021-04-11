@@ -6,7 +6,7 @@ import lombok.Value;
  * DTO with command for authentication and registration.
  */
 @Value
-public class AuthRequest extends ChangePasswordRequest {
+public class AuthRequest extends BasePasswordRequest {
 
     String login;
     RequestType requestType;

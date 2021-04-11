@@ -17,13 +17,13 @@ import java.nio.file.Paths;
 public class AuthHandlerService {
 
     //Services
-    private final UserService USER_SERVICE;
+    private final UserService userService;
 
     //For verifying authorization of client
     private boolean isAuthorized;
 
     public AuthHandlerService() {
-        USER_SERVICE = new UserService();
+        userService = new UserService();
         isAuthorized = false;
     }
 
@@ -34,10 +34,13 @@ public class AuthHandlerService {
         switch (type) {
             //If client want to authorize
             case AUTH:
-                isAuthorized = USER_SERVICE.isValidUserData(login, password);
+                Object[] responseFromDB = userService.isValidUserData(login, password);
+                isAuthorized = (Boolean) responseFromDB[0];
                 if (isAuthorized) {
                     MainHandler handler = ctx.pipeline().get(MainHandler.class);
-                    handler.setUserDir(USER_SERVICE.getRootDirectoryByLogin(login));
+                    handler.setCurrentDirectory(userService.getRootDirectoryByLogin(login));
+                    handler.setUserService(userService);
+                    handler.setUserId((Long) responseFromDB[1]);
                     ctx.writeAndFlush(new AuthResult(AuthResult.Result.OK_AUTH));
                 } else {
                     ctx.writeAndFlush(new AuthResult(AuthResult.Result.FAIL_AUTH));
@@ -47,7 +50,7 @@ public class AuthHandlerService {
             case REGISTRATION:
                 String root = MainHandler.getMainPath() + File.separator + login;
                 //Verifies existing duplicate login
-                if (USER_SERVICE.createUser(login, password, root)) {
+                if (userService.createUser(login, password, root)) {
                     Files.createDirectory(Paths.get(root));
                     ctx.writeAndFlush(new AuthResult(AuthResult.Result.OK_REG, login));
                 } else {

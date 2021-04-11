@@ -1,9 +1,12 @@
 package ru.fomin.entities;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
+@Data
 @Table(name = "users")
 public class User {
 
@@ -11,7 +14,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<Directory> dataList;
 
     @OneToOne
@@ -33,31 +36,4 @@ public class User {
 
     }
 
-    public String getLogin() {
-        return login;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public List<Directory> getDataList() {
-        return dataList;
-    }
-
-    public void setDataList(List<Directory> dataList) {
-        this.dataList = dataList;
-    }
-
-    public Directory getRootDirectory() {
-        return rootDirectory;
-    }
 }

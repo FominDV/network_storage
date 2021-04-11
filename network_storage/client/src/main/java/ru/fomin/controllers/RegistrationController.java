@@ -5,8 +5,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import ru.fomin.services.ResponseService;
-import ru.fomin.services.RequestService;
+import ru.fomin.factory.Factory;
+import ru.fomin.services.RegistrationService;
+import ru.fomin.services.impl.ResponseService;
 import ru.fomin.dto.responses.AuthResult;
 import ru.fomin.util.ControllersUtil;
 
@@ -17,7 +18,7 @@ public class RegistrationController {
 
     private boolean isWaitingResponse;
     private String currentPassword = "";
-    private RequestService requestService;
+    private RegistrationService registrationRequest;
 
     @FXML
     private Button btn_info;
@@ -39,11 +40,11 @@ public class RegistrationController {
 
     @FXML
     void initialize() {
-        requestService = RequestService.getInstance();
+        registrationRequest = Factory.getRegistrationRequest();
 
         btn_info.setOnAction(event -> ControllersUtil.showDeveloperInfo());
 
-        btn_cancel.setOnAction(event -> requestService.exitToAuthentication(btn_cancel));
+        btn_cancel.setOnAction(event -> registrationRequest.exitToAuthentication(btn_cancel));
 
         btn_registration.setOnAction(event -> registration());
 
@@ -56,7 +57,7 @@ public class RegistrationController {
         if (!isWaitingResponse && ControllersUtil.validation(login, password, field_repeat_password.getText())) {
             isWaitingResponse = true;
             currentPassword = password;
-            requestService.registration(login, password);
+            registrationRequest.registration(login, password);
         } else {
             clearFields();
         }
@@ -64,9 +65,9 @@ public class RegistrationController {
     }
 
     private void clearFields() {
-        field_login.setText("");
-        field_password.setText("");
-        field_repeat_password.setText("");
+        field_login.clear();
+        field_password.clear();
+        field_repeat_password.clear();
     }
 
     /**
@@ -76,7 +77,7 @@ public class RegistrationController {
         if (result == AuthResult.Result.OK_REG) {
             AuthenticationController.setAuthenticationData(login, currentPassword);
             ControllersUtil.showInfoMessage(String.format("Registration is successful\nYour login is \"%s\"", login));
-            requestService.exitToAuthentication(btn_info);
+            registrationRequest.exitToAuthentication(btn_info);
         } else {
             ControllersUtil.showErrorMessage(String.format("Registration is failed\nLogin \"%s\" already exist", login));
             isWaitingResponse = false;

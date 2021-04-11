@@ -4,7 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import ru.fomin.network.NetworkConnection;
+import ru.fomin.network.impl.NetworkConnection;
 import ru.fomin.util.ControllersUtil;
 
 /**
@@ -59,8 +59,8 @@ public class ConnectionPropertiesController {
             ControllersUtil.showInfoMessage(String.format("Successful\nIp: %s\nPort: %s", newIP, newPort));
             ControllersUtil.showAndHideStages("/fxml/authentication.fxml", btn_cancel);
         } else {
-            field_ip.setText("");
-            field_port.setText("");
+            field_ip.clear();
+            field_port.clear();
         }
     }
 

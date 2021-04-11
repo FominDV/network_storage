@@ -3,6 +3,8 @@ package ru.fomin.core;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;
+import lombok.Setter;
+import ru.fomin.dto.requests.ChangePasswordRequest;
 import ru.fomin.dto.requests.CreatingAndUpdatingManipulationRequest;
 import ru.fomin.dto.requests.FileManipulationRequest;
 import ru.fomin.entities.Directory;
@@ -10,6 +12,8 @@ import ru.fomin.dto.file_packages.FileChunkPackage;
 import ru.fomin.dto.file_packages.FileDataPackage;
 import ru.fomin.services.db_services.DirectoryService;
 import ru.fomin.services.db_services.FileDataService;
+import ru.fomin.services.db_services.UserService;
+import ru.fomin.services.handler_services.MainHandlerChangePasswordService;
 import ru.fomin.services.handler_services.MainHandlerDownloadService;
 import ru.fomin.services.handler_services.MainHandlerFileManipulationService;
 import ru.fomin.services.handler_services.MainHandlerRequestDirectoryService;
@@ -22,6 +26,7 @@ import static java.util.concurrent.Executors.newSingleThreadExecutor;
 /**
  * Processes requests from client after successful authorization.
  */
+@Setter
 public class MainHandler extends ChannelInboundHandlerAdapter {
 
     //services
@@ -30,9 +35,14 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
     private final MainHandlerFileManipulationService mainHandlerFileManipulationService;
     private final MainHandlerRequestDirectoryService mainHandlerRequestDirectoryService;
     private final MainHandlerDownloadService mainHandlerDownloadService;
+    private final MainHandlerChangePasswordService mainHandlerChangePasswordService;
+
+    private UserService userService;
+    private Directory currentDirectory;
+    private Long userId;
+
 
     private static final String MAIN_PATH = "main_repository";
-    private Directory currentDirectory;
 
     public MainHandler() {
         directoryService = new DirectoryService();
@@ -40,6 +50,7 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
         mainHandlerFileManipulationService = new MainHandlerFileManipulationService(directoryService, fileDataService);
         mainHandlerRequestDirectoryService = new MainHandlerRequestDirectoryService(directoryService, fileDataService);
         mainHandlerDownloadService = new MainHandlerDownloadService(directoryService, fileDataService);
+        mainHandlerChangePasswordService = new MainHandlerChangePasswordService();
     }
 
     @Override
@@ -53,6 +64,8 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
                 mainHandlerDownloadService.downloadBigFile(ctx, (FileChunkPackage) msg);
             } else if (msg instanceof CreatingAndUpdatingManipulationRequest) {
                 mainHandlerRequestDirectoryService.requestDirectoryHandle(ctx, (CreatingAndUpdatingManipulationRequest) msg);
+            } else if (msg instanceof ChangePasswordRequest) {
+                mainHandlerChangePasswordService.changePassword(ctx, (ChangePasswordRequest) msg, userService, userId);
             }
         } finally {
             ReferenceCountUtil.release(msg);
@@ -67,9 +80,5 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
 
     public static String getMainPath() {
         return MAIN_PATH;
-    }
-
-    public void setUserDir(Directory directory) {
-        currentDirectory = directory;
     }
 }

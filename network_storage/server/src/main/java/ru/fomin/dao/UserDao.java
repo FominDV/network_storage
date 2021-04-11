@@ -37,4 +37,19 @@ public class UserDao {
             return null;
         }
     }
+
+    public void updateUser(User user) {
+        Session session = SessionFactory.getSession();
+        session.beginTransaction();
+        session.update(user);
+        session.getTransaction().commit();
+        session.close();
+    }
+
+    public User findUserById(Long id) {
+        Session session = SessionFactory.getSession();
+       User user = session.get(User.class, id);
+       session.close();
+       return user;
+    }
 }

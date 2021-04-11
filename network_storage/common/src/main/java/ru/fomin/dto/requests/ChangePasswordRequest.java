@@ -1,16 +1,17 @@
 package ru.fomin.dto.requests;
 
 import lombok.Value;
-import lombok.experimental.NonFinal;
-import ru.fomin.dto.DataPackage;
 
 /**
  * DTO for changing password.
  */
 @Value
-@NonFinal
-public class ChangePasswordRequest extends DataPackage {
+public class ChangePasswordRequest extends BasePasswordRequest{
 
-    String password;
+    String currentPassword;
 
+    public ChangePasswordRequest(String password, String currentPassword) {
+        super(password);
+        this.currentPassword = currentPassword;
+    }
 }

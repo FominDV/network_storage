@@ -6,8 +6,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
-import ru.fomin.services.ResponseService;
-import ru.fomin.services.RequestService;
+import ru.fomin.factory.Factory;
+import ru.fomin.services.MainPanelService;
+import ru.fomin.services.impl.ResponseService;
 import ru.fomin.classes.Constants;
 import ru.fomin.dto.requests.CreatingAndUpdatingManipulationRequest;
 import ru.fomin.dto.responses.CurrentDirectoryEntityList;
@@ -33,7 +34,7 @@ public class MainPanelController {
     private Map<String, Long> fileMap = new HashMap<>();
     private Map<String, Long> directoryMap = new HashMap<>();
 
-    private RequestService requestService;
+    private MainPanelService mainPanelRequest;
     private ObservableList<String> observableList;
     private MultipleSelectionModel<String> multipleSelectionModel;
     private FileChooser fileChooser = new FileChooser();
@@ -84,11 +85,11 @@ public class MainPanelController {
 
     @FXML
     void initialize() {
-        requestService = RequestService.getInstance();
+        mainPanelRequest = Factory.getMainPanelRequest();
 
         btn_info.setOnAction(event -> showDeveloperInfo());
 
-        btn_exit.setOnAction(event -> requestService.exitToAuthentication(btn_info));
+        btn_exit.setOnAction(event -> mainPanelRequest.exitToAuthentication(btn_info));
 
         btn_upload.setOnAction(event -> upload());
 
@@ -105,7 +106,7 @@ public class MainPanelController {
         ResponseService.setMainPanelController(this);
 
         //Request to server for setting list of file and nested directories;
-        requestService.getCurrentDirectoryEntity();
+        mainPanelRequest.getCurrentDirectoryEntity();
     }
 
     /**
@@ -120,7 +121,7 @@ public class MainPanelController {
         String newName = field_resource_name.getText();
         if (!hasText(newName)) {
             showErrorMessage("You should insert new name of resource into the filed");
-            field_resource_name.setText("");
+            field_resource_name.clear();
             return;
         }
 
@@ -131,7 +132,7 @@ public class MainPanelController {
             //Verify duplicate names
             if (fileMap.containsKey(Constants.getFILE_NAME_PREFIX() + newName)) {
                 showErrorMessage(String.format("File with the name \"%s\" already exist", newName));
-                field_resource_name.setText("");
+                field_resource_name.clear();
                 return;
             }
             type = CreatingAndUpdatingManipulationRequest.Type.RENAME_FILE;
@@ -140,7 +141,7 @@ public class MainPanelController {
             //Verify duplicate names
             if (directoryMap.containsKey(Constants.getDIRECTORY_NAME_PREFIX() + newName)) {
                 showErrorMessage(String.format("Directory with the name \"%s\" already exist", newName));
-                field_resource_name.setText("");
+                field_resource_name.clear();
                 return;
             }
             type = CreatingAndUpdatingManipulationRequest.Type.RENAME_DIR;
@@ -148,12 +149,12 @@ public class MainPanelController {
         } else {
             //resource is not contained into maps
             showErrorMessage("Fatal error");
-            requestService.exitToAuthentication(btn_info);
+            mainPanelRequest.exitToAuthentication(btn_info);
             return;
         }
 
-        requestService.rename(newName, id, type);
-        field_resource_name.setText("");
+        mainPanelRequest.rename(newName, id, type);
+        field_resource_name.clear();
     }
 
     /**
@@ -163,11 +164,11 @@ public class MainPanelController {
         String dirName = field_resource_name.getText();
         if (!hasText(dirName)) {
             showErrorMessage("You should insert name of new directory into the filed");
-            field_resource_name.setText("");
+            field_resource_name.clear();
             return;
         }
-        requestService.createDir(dirName, remoteDirectoryId);
-        field_resource_name.setText("");
+        mainPanelRequest.createDir(dirName, remoteDirectoryId);
+        field_resource_name.clear();
     }
 
     /**
@@ -195,10 +196,10 @@ public class MainPanelController {
         } else {
             //resource is not contained into maps
             showErrorMessage("Fatal error");
-            requestService.exitToAuthentication(btn_info);
+            mainPanelRequest.exitToAuthentication(btn_info);
             return;
         }
-        requestService.delete(id, type);
+        mainPanelRequest.delete(id, type);
     }
 
     /**
@@ -229,7 +230,7 @@ public class MainPanelController {
             return;
         }
         Long id = fileMap.get(fileName);
-        requestService.download(id, directory.toString());
+        mainPanelRequest.download(id, directory.toString());
     }
 
     /**
@@ -244,8 +245,8 @@ public class MainPanelController {
             showErrorMessage(String.format("Path \"%s\" is not file", file.toString()));
             return;
         }
-        requestService.sendFile(file, remoteDirectoryId);
-        requestService.getCurrentDirectoryEntity();
+        mainPanelRequest.sendFile(file, remoteDirectoryId);
+        mainPanelRequest.getCurrentDirectoryEntity();
     }
 
     /**
@@ -323,7 +324,7 @@ public class MainPanelController {
                 break;
             default:
                 showErrorMessage(String.format("Unknown response \"%s\" from server", response.getResponse()));
-                requestService.exitToAuthentication(btn_info);
+                mainPanelRequest.exitToAuthentication(btn_info);
         }
     }
 

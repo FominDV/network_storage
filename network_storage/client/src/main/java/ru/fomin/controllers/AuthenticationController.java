@@ -5,9 +5,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import ru.fomin.dto.responses.AuthResult;
-import ru.fomin.services.ResponseService;
-import ru.fomin.services.RequestService;
-import ru.fomin.network.NetworkConnection;
+import ru.fomin.factory.Factory;
+import ru.fomin.network.Connection;
+import ru.fomin.services.AuthenticationService;
+import ru.fomin.services.impl.ResponseService;
 
 import static ru.fomin.util.ControllersUtil.*;
 
@@ -24,8 +25,8 @@ public class AuthenticationController {
     private static String login = "Dmitriy777";
     private static String password = "Dmitriy777";
 
-    private RequestService requestService;
-    private NetworkConnection networkConnection;
+    private AuthenticationService authenticationService;
+    private Connection connection;
 
     @FXML
     private ResourceBundle resources;
@@ -69,9 +70,9 @@ public class AuthenticationController {
 
         btnTCP_IP.setOnAction(event -> showAndHideStages("/fxml/connaction_properties.fxml", btnTCP_IP));
 
-        requestService = RequestService.getInstance();
+        authenticationService = Factory.getAuthenticationRequest();
 
-        networkConnection = NetworkConnection.getInstance();
+        connection = Factory.getConnection();
 
         ResponseService.setAuthenticationController(this);
     }
@@ -83,7 +84,7 @@ public class AuthenticationController {
      */
     private boolean connect() {
         try {
-            networkConnection.connect();
+            connection.connect();
         } catch (IOException e) {
             showConnectionError();
             return false;
@@ -96,13 +97,13 @@ public class AuthenticationController {
             return;
         }
         login = field_login.getText();
-        String password = field_password.getText();
+        password = field_password.getText();
         if (!(hasText(login) && hasText(password))) {
-            field_password.setText("");
+            field_password.clear();
             showErrorMessage("All field should be fill");
             return;
         }
-        requestService.authentication(login, password);
+        authenticationService.authentication(login, password);
     }
 
     /**
@@ -112,8 +113,9 @@ public class AuthenticationController {
         if (result == AuthResult.Result.OK_AUTH) {
             showAndHideStages("/fxml/main_panel.fxml", btn_login);
         } else {
-            field_login.setText("");
-            field_password.setText("");
+            field_login.clear();
+            field_password.clear();
+            clearPasswordField();
             showErrorMessage("Invalid login or password");
         }
     }
@@ -121,5 +123,9 @@ public class AuthenticationController {
     static void setAuthenticationData(String login, String password) {
         AuthenticationController.login = login;
         AuthenticationController.password = password;
+    }
+
+    static void clearPasswordField() {
+        password = "";
     }
 }

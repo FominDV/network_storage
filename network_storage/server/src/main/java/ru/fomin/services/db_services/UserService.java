@@ -13,10 +13,15 @@ public class UserService {
 
     /**
      * Verifies login and password for authorizing.
+     *
+     * @return - [0] - boolean, true if login and password is valid, [1] - Long, id of authorized client
      */
-    public boolean isValidUserData(String login, String password) {
+    public Object[] isValidUserData(String login, String password) {
         User user = USER_DAO.getUsersByLogin(login);
-        return user != null && user.getPassword().equals(password);
+        Object[] response = new Object[2];
+        response[0] = user != null && user.getPassword().equals(password);
+        response[1] = user.getId();
+        return response;
     }
 
     /**
@@ -43,5 +48,23 @@ public class UserService {
     public Directory getRootDirectoryByLogin(String login) {
         User user = getUserByLogin(login);
         return user.getRootDirectory();
+    }
+
+    /**
+     * Changing password.
+     *
+     * @param currentPassword - current password of user
+     * @param newPassword     - new password
+     * @param id              - id of user
+     * @return - true if password was changed
+     */
+    public boolean changePassword(String currentPassword, String newPassword, Long id) {
+        User user = USER_DAO.findUserById(id);
+        if (user == null || !user.getPassword().equals(currentPassword)) {
+            return false;
+        }
+        user.setPassword(newPassword);
+        USER_DAO.updateUser(user);
+        return true;
     }
 }

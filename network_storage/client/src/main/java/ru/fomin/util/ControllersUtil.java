@@ -142,8 +142,7 @@ public class ControllersUtil {
     public static boolean validation(String login, String password, String repeated_password) {
 
         //Verify empty field
-        if (!(hasText(login) && hasText(password) && hasText(repeated_password))) {
-            showErrorMessage("All field should be fill");
+        if (!verifyEmptyField(login, password, repeated_password)) {
             return false;
         }
 
@@ -159,10 +158,25 @@ public class ControllersUtil {
     }
 
     /**
+     * Verifies fields and show pop-up window when any field has not text.
+     *
+     * @param fields - fields for verifying
+     * @return - true if all field have test.
+     */
+    public static boolean verifyEmptyField(String... fields) {
+        for (String field : fields) {
+            if (!hasText(field)) {
+                showErrorMessage("All field should be fill");
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
      * Verifies password for registration or changing password.
      */
     public static boolean verifyPassword(String password, String repeated_password) {
-
         //Verify password entity
         if (!password.matches(PASSWORD_PATTERN)) {
             showErrorMessage("The password should be at least 8 characters long,\n" +

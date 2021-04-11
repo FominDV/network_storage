@@ -1,7 +1,8 @@
 package ru.fomin.network;
 
 import ru.fomin.dto.DataPackage;
-import ru.fomin.services.ResponseService;
+import ru.fomin.factory.Factory;
+import ru.fomin.services.impl.ResponseService;
 
 import static java.lang.Thread.currentThread;
 
@@ -10,18 +11,18 @@ import static java.lang.Thread.currentThread;
  */
 public class ResponseReceiver implements Runnable {
 
-    private final NetworkConnection networkConnection;
+    private final ResponseSandler responseSandler;
     private final ResponseService responseService;
 
     public ResponseReceiver() {
-        networkConnection=NetworkConnection.getInstance();
+        responseSandler = Factory.getResponseSandler();
         responseService = ResponseService.getInstance();
     }
 
     @Override
     public void run() {
         while (!currentThread().isInterrupted()) {
-            DataPackage response = networkConnection.getResponseFromServer();
+            DataPackage response = responseSandler.getResponseFromServer();
             if (response != null) {
                 responseService.processResponse(response);
             }
