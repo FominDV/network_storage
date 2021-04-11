@@ -15,12 +15,12 @@ public class StartClientApplication extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/authentication.fxml"));
         primaryStage.setTitle("Authentication");
         primaryStage.setScene(new Scene(root, 290, 400));
-        primaryStage.show();
         primaryStage.setResizable(false);
+        primaryStage.show();
     }
 
 
-    public static void main(String[] args) {
-        launch(args);
-    }
+//    public static void main(String[] args) {
+//        launch(args);
+//    }
 }
