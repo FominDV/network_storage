@@ -13,5 +13,7 @@ public interface MainPanelService extends ExitService {
     void delete(Long id, FileManipulationRequest.Request type);
     void createDir(String dirName, Long remoteDirectoryId);
     void rename(String dirName, Long remoteDirectoryId, CreatingAndUpdatingManipulationRequest.Type type);
+    void moveToNestedDirectory(Long id);
+    void moveFromCurrentDirectory(Long id);
 
 }

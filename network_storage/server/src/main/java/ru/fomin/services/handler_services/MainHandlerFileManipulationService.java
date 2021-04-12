@@ -55,9 +55,21 @@ public class MainHandlerFileManipulationService {
             case DOWNLOAD:
                 upload(ctx, request.getId());
                 break;
+            case OUT_DIR:
+                sendFileListOfParentDirectory(ctx, request.getId());
+                break;
+            case INTO_DIR:
+                sendFileList(ctx, request.getId());
+                break;
             default:
                 System.out.println(String.format("Unknown response \"%s\" from server", request.getRequest()));
         }
+    }
+
+    private void sendFileListOfParentDirectory(ChannelHandlerContext ctx, Long currentDirectoryId) {
+        Directory newCurrentDirectory = DIRECTORY_SERVICE.getDirectoryById(currentDirectoryId).getParentDirectory();
+        ctx.pipeline().get(MainHandler.class).setCurrentDirectory(newCurrentDirectory);
+        sendFileList(ctx, newCurrentDirectory);
     }
 
     private void deleteFile(ChannelHandlerContext ctx, Long id, Directory currentDirectory) throws IOException {
@@ -79,7 +91,13 @@ public class MainHandlerFileManipulationService {
         fileTransmitter.addFile(FILE_DATA_SERVICE.getFileById(fileId), fileId);
     }
 
-    private void sendFileList(ChannelHandlerContext ctx, Directory currentDirectory) throws IOException {
+    private void sendFileList(ChannelHandlerContext ctx, Long directoryId) {
+        Directory newCurrentDirectory = DIRECTORY_SERVICE.getDirectoryById(directoryId);
+        ctx.pipeline().get(MainHandler.class).setCurrentDirectory(newCurrentDirectory);
+        sendFileList(ctx, newCurrentDirectory);
+    }
+
+    private void sendFileList(ChannelHandlerContext ctx, Directory currentDirectory) {
         Map<String, Long> fileMap = new HashMap<>();
         Map<String, Long> directoryMap = new HashMap<>();
         Long id = currentDirectory.getId();

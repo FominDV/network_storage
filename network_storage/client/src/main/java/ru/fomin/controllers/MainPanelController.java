@@ -34,12 +34,13 @@ public class MainPanelController {
     private Map<String, Long> fileMap = new HashMap<>();
     private Map<String, Long> directoryMap = new HashMap<>();
 
-    private MainPanelService mainPanelRequest;
+    private MainPanelService mainPanelService;
     private ObservableList<String> observableList;
     private MultipleSelectionModel<String> multipleSelectionModel;
     private FileChooser fileChooser = new FileChooser();
     private DirectoryChooser directoryChooser = new DirectoryChooser();
-    private Long remoteDirectoryId;
+    private Long remoteCurrentDirectoryId;
+    private Long remoteRootDirectoryId;
 
     @FXML
     private Label title;
@@ -85,11 +86,11 @@ public class MainPanelController {
 
     @FXML
     void initialize() {
-        mainPanelRequest = Factory.getMainPanelRequest();
+        mainPanelService = Factory.getMainPanelRequest();
 
         btn_info.setOnAction(event -> showDeveloperInfo());
 
-        btn_exit.setOnAction(event -> mainPanelRequest.exitToAuthentication(btn_info));
+        btn_exit.setOnAction(event -> mainPanelService.exitToAuthentication(btn_info));
 
         btn_upload.setOnAction(event -> upload());
 
@@ -103,10 +104,53 @@ public class MainPanelController {
 
         btn_rename.setOnAction(event -> rename());
 
+        btn_into_dir.setOnAction(event -> moveToNestedDirectory());
+
+        btn_out_dir.setOnAction(event -> moveFromCurrentDirectory());
+
         ResponseService.setMainPanelController(this);
 
         //Request to server for setting list of file and nested directories;
-        mainPanelRequest.getCurrentDirectoryEntity();
+        mainPanelService.getCurrentDirectoryEntity();
+    }
+
+    private void moveFromCurrentDirectory() {
+        if (remoteRootDirectoryId.equals(remoteCurrentDirectoryId)) {
+            showErrorMessage("You are into root directory");
+            return;
+        }
+        mainPanelService.moveFromCurrentDirectory(remoteCurrentDirectoryId);
+    }
+
+    private void moveToNestedDirectory() {
+        Long id;
+        if ((id = getIdOfChosenDirectory()) == null) {
+            return;
+        }
+        mainPanelService.moveToNestedDirectory(id);
+    }
+
+    /**
+     * Returns id of chosen directory from list.
+     *
+     * @return - null if directory was not chosen
+     */
+    private Long getIdOfChosenDirectory() {
+        String resourceName = multipleSelectionModel.getSelectedItem();
+
+        //Verify that something was chosen
+        if (!hasText(resourceName)) {
+            showErrorMessage("Directory was not chosen");
+            return null;
+        }
+
+        //Verify that directory was chosen
+        if (!directoryMap.containsKey(resourceName)) {
+            showErrorMessage("You chose not directory");
+            return null;
+        }
+
+        return directoryMap.get(resourceName);
     }
 
     /**
@@ -149,11 +193,11 @@ public class MainPanelController {
         } else {
             //resource is not contained into maps
             showErrorMessage("Fatal error");
-            mainPanelRequest.exitToAuthentication(btn_info);
+            mainPanelService.exitToAuthentication(btn_info);
             return;
         }
 
-        mainPanelRequest.rename(newName, id, type);
+        mainPanelService.rename(newName, id, type);
         field_resource_name.clear();
     }
 
@@ -167,7 +211,7 @@ public class MainPanelController {
             field_resource_name.clear();
             return;
         }
-        mainPanelRequest.createDir(dirName, remoteDirectoryId);
+        mainPanelService.createDir(dirName, remoteCurrentDirectoryId);
         field_resource_name.clear();
     }
 
@@ -196,10 +240,10 @@ public class MainPanelController {
         } else {
             //resource is not contained into maps
             showErrorMessage("Fatal error");
-            mainPanelRequest.exitToAuthentication(btn_info);
+            mainPanelService.exitToAuthentication(btn_info);
             return;
         }
-        mainPanelRequest.delete(id, type);
+        mainPanelService.delete(id, type);
     }
 
     /**
@@ -230,7 +274,7 @@ public class MainPanelController {
             return;
         }
         Long id = fileMap.get(fileName);
-        mainPanelRequest.download(id, directory.toString());
+        mainPanelService.download(id, directory.toString());
     }
 
     /**
@@ -245,8 +289,8 @@ public class MainPanelController {
             showErrorMessage(String.format("Path \"%s\" is not file", file.toString()));
             return;
         }
-        mainPanelRequest.sendFile(file, remoteDirectoryId);
-        mainPanelRequest.getCurrentDirectoryEntity();
+        mainPanelService.sendFile(file, remoteCurrentDirectoryId);
+        mainPanelService.getCurrentDirectoryEntity();
     }
 
     /**
@@ -256,7 +300,12 @@ public class MainPanelController {
         fileMap = com.getFileMap();
         directoryMap = com.getDirectoryMap();
         label_current_dir.setText(com.getCurrentDirectory());
-        remoteDirectoryId = com.getCurrentDirectoryId();
+        remoteCurrentDirectoryId = com.getCurrentDirectoryId();
+
+        //root directory is set only once
+        if (remoteRootDirectoryId == null) {
+            remoteRootDirectoryId = remoteCurrentDirectoryId;
+        }
 
         //Creating list of all files and nested directories
         List<String> filesList = new ArrayList<>();
@@ -324,7 +373,7 @@ public class MainPanelController {
                 break;
             default:
                 showErrorMessage(String.format("Unknown response \"%s\" from server", response.getResponse()));
-                mainPanelRequest.exitToAuthentication(btn_info);
+                mainPanelService.exitToAuthentication(btn_info);
         }
     }
 

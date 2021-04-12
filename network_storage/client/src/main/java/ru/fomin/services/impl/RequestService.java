@@ -113,6 +113,16 @@ public class RequestService implements MainPanelService, RegistrationService, Au
     }
 
     @Override
+    public void moveToNestedDirectory(Long id) {
+        networkConnection.sendToServer(new FileManipulationRequest(FileManipulationRequest.Request.INTO_DIR, id));
+    }
+
+    @Override
+    public void moveFromCurrentDirectory(Long id) {
+        networkConnection.sendToServer(new FileManipulationRequest(FileManipulationRequest.Request.OUT_DIR, id));
+    }
+
+    @Override
     public void changePassword(String currentPassword, String newPassword) {
         networkConnection.sendToServer(new ChangePasswordRequest(newPassword, currentPassword));
     }

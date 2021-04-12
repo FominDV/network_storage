@@ -20,7 +20,12 @@ public class FileManipulationRequest extends DataPackage {
     private Long id;
 
     public enum Request {
-        DELETE_DIR, DELETE_FILE, DOWNLOAD, GET_FILES_LIST
+        DELETE_DIR,
+        DELETE_FILE,
+        DOWNLOAD,
+        GET_FILES_LIST,
+        INTO_DIR,
+        OUT_DIR
     }
 
 }
