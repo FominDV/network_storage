@@ -1,4 +1,4 @@
-package ru.fomin;
+package ru.fomin.gui_executor;
 
 
 import javafx.application.Application;
