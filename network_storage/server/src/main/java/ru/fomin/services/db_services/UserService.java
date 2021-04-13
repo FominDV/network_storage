@@ -19,8 +19,12 @@ public class UserService {
     public Object[] isValidUserData(String login, String password) {
         User user = USER_DAO.getUsersByLogin(login);
         Object[] response = new Object[2];
-        response[0] = user != null && user.getPassword().equals(password);
-        response[1] = user.getId();
+        if (user != null) {
+            response[0] = user.getPassword().equals(password);
+            response[1] = user.getId();
+        }else {
+            response[0] = false;
+        }
         return response;
     }
 

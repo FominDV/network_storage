@@ -1,10 +1,12 @@
 package ru.fomin;
 
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+
 
 /**
  * Starts application and shows window of authentication.
@@ -20,7 +22,7 @@ public class StartClientApplication extends Application {
     }
 
 
-//    public static void main(String[] args) {
-//        launch(args);
-//    }
+    public static void main(String[] args) {
+        launch(args);
+    }
 }

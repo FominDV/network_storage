@@ -11,6 +11,10 @@
 
     <artifactId>client</artifactId>
 
+    <properties>
+        <org.openjfx>11</org.openjfx>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>ru.fomin</groupId>
@@ -19,18 +23,23 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-all</artifactId>
-            <version>4.1.59.Final</version>
-            <scope>compile</scope>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>${org.openjfx}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-graphics</artifactId>
+            <version>${org.openjfx}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>${org.openjfx}</version>
         </dependency>
     </dependencies>
 
 
-    <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
-    </properties>
 
 <!--    <build>-->
 <!--        <plugins>-->

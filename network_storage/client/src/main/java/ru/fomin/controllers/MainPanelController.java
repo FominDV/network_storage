@@ -290,7 +290,6 @@ public class MainPanelController {
             return;
         }
         mainPanelService.sendFile(file, remoteCurrentDirectoryId);
-        mainPanelService.getCurrentDirectoryEntity();
     }
 
     /**
@@ -332,9 +331,7 @@ public class MainPanelController {
                 showErrorMessage(String.format("File with the name \"%s\" already exist", fileName));
                 break;
             case FILE_UPLOADED:
-                String fileSpecialName = Constants.getFILE_NAME_PREFIX() + fileName;
-                fileMap.put(fileSpecialName, id);
-                observableList.add(fileSpecialName);
+                mainPanelService.getCurrentDirectoryEntity();
                 showInfoMessage(String.format("Uploading of file \"%s\" is successful", fileName));
                 break;
             case DIR_CREATED:
