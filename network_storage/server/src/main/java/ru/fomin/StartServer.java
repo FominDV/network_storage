@@ -20,7 +20,6 @@ public class StartServer {
         Properties properties = new Properties();
         try(FileReader fileReader = new FileReader(PROPERTIES_PATH)){
             properties.load(fileReader);
-
             String url = properties.getProperty("hibernate.connection.url");
             String user = properties.getProperty("hibernate.connection.username");
             String password = properties.getProperty("hibernate.connection.password");

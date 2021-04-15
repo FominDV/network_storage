@@ -1,6 +1,8 @@
 package ru.fomin.services.handler_services;
 
 import io.netty.channel.ChannelHandlerContext;
+import lombok.Getter;
+import lombok.Setter;
 import ru.fomin.dto.requests.AuthRequest;
 import ru.fomin.dto.responses.AuthResult;
 import ru.fomin.core.MainHandler;
@@ -24,6 +26,11 @@ public class AuthHandlerService {
 
     public AuthHandlerService() {
         userService = new UserService();
+        isAuthorized = false;
+    }
+
+    public AuthHandlerService(UserService userService) {
+        this.userService = userService;
         isAuthorized = false;
     }
 
