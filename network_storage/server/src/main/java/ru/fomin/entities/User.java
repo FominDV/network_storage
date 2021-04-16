@@ -1,5 +1,6 @@
 package ru.fomin.entities;
 
+import com.sun.istack.NotNull;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -23,13 +24,20 @@ public class User {
     inverseJoinColumns = @JoinColumn(name = "directory_id"))
     private Directory rootDirectory;
 
+    @NotNull
     private String login;
+
+    @NotNull
     private String password;
 
-    public User(String login, String password, Directory rootDirectory) {
+    @NotNull
+    private String salt;
+
+    public User(String login, String password, Directory rootDirectory, String salt) {
         this.login = login;
         this.password = password;
         this.rootDirectory = rootDirectory;
+        this.salt = salt;
     }
 
     public User() {
