@@ -21,7 +21,7 @@ public class Server {
     private EventLoopGroup mainGroup;
     private EventLoopGroup workerGroup;
 
-    private static final int PORT = 8189;
+    private static final int PORT = PropertiesLoader.getPORT();
 
     public Server() {
         sb = new ServerBootstrap();

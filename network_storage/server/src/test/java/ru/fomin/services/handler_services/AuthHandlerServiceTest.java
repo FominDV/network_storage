@@ -3,6 +3,7 @@ package ru.fomin.services.handler_services;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPipeline;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.*;
@@ -60,5 +61,10 @@ class AuthHandlerServiceTest {
             assertEquals(userService, userServiceCaptor.getValue());
         }
         Mockito.verify(ctx).writeAndFlush(new AuthResult(AuthResult.Result.valueOf(result)));
+    }
+
+    @Test
+    public void authHandle_Registration(){
+
     }
 }

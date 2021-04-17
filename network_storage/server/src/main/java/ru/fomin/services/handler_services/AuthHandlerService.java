@@ -3,6 +3,7 @@ package ru.fomin.services.handler_services;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.Getter;
 import lombok.Setter;
+import ru.fomin.core.PropertiesLoader;
 import ru.fomin.dto.requests.AuthRequest;
 import ru.fomin.dto.responses.AuthResult;
 import ru.fomin.core.MainHandler;
@@ -55,7 +56,7 @@ public class AuthHandlerService {
                 break;
             //If client want to create new account
             case REGISTRATION:
-                String root = MainHandler.getMainPath() + File.separator + login;
+                String root = PropertiesLoader.getROOT_DIRECTORY() + File.separator + login;
                 //Verifies existing duplicate login
                 if (userService.createUser(login, password, root)) {
                     Files.createDirectory(Paths.get(root));

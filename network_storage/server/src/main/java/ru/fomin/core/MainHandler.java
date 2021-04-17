@@ -41,9 +41,6 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
     private Directory currentDirectory;
     private Long userId;
 
-
-    private static final String MAIN_PATH = "main_repository";
-
     public MainHandler() {
         directoryService = new DirectoryService();
         fileDataService = new FileDataService();
@@ -78,7 +75,4 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
         ctx.close();
     }
 
-    public static String getMainPath() {
-        return MAIN_PATH;
-    }
 }

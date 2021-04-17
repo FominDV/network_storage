@@ -2,6 +2,7 @@ package ru.fomin.services.handler_services;
 
 import io.netty.channel.ChannelHandlerContext;
 import ru.fomin.classes.Constants;
+import ru.fomin.core.PropertiesLoader;
 import ru.fomin.dto.responses.CurrentDirectoryEntityList;
 import ru.fomin.dto.requests.FileManipulationRequest;
 import ru.fomin.dto.responses.FileManipulationResponse;
@@ -105,7 +106,7 @@ public class MainHandlerFileManipulationService {
         List<Directory> currentDirectoryList = DIRECTORY_SERVICE.getNestedDirectories(id);
         currentFileList.forEach(fileData -> fileMap.put(Constants.getFILE_NAME_PREFIX() + fileData.getName(), fileData.getId()));
         currentDirectoryList.forEach(directory -> directoryMap.put(Constants.getDIRECTORY_NAME_PREFIX() + directory.getPath().substring(currentDirectory.getPath().length() + 1), directory.getId()));
-        String currentDirectoryName = currentDirectory.getPath().substring(MainHandler.getMainPath().length());
+        String currentDirectoryName = currentDirectory.getPath().substring(PropertiesLoader.getROOT_DIRECTORY().length());
         ctx.writeAndFlush(new CurrentDirectoryEntityList(fileMap, directoryMap, currentDirectoryName, currentDirectory.getId()));
     }
 
@@ -131,6 +132,6 @@ public class MainHandlerFileManipulationService {
                 return FileVisitResult.CONTINUE;
             }
         });
-        ctx.writeAndFlush(new FileManipulationResponse(FileManipulationResponse.Response.DIRECTORY_REMOVED, directoryPathString.substring(MainHandler.getMainPath().length()), id));
+        ctx.writeAndFlush(new FileManipulationResponse(FileManipulationResponse.Response.DIRECTORY_REMOVED, directoryPathString.substring(PropertiesLoader.getROOT_DIRECTORY().length()), id));
     }
 }
