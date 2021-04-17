@@ -132,6 +132,10 @@ public class MainHandlerFileManipulationService {
                 return FileVisitResult.CONTINUE;
             }
         });
-        ctx.writeAndFlush(new FileManipulationResponse(FileManipulationResponse.Response.DIRECTORY_REMOVED, directoryPathString.substring(PropertiesLoader.getROOT_DIRECTORY().length()), id));
+        ctx.writeAndFlush(
+                new FileManipulationResponse(FileManipulationResponse.Response.DIRECTORY_REMOVED,
+                        directoryPathString.substring(PropertiesLoader.getROOT_DIRECTORY().length()),
+                        id)
+        );
     }
 }

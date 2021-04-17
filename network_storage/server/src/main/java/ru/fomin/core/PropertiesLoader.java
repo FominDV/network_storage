@@ -2,14 +2,17 @@ package ru.fomin.core;
 
 import lombok.Getter;
 
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.Properties;
 
+/**
+ * Class for loading properties from properties files.
+ */
 public class PropertiesLoader {
 
-    private static final String SERVER_PROPERTIES_PATH = "server/src/main/resources/server.properties";
-    private static final String PROPERTIES_PATH = "server/src/main/resources/hibernate.properties";
+    private static final String SERVER_PROPERTIES = "server.properties";
+
+    private static final String HIBERNATE_PROPERTIES = "hibernate.properties";
 
     @Getter
     private static final String ROOT_DIRECTORY;
@@ -25,23 +28,17 @@ public class PropertiesLoader {
 
     static {
 
-        Properties properties = new Properties();
+        Properties properties = getProperties();
 
-        try (FileReader fileReaderServerProperties = new FileReader(SERVER_PROPERTIES_PATH);
-             FileReader fileReaderDbProperties = new FileReader(PROPERTIES_PATH)) {
+        URL = properties.getProperty("hibernate.connection.url");
+        USER = properties.getProperty("hibernate.connection.username");
+        PASSWORD = properties.getProperty("hibernate.connection.password");
+        ROOT_DIRECTORY = properties.getProperty("rootDirectory");
+        PORT = Integer.parseInt(properties.getProperty("port"));
 
-            properties.load(fileReaderServerProperties);
-            properties.load(fileReaderDbProperties);
+        //verify values by null
+        checkProperties();
 
-            URL = properties.getProperty("hibernate.connection.url");
-            USER = properties.getProperty("hibernate.connection.username");
-            PASSWORD = properties.getProperty("hibernate.connection.password");
-            ROOT_DIRECTORY = properties.getProperty("rootDirectory");
-            PORT = Integer.parseInt(properties.getProperty("port"));
-
-        } catch (IOException | NumberFormatException e) {
-            throw new RuntimeException("Loading server properties error: " + e.getCause());
-        }
     }
 
     private static void checkProperties() {
@@ -51,6 +48,38 @@ public class PropertiesLoader {
                 ROOT_DIRECTORY == null ||
                 PORT == null) {
             throw new RuntimeException("Incorrect properties.");
+        }
+    }
+
+    /**
+     * Returns filled properties.
+     */
+    private static Properties getProperties() {
+
+        //get list of target files
+        ClassLoader classLoader = PropertiesLoader.class.getClassLoader();
+        File classpathRoot = new File(classLoader.getResource("").getPath());
+        File[] fileList = classpathRoot.listFiles((dir, name) -> (name.endsWith(SERVER_PROPERTIES) || name.equals(HIBERNATE_PROPERTIES)));
+
+        Properties properties = new Properties();
+        for (File file : fileList) {
+            try {
+                Reader reader = getFileReader(file);
+                properties.load(reader);
+                reader.close();
+            } catch (IOException e) {
+                throw new RuntimeException("Can not load properties by IO: " + e.getCause());
+            }
+        }
+
+        return properties;
+    }
+
+    private static FileReader getFileReader(File file) {
+        try {
+            return new FileReader(file);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException("Loading server properties error: " + e.getCause());
         }
     }
 

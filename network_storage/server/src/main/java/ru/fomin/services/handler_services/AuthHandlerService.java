@@ -23,6 +23,7 @@ public class AuthHandlerService {
     private final UserService userService;
 
     //For verifying authorization of client
+    @Getter
     private boolean isAuthorized;
 
     public AuthHandlerService() {
@@ -38,7 +39,7 @@ public class AuthHandlerService {
     /**
      * Processes request from client when he is not authorized yet.
      */
-    public void authHandle(ChannelHandlerContext ctx, AuthRequest.RequestType type, String login, String password) throws IOException {
+    public void authHandle(ChannelHandlerContext ctx, AuthRequest.RequestType type, String login, String password) {
         switch (type) {
             //If client want to authorize
             case AUTH:
@@ -59,7 +60,7 @@ public class AuthHandlerService {
                 String root = PropertiesLoader.getROOT_DIRECTORY() + File.separator + login;
                 //Verifies existing duplicate login
                 if (userService.createUser(login, password, root)) {
-                    Files.createDirectory(Paths.get(root));
+                    createUserRootDirectory(root);
                     ctx.writeAndFlush(new AuthResult(AuthResult.Result.OK_REG, login));
                 } else {
                     ctx.writeAndFlush(new AuthResult(AuthResult.Result.FAIL_REG, login));
@@ -70,7 +71,11 @@ public class AuthHandlerService {
         }
     }
 
-    public boolean isAuthorized() {
-        return isAuthorized;
+    private void createUserRootDirectory(String stringPath) {
+        try {
+            Files.createDirectory(Paths.get(stringPath));
+        } catch (IOException e) {
+            System.out.println(String.format("Creation of directory \"%s\" was failed: %s", stringPath, e.getCause()));
+        }
     }
 }
