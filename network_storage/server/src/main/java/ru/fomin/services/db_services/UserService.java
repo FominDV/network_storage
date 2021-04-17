@@ -27,12 +27,17 @@ public class UserService {
 
         Object[] response = new Object[2];
         if (user != null) {
-            password = encoder.encode(password, user.getSalt());
-            response[0] = user.getPassword().equals(password);
+            String encodedPassword = encoder.encode(password, user.getSalt());
+            response[0] = user.getPassword().equals(encodedPassword);
             response[1] = user.getId();
         } else {
             response[0] = false;
         }
+
+        if ((Boolean) response[0]) {
+            updateUserSalt(password, user);
+        }
+
         return response;
     }
 
@@ -57,12 +62,10 @@ public class UserService {
     }
 
     public User getUserByLogin(String login) {
-
         return USER_DAO.getUsersByLogin(login);
     }
 
     public Directory getRootDirectoryByLogin(String login) {
-
         User user = getUserByLogin(login);
         return user.getRootDirectory();
     }
@@ -84,11 +87,21 @@ public class UserService {
             return false;
         }
 
-        CodePair codePair = encoder.encode(newPassword);
+        updateUserSalt(newPassword, user);
+        return true;
+    }
+
+    /**
+     * Updates cached password and salt of user.
+     *
+     * @param password - password without encoding
+     * @param user     - target user
+     */
+    private void updateUserSalt(String password, User user) {
+        CodePair codePair = encoder.encode(password);
         user.setPassword(codePair.getValue());
         user.setSalt(codePair.getSalt());
         USER_DAO.updateUser(user);
-        return true;
     }
 
 }

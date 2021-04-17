@@ -33,7 +33,7 @@ public class EncoderSHA256 implements Encoder {
         getSecureRandom().nextBytes(salt);
         cloneEncoder.update(salt);
 
-        byte[] digest = encoder.digest(input);
+        byte[] digest = cloneEncoder.digest(input);
         return CodePair.builder()
                 .salt(DatatypeConverter.printHexBinary(salt))
                 .value(DatatypeConverter.printHexBinary(digest))
@@ -45,16 +45,29 @@ public class EncoderSHA256 implements Encoder {
     public String encode(String value, String salt) {
 
         byte[] input = value.getBytes(StandardCharsets.UTF_8);
-        byte[] saltBytes = salt.getBytes();
+        byte[] saltBytes = hexStringToByteArray(salt);
 
         MessageDigest cloneEncoder = getCloneDigest();
         cloneEncoder.update(saltBytes);
 
-        byte[] digest = encoder.digest(input);
+        byte[] digest = cloneEncoder.digest(input);
         return DatatypeConverter.printHexBinary(digest);
     }
 
-    private MessageDigest getCloneDigest(){
+    /**
+     * Converts string of hex digit to byte array.
+     */
+    private byte[] hexStringToByteArray(String hexString) {
+        byte[] bytes = new byte[hexString.length() / 2];
+        for (int i = 0; i < bytes.length; i++) {
+            int index = i * 2;
+            int tempValue = Integer.parseInt(hexString.substring(index, index + 2), 16);
+            bytes[i] = (byte) tempValue;
+        }
+        return bytes;
+    }
+
+    private MessageDigest getCloneDigest() {
         try {
             return (MessageDigest) encoder.clone();
         } catch (CloneNotSupportedException e) {
@@ -64,7 +77,7 @@ public class EncoderSHA256 implements Encoder {
 
     private MessageDigest getDigest() {
         try {
-            return  MessageDigest.getInstance("SHA-256");
+            return MessageDigest.getInstance("SHA-256");
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException("Encoder initialization error: " + e.getCause());
         }
