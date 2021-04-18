@@ -1,6 +1,7 @@
 package ru.fomin.services.handler_services;
 
 import io.netty.channel.ChannelHandlerContext;
+import lombok.extern.log4j.Log4j2;
 import ru.fomin.classes.Constants;
 import ru.fomin.core.PropertiesLoader;
 import ru.fomin.dto.responses.CurrentDirectoryEntityList;
@@ -23,6 +24,7 @@ import java.util.Map;
 /**
  * Service for process FileManipulationRequest message from client.
  */
+@Log4j2
 public class MainHandlerFileManipulationService {
 
     //services
@@ -63,7 +65,7 @@ public class MainHandlerFileManipulationService {
                 sendFileList(ctx, request.getId());
                 break;
             default:
-                System.out.println(String.format("Unknown response \"%s\" from server", request.getRequest()));
+                log.error(String.format("Unknown response \"%s\" from server", request.getRequest()));
         }
     }
 

@@ -1,6 +1,7 @@
 package ru.fomin.services.handler_services;
 
 import io.netty.channel.ChannelHandlerContext;
+import lombok.extern.log4j.Log4j2;
 import ru.fomin.dto.requests.CreatingAndUpdatingManipulationRequest;
 import ru.fomin.dto.responses.FileManipulationResponse;
 import ru.fomin.entities.Directory;
@@ -16,6 +17,7 @@ import java.nio.file.Paths;
 /**
  * Service for process CreatingAndUpdatingManipulationRequest message from client.
  */
+@Log4j2
 public class MainHandlerRequestDirectoryService {
 
     //services
@@ -60,7 +62,7 @@ public class MainHandlerRequestDirectoryService {
                 ctx.writeAndFlush(new FileManipulationResponse(FileManipulationResponse.Response.RENAME_FILE, newName, id));
                 break;
             default:
-                System.out.println(String.format("Unknown response \"%s\" from server", request.getType()));
+                log.error(String.format("Unknown response \"%s\" from server", request.getType()));
         }
     }
 }

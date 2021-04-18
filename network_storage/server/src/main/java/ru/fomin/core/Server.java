@@ -10,11 +10,14 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
+import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 
 import static io.netty.channel.ChannelOption.SO_BACKLOG;
 import static io.netty.channel.ChannelOption.SO_KEEPALIVE;
 import static io.netty.handler.codec.serialization.ClassResolvers.cacheDisabled;
 
+@Log4j2
 public class Server {
 
     private ServerBootstrap sb;
@@ -45,7 +48,7 @@ public class Server {
      */
     public void start() {
         try {
-            System.out.println("Server was started");
+            log.info("Server was started");
             ChannelFuture future = sb.bind(PORT).sync();
             future.channel().closeFuture().sync();
         } catch (InterruptedException e) {
@@ -53,7 +56,7 @@ public class Server {
         } finally {
             mainGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();
-            System.out.println("Server was stopped");
+            log.info("Server was stopped");
         }
     }
 

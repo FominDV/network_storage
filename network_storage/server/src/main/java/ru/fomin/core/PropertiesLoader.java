@@ -1,6 +1,10 @@
 package ru.fomin.core;
 
 import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 import java.io.*;
 import java.util.Properties;
@@ -8,6 +12,7 @@ import java.util.Properties;
 /**
  * Class for loading properties from properties files.
  */
+@Log4j2
 public class PropertiesLoader {
 
     private static final String SERVER_PROPERTIES = "server.properties";
@@ -48,6 +53,8 @@ public class PropertiesLoader {
                 ROOT_DIRECTORY == null ||
                 PORT == null) {
             throw new RuntimeException("Incorrect properties.");
+        }else {
+           log.info("Properties was loaded successful.");
         }
     }
 

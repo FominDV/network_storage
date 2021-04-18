@@ -3,6 +3,7 @@ package ru.fomin.services.handler_services;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.log4j.Log4j2;
 import ru.fomin.core.PropertiesLoader;
 import ru.fomin.dto.requests.AuthRequest;
 import ru.fomin.dto.responses.AuthResult;
@@ -17,6 +18,7 @@ import java.nio.file.Paths;
 /**
  * Service for process AuthRequest message from client.
  */
+@Log4j2
 public class AuthHandlerService {
 
     //Services
@@ -67,7 +69,7 @@ public class AuthHandlerService {
                 }
                 break;
             default:
-                System.out.println(String.format("Unknown request \"%s\"", type));
+                log.error(String.format("Unknown request \"%s\"", type));
         }
     }
 
@@ -75,7 +77,7 @@ public class AuthHandlerService {
         try {
             Files.createDirectory(Paths.get(stringPath));
         } catch (IOException e) {
-            System.out.println(String.format("Creation of directory \"%s\" was failed: %s", stringPath, e.getCause()));
+            log.error(String.format("Creation of directory \"%s\" was failed: %s", stringPath, e.getCause()));
         }
     }
 }

@@ -1,5 +1,6 @@
 package ru.fomin.factory;
 
+import lombok.extern.log4j.Log4j2;
 import ru.fomin.network.Connection;
 import ru.fomin.network.ResponseSandler;
 import ru.fomin.network.impl.NetworkConnection;
@@ -7,10 +8,12 @@ import ru.fomin.services.*;
 import ru.fomin.services.impl.ResponseService;
 import ru.fomin.services.impl.RequestService;
 
+@Log4j2
 public class Factory {
 
     //NetworkConnection
     public static Connection getConnection(){
+        log.info("9999999999999999999999999999999999999999");
         return NetworkConnection.getInstance();
     }
 
