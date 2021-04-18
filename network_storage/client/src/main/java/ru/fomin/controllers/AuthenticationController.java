@@ -5,6 +5,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import ru.fomin.dto.responses.AuthResult;
+import ru.fomin.encoder.Encoder;
 import ru.fomin.factory.Factory;
 import ru.fomin.network.Connection;
 import ru.fomin.services.AuthenticationService;
@@ -24,6 +25,8 @@ public class AuthenticationController {
     //initial values of login and password
     private static String login = "Dmitriy777";
     private static String password = "Dmitriy777";
+
+    private static final Encoder encoder = Factory.getEncoder();
 
     private AuthenticationService authenticationService;
     private Connection connection;
@@ -103,7 +106,7 @@ public class AuthenticationController {
             showErrorMessage("All field should be fill");
             return;
         }
-        authenticationService.authentication(login, password);
+        authenticationService.authentication(login, encoder.encode(password));
     }
 
     /**

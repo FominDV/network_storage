@@ -5,6 +5,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.PasswordField;
 import lombok.Getter;
+import ru.fomin.encoder.Encoder;
 import ru.fomin.factory.Factory;
 import ru.fomin.services.ChangingPasswordService;
 import ru.fomin.services.impl.ResponseService;
@@ -14,6 +15,8 @@ import ru.fomin.util.ControllersUtil;
  * Window for changing password.
  */
 public class UpdatePasswordController {
+
+    private static final Encoder encoder = Factory.getEncoder();
 
     private ChangingPasswordService changingPasswordService;
 
@@ -63,6 +66,11 @@ public class UpdatePasswordController {
 
         //checks the password values for correctness
         if (ControllersUtil.verifyEmptyField(currentPassword, newPassword, repeatedPassword) && ControllersUtil.verifyPassword(newPassword, repeatedPassword)) {
+
+            //Caching password
+            currentPassword = encoder.encode(currentPassword);
+            newPassword = encoder.encode(newPassword);
+
             changingPasswordService.changePassword(currentPassword, newPassword);
         }
     }

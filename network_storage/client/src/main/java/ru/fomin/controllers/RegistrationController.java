@@ -5,6 +5,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import ru.fomin.encoder.Encoder;
 import ru.fomin.factory.Factory;
 import ru.fomin.services.RegistrationService;
 import ru.fomin.services.impl.ResponseService;
@@ -15,6 +16,8 @@ import ru.fomin.util.ControllersUtil;
  * Window for creating new account.
  */
 public class RegistrationController {
+
+    private static final Encoder encoder = Factory.getEncoder();
 
     private boolean isWaitingResponse;
     private String currentPassword = "";
@@ -57,7 +60,7 @@ public class RegistrationController {
         if (!isWaitingResponse && ControllersUtil.validation(login, password, field_repeat_password.getText())) {
             isWaitingResponse = true;
             currentPassword = password;
-            registrationRequest.registration(login, password);
+            registrationRequest.registration(login, encoder.encode(password));
         } else {
             clearFields();
         }
