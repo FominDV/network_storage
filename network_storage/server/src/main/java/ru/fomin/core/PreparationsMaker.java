@@ -31,7 +31,7 @@ public class PreparationsMaker {
         }
     }
 
-    private void migrateDB() {
+    public void migrateDB() {
 
         String url = PropertiesLoader.getURL();
         String user = PropertiesLoader.getUSER();
@@ -44,4 +44,5 @@ public class PreparationsMaker {
         flyway.migrate();
 
     }
+
 }

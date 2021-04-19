@@ -3,6 +3,7 @@ package ru.fomin.services.encoder;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 
 import javax.xml.bind.DatatypeConverter;
 import java.nio.charset.StandardCharsets;
@@ -13,6 +14,7 @@ import java.security.SecureRandom;
 /**
  * Class for encoding by SHA256.
  */
+@Log4j2
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class EncoderSHA256 implements Encoder {
 
@@ -34,6 +36,7 @@ public class EncoderSHA256 implements Encoder {
         cloneEncoder.update(salt);
 
         byte[] digest = cloneEncoder.digest(input);
+        log.info("String was encoded and salt was created");
         return CodePair.builder()
                 .salt(DatatypeConverter.printHexBinary(salt))
                 .value(DatatypeConverter.printHexBinary(digest))
@@ -51,6 +54,7 @@ public class EncoderSHA256 implements Encoder {
         cloneEncoder.update(saltBytes);
 
         byte[] digest = cloneEncoder.digest(input);
+        log.info("String was encoded by gotten salt");
         return DatatypeConverter.printHexBinary(digest);
     }
 
