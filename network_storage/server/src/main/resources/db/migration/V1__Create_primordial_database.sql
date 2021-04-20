@@ -1,13 +1,13 @@
 
 CREATE TABLE users (
-                       id int8 NOT NULL,
+                       id serial NOT NULL,
                        login varchar(255) NULL,
                        "password" varchar(255) NULL,
                        CONSTRAINT users_pkey PRIMARY KEY (id)
 );
 
 CREATE TABLE directories (
-                             id int8 NOT NULL,
+                             id serial NOT NULL,
                              "path" varchar(255) NULL,
                              user_id int8 NULL,
                              CONSTRAINT directories_pkey PRIMARY KEY (id),
@@ -23,7 +23,7 @@ CREATE TABLE dirtodir (
 );
 
 CREATE TABLE files (
-                       id int8 NOT NULL,
+                       id serial NOT NULL,
                        "name" varchar(255) NULL,
                        directory_id int8 NULL,
                        CONSTRAINT files_pkey PRIMARY KEY (id),

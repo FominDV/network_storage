@@ -1335,3 +1335,100 @@ java.lang.IllegalStateException: Cannot get a connection as the driver manager i
   Позиция: 17
 2021-04-19 00:58:36,653 [main] WARN  org.hibernate.engine.jdbc.spi.SqlExceptionHelper - SQL Error: 0, SQLState: 25P02
 2021-04-19 00:58:36,654 [main] ERROR org.hibernate.engine.jdbc.spi.SqlExceptionHelper - ERROR: current transaction is aborted, commands ignored until end of transaction block
+2021-04-19 23:36:12,240 [main] INFO  ru.fomin.core.PropertiesLoader - Properties was loaded successful.
+2021-04-19 23:37:47,591 [main] INFO  ru.fomin.core.PropertiesLoader - Properties was loaded successful.
+2021-04-19 23:38:39,345 [main] INFO  ru.fomin.core.PropertiesLoader - Properties was loaded successful.
+2021-04-19 23:39:09,710 [main] INFO  ru.fomin.core.PropertiesLoader - Properties was loaded successful.
+2021-04-19 23:39:10,207 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 5.4.28.Final
+2021-04-19 23:39:10,210 [main] INFO  org.hibernate.cfg.Environment - HHH000205: Loaded properties from resource hibernate.properties: {hibernate.connection.driver_class=org.postgresql.Driver, hibernate.dialect=org.hibernate.dialect.PostgreSQL94Dialect, hibernate.connection.password=****, hibernate.connection.username=postgres, hibernate.connection.url=jdbc:postgresql://localhost:49179/test_network_storage?loggerLevel=OFF, hibernate.bytecode.use_reflection_optimizer=false, hibernate.show_sql=true, hibernate.connection.autocommit=false}
+2021-04-19 23:39:10,418 [main] INFO  org.hibernate.annotations.common.Version - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2021-04-19 23:39:10,567 [main] WARN  org.hibernate.orm.connections.pooling - HHH10001002: Using Hibernate built-in connection pool (not for production use!)
+2021-04-19 23:39:10,568 [main] INFO  org.hibernate.orm.connections.pooling - HHH10001005: using driver [org.postgresql.Driver] at URL [jdbc:postgresql://localhost:49179/test_network_storage?loggerLevel=OFF]
+2021-04-19 23:39:10,569 [main] INFO  org.hibernate.orm.connections.pooling - HHH10001001: Connection properties: {password=****, autocommit=false, user=postgres}
+2021-04-19 23:39:10,569 [main] INFO  org.hibernate.orm.connections.pooling - HHH10001003: Autocommit mode: false
+2021-04-19 23:39:10,572 [main] INFO  org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl - HHH000115: Hibernate connection pool size: 20 (min=1)
+2021-04-19 23:39:10,601 [main] INFO  org.hibernate.dialect.Dialect - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQL94Dialect
+2021-04-19 23:39:11,972 [main] INFO  org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2021-04-19 23:39:12,089 [main] WARN  org.hibernate.engine.jdbc.spi.SqlExceptionHelper - SQL Error: 0, SQLState: 23502
+2021-04-19 23:39:12,089 [main] ERROR org.hibernate.engine.jdbc.spi.SqlExceptionHelper - ERROR: null value in column "id" of relation "directories" violates not-null constraint
+  Подробности: Failing row contains (null, null, null).
+2021-04-19 23:39:12,121 [main] WARN  org.hibernate.engine.jdbc.spi.SqlExceptionHelper - SQL Error: 0, SQLState: 23502
+2021-04-19 23:39:12,121 [main] ERROR org.hibernate.engine.jdbc.spi.SqlExceptionHelper - ERROR: null value in column "id" of relation "directories" violates not-null constraint
+  Подробности: Failing row contains (null, path1, null).
+2021-04-19 23:39:12,141 [main] WARN  org.hibernate.engine.jdbc.spi.SqlExceptionHelper - SQL Error: 0, SQLState: 23502
+2021-04-19 23:39:12,141 [main] ERROR org.hibernate.engine.jdbc.spi.SqlExceptionHelper - ERROR: null value in column "id" of relation "directories" violates not-null constraint
+  Подробности: Failing row contains (null, path1, null).
+2021-04-19 23:41:36,428 [main] INFO  ru.fomin.core.PropertiesLoader - Properties was loaded successful.
+2021-04-19 23:41:36,974 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 5.4.28.Final
+2021-04-19 23:41:36,978 [main] INFO  org.hibernate.cfg.Environment - HHH000205: Loaded properties from resource hibernate.properties: {hibernate.connection.driver_class=org.postgresql.Driver, hibernate.dialect=org.hibernate.dialect.PostgreSQL94Dialect, hibernate.connection.password=****, hibernate.connection.username=postgres, hibernate.connection.url=jdbc:postgresql://localhost:49183/test_network_storage?loggerLevel=OFF, hibernate.bytecode.use_reflection_optimizer=false, hibernate.show_sql=true, hibernate.connection.autocommit=false}
+2021-04-19 23:41:37,238 [main] INFO  org.hibernate.annotations.common.Version - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2021-04-19 23:41:37,407 [main] WARN  org.hibernate.orm.connections.pooling - HHH10001002: Using Hibernate built-in connection pool (not for production use!)
+2021-04-19 23:41:37,409 [main] INFO  org.hibernate.orm.connections.pooling - HHH10001005: using driver [org.postgresql.Driver] at URL [jdbc:postgresql://localhost:49183/test_network_storage?loggerLevel=OFF]
+2021-04-19 23:41:37,409 [main] INFO  org.hibernate.orm.connections.pooling - HHH10001001: Connection properties: {password=****, autocommit=false, user=postgres}
+2021-04-19 23:41:37,409 [main] INFO  org.hibernate.orm.connections.pooling - HHH10001003: Autocommit mode: false
+2021-04-19 23:41:37,413 [main] INFO  org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl - HHH000115: Hibernate connection pool size: 20 (min=1)
+2021-04-19 23:41:37,444 [main] INFO  org.hibernate.dialect.Dialect - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQL94Dialect
+2021-04-19 23:41:38,923 [main] INFO  org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2021-04-19 23:41:39,071 [main] WARN  org.hibernate.engine.jdbc.spi.SqlExceptionHelper - SQL Error: 0, SQLState: 23502
+2021-04-19 23:41:39,072 [main] ERROR org.hibernate.engine.jdbc.spi.SqlExceptionHelper - ERROR: null value in column "id" of relation "directories" violates not-null constraint
+  Подробности: Failing row contains (null, null, null).
+2021-04-19 23:41:39,106 [main] WARN  org.hibernate.engine.jdbc.spi.SqlExceptionHelper - SQL Error: 0, SQLState: 23502
+2021-04-19 23:41:39,106 [main] ERROR org.hibernate.engine.jdbc.spi.SqlExceptionHelper - ERROR: null value in column "id" of relation "directories" violates not-null constraint
+  Подробности: Failing row contains (null, path1, null).
+2021-04-19 23:41:39,127 [main] WARN  org.hibernate.engine.jdbc.spi.SqlExceptionHelper - SQL Error: 0, SQLState: 23502
+2021-04-19 23:41:39,127 [main] ERROR org.hibernate.engine.jdbc.spi.SqlExceptionHelper - ERROR: null value in column "id" of relation "directories" violates not-null constraint
+  Подробности: Failing row contains (null, path1, null).
+2021-04-19 23:42:47,432 [main] INFO  ru.fomin.core.PropertiesLoader - Properties was loaded successful.
+2021-04-19 23:43:02,671 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 5.4.28.Final
+2021-04-19 23:43:02,688 [main] INFO  org.hibernate.cfg.Environment - HHH000205: Loaded properties from resource hibernate.properties: {hibernate.connection.driver_class=org.postgresql.Driver, hibernate.dialect=org.hibernate.dialect.PostgreSQL94Dialect, hibernate.connection.password=****, hibernate.connection.username=postgres, hibernate.connection.url=jdbc:postgresql://localhost:49185/test_network_storage?loggerLevel=OFF, hibernate.bytecode.use_reflection_optimizer=false, hibernate.show_sql=true, hibernate.connection.autocommit=false}
+2021-04-19 23:43:03,640 [main] INFO  org.hibernate.annotations.common.Version - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2021-04-19 23:43:04,399 [main] WARN  org.hibernate.orm.connections.pooling - HHH10001002: Using Hibernate built-in connection pool (not for production use!)
+2021-04-19 23:43:04,403 [main] INFO  org.hibernate.orm.connections.pooling - HHH10001005: using driver [org.postgresql.Driver] at URL [jdbc:postgresql://localhost:49185/test_network_storage?loggerLevel=OFF]
+2021-04-19 23:43:04,404 [main] INFO  org.hibernate.orm.connections.pooling - HHH10001001: Connection properties: {password=****, autocommit=false, user=postgres}
+2021-04-19 23:43:04,405 [main] INFO  org.hibernate.orm.connections.pooling - HHH10001003: Autocommit mode: false
+2021-04-19 23:43:04,420 [main] INFO  org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl - HHH000115: Hibernate connection pool size: 20 (min=1)
+2021-04-19 23:43:04,511 [main] INFO  org.hibernate.dialect.Dialect - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQL94Dialect
+2021-04-19 23:43:08,783 [main] INFO  org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2021-04-19 23:43:09,240 [main] WARN  org.hibernate.engine.jdbc.spi.SqlExceptionHelper - SQL Error: 0, SQLState: 23502
+2021-04-19 23:43:09,240 [main] ERROR org.hibernate.engine.jdbc.spi.SqlExceptionHelper - ERROR: null value in column "id" of relation "directories" violates not-null constraint
+  Подробности: Failing row contains (null, null, null).
+2021-04-19 23:43:09,439 [main] WARN  org.hibernate.engine.jdbc.spi.SqlExceptionHelper - SQL Error: 0, SQLState: 23502
+2021-04-19 23:43:09,440 [main] ERROR org.hibernate.engine.jdbc.spi.SqlExceptionHelper - ERROR: null value in column "id" of relation "directories" violates not-null constraint
+  Подробности: Failing row contains (null, path1, null).
+2021-04-19 23:43:09,582 [main] WARN  org.hibernate.engine.jdbc.spi.SqlExceptionHelper - SQL Error: 0, SQLState: 23502
+2021-04-19 23:43:09,583 [main] ERROR org.hibernate.engine.jdbc.spi.SqlExceptionHelper - ERROR: null value in column "id" of relation "directories" violates not-null constraint
+  Подробности: Failing row contains (null, path1, null).
+2021-04-19 23:44:08,058 [main] INFO  ru.fomin.core.PropertiesLoader - Properties was loaded successful.
+2021-04-19 23:44:14,518 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 5.4.28.Final
+2021-04-19 23:44:14,522 [main] INFO  org.hibernate.cfg.Environment - HHH000205: Loaded properties from resource hibernate.properties: {hibernate.connection.driver_class=org.postgresql.Driver, hibernate.dialect=org.hibernate.dialect.PostgreSQL94Dialect, hibernate.connection.password=****, hibernate.connection.username=postgres, hibernate.connection.url=jdbc:postgresql://localhost:49187/test_network_storage?loggerLevel=OFF, hibernate.bytecode.use_reflection_optimizer=false, hibernate.show_sql=true, hibernate.connection.autocommit=false}
+2021-04-19 23:44:14,743 [main] INFO  org.hibernate.annotations.common.Version - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2021-04-19 23:44:14,907 [main] WARN  org.hibernate.orm.connections.pooling - HHH10001002: Using Hibernate built-in connection pool (not for production use!)
+2021-04-19 23:44:14,908 [main] INFO  org.hibernate.orm.connections.pooling - HHH10001005: using driver [org.postgresql.Driver] at URL [jdbc:postgresql://localhost:49187/test_network_storage?loggerLevel=OFF]
+2021-04-19 23:44:14,908 [main] INFO  org.hibernate.orm.connections.pooling - HHH10001001: Connection properties: {password=****, autocommit=false, user=postgres}
+2021-04-19 23:44:14,908 [main] INFO  org.hibernate.orm.connections.pooling - HHH10001003: Autocommit mode: false
+2021-04-19 23:44:14,911 [main] INFO  org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl - HHH000115: Hibernate connection pool size: 20 (min=1)
+2021-04-19 23:44:14,940 [main] INFO  org.hibernate.dialect.Dialect - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQL94Dialect
+2021-04-19 23:44:16,463 [main] INFO  org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2021-04-19 23:44:16,590 [main] WARN  org.hibernate.engine.jdbc.spi.SqlExceptionHelper - SQL Error: 0, SQLState: 23502
+2021-04-19 23:44:16,591 [main] ERROR org.hibernate.engine.jdbc.spi.SqlExceptionHelper - ERROR: null value in column "id" of relation "directories" violates not-null constraint
+  Подробности: Failing row contains (null, null, null).
+2021-04-19 23:44:16,609 [main] WARN  org.hibernate.engine.jdbc.spi.SqlExceptionHelper - SQL Error: 0, SQLState: 23502
+2021-04-19 23:44:16,609 [main] ERROR org.hibernate.engine.jdbc.spi.SqlExceptionHelper - ERROR: null value in column "id" of relation "directories" violates not-null constraint
+  Подробности: Failing row contains (null, null, null).
+2021-04-19 23:46:06,892 [main] WARN  org.hibernate.engine.jdbc.spi.SqlExceptionHelper - SQL Error: 0, SQLState: 23502
+2021-04-19 23:46:06,892 [main] ERROR org.hibernate.engine.jdbc.spi.SqlExceptionHelper - ERROR: null value in column "id" of relation "directories" violates not-null constraint
+  Подробности: Failing row contains (null, null, null).
+2021-04-19 23:46:06,926 [main] WARN  org.hibernate.engine.jdbc.spi.SqlExceptionHelper - SQL Error: 0, SQLState: 23502
+2021-04-19 23:46:06,926 [main] ERROR org.hibernate.engine.jdbc.spi.SqlExceptionHelper - ERROR: null value in column "id" of relation "directories" violates not-null constraint
+  Подробности: Failing row contains (null, path1, null).
+2021-04-19 23:46:22,678 [main] INFO  ru.fomin.core.PropertiesLoader - Properties was loaded successful.
+2021-04-19 23:46:23,166 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 5.4.28.Final
+2021-04-19 23:46:23,169 [main] INFO  org.hibernate.cfg.Environment - HHH000205: Loaded properties from resource hibernate.properties: {hibernate.connection.driver_class=org.postgresql.Driver, hibernate.dialect=org.hibernate.dialect.PostgreSQL94Dialect, hibernate.connection.password=****, hibernate.connection.username=postgres, hibernate.connection.url=jdbc:postgresql://localhost:49189/test_network_storage?loggerLevel=OFF, hibernate.bytecode.use_reflection_optimizer=false, hibernate.show_sql=true, hibernate.connection.autocommit=false}
+2021-04-19 23:46:23,365 [main] INFO  org.hibernate.annotations.common.Version - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2021-04-19 23:46:23,507 [main] WARN  org.hibernate.orm.connections.pooling - HHH10001002: Using Hibernate built-in connection pool (not for production use!)
+2021-04-19 23:46:23,508 [main] INFO  org.hibernate.orm.connections.pooling - HHH10001005: using driver [org.postgresql.Driver] at URL [jdbc:postgresql://localhost:49189/test_network_storage?loggerLevel=OFF]
+2021-04-19 23:46:23,508 [main] INFO  org.hibernate.orm.connections.pooling - HHH10001001: Connection properties: {password=****, autocommit=false, user=postgres}
+2021-04-19 23:46:23,508 [main] INFO  org.hibernate.orm.connections.pooling - HHH10001003: Autocommit mode: false
+2021-04-19 23:46:23,511 [main] INFO  org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl - HHH000115: Hibernate connection pool size: 20 (min=1)
+2021-04-19 23:46:23,538 [main] INFO  org.hibernate.dialect.Dialect - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQL94Dialect
+2021-04-19 23:46:24,885 [main] INFO  org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]

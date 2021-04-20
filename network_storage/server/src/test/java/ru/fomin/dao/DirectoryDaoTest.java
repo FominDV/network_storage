@@ -1,81 +1,50 @@
 package ru.fomin.dao;
 
-import org.junit.Before;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import ru.fomin.PostgreSQLTestContainer;
 import ru.fomin.core.PreparationsMaker;
-import ru.fomin.core.PropertiesLoader;
 import ru.fomin.entities.Directory;
 
-import java.io.*;
-import java.util.Properties;
+import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 @Testcontainers
 class DirectoryDaoTest {
 
     @Container
-    private static final PostgreSQLContainer<?> postgresqlContainer = new PostgreSQLContainer<>("postgres:latest")
-            .withDatabaseName("test_network_storage")
-            .withUsername("postgres")
-            .withPassword("test_password")
-            .withExposedPorts(5436);
+    private static final PostgreSQLContainer<?> postgresqlContainer = PostgreSQLTestContainer.getTestContainer();
 
     private DirectoryDao directoryDao = new DirectoryDao();
 
     @BeforeAll
     public static void init() {
-        String url = postgresqlContainer.getJdbcUrl();
-
-        Properties properties = getProperties(url);
-
+        PostgreSQLTestContainer.changeProperties();
         new PreparationsMaker().migrateDB();
     }
 
-    @Test
-    public void testSimplePutAndGet() {
-
-
-        postgresqlContainer.isRunning();
-        Directory directory = directoryDao.getDirectoryById(46L);
-        directoryDao.create(new Directory());
-        Assertions.assertEquals(45L, directory.getId());
+    @ParameterizedTest
+    @MethodSource("getStreamForCreate")
+    public void create(Directory directory, Long expectedId) {
+        Long actualId = directoryDao.create(directory);
+        Assertions.assertEquals(expectedId, actualId);
     }
 
-    private static Properties getProperties(String url) {
-
-        //get list of target files
-        ClassLoader classLoader = PropertiesLoader.class.getClassLoader();
-        File classpathRoot = new File(classLoader.getResource("").getPath());
-        File[] fileList = classpathRoot.listFiles((dir, name) -> (name.equals("hibernate.properties")));
-
-        Properties properties = new Properties();
-
-        try {
-            Reader reader = new FileReader(fileList[0]);
-            properties.load(reader);
-            reader.close();
-        } catch (IOException e) {
-            throw new RuntimeException("Can not load properties by IO: " + e.getCause());
-        }
-
-        properties.setProperty("hibernate.connection.url", url);
-
-        try( Writer writer = new FileWriter(fileList[0])) {
-
-            properties.store(writer, null);
-
-        } catch (IOException e) {
-            throw new RuntimeException("Can not load properties by IO: " + e.getCause());
-        }
-
-        return properties;
+    private static Stream<Arguments> getStreamForCreate() {
+        Directory parentDirectory;
+        return Stream.of(
+                Arguments.arguments(new Directory(), 1L),
+                Arguments.arguments(parentDirectory = new Directory(null, null, "path1"), 2L),
+                Arguments.arguments(new Directory(null, parentDirectory, "path1"), 3L)
+        );
     }
+
 }
