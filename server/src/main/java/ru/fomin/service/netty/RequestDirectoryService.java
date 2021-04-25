@@ -1,4 +1,4 @@
-package ru.fomin.service.handler;
+package ru.fomin.service.netty;
 
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.log4j.Log4j2;
@@ -18,13 +18,13 @@ import java.nio.file.Paths;
  * Service for process CreatingAndUpdatingRequest message from client.
  */
 @Log4j2
-public class MainHandlerRequestDirectoryService {
+public class RequestDirectoryService {
 
     //services
     private final DirectoryService directoryService;
     private final FileDataService fileDataService;
 
-    public MainHandlerRequestDirectoryService(DirectoryService directoryService, FileDataService fileDataService) {
+    public RequestDirectoryService(DirectoryService directoryService, FileDataService fileDataService) {
         this.directoryService = directoryService;
         this.fileDataService = fileDataService;
     }

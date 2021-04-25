@@ -13,10 +13,10 @@ import ru.fomin.dto.file_packages.FileDataPackage;
 import ru.fomin.service.db.DirectoryService;
 import ru.fomin.service.db.FileDataService;
 import ru.fomin.service.db.UserService;
-import ru.fomin.service.handler.MainHandlerChangePasswordService;
-import ru.fomin.service.handler.MainHandlerDownloadService;
-import ru.fomin.service.handler.MainHandlerFileManipulationService;
-import ru.fomin.service.handler.MainHandlerRequestDirectoryService;
+import ru.fomin.service.netty.ChangePasswordService;
+import ru.fomin.service.netty.DownloadService;
+import ru.fomin.service.netty.FileManipulationService;
+import ru.fomin.service.netty.RequestDirectoryService;
 
 import java.io.IOException;
 
@@ -32,10 +32,10 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
     //services
     private final DirectoryService directoryService;
     private final FileDataService fileDataService;
-    private final MainHandlerFileManipulationService mainHandlerFileManipulationService;
-    private final MainHandlerRequestDirectoryService mainHandlerRequestDirectoryService;
-    private final MainHandlerDownloadService mainHandlerDownloadService;
-    private final MainHandlerChangePasswordService mainHandlerChangePasswordService;
+    private final FileManipulationService fileManipulationService;
+    private final RequestDirectoryService requestDirectoryService;
+    private final DownloadService downloadService;
+    private final ChangePasswordService changePasswordService;
 
     private UserService userService;
     private Directory currentDirectory;
@@ -44,25 +44,25 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
     public MainHandler() {
         directoryService = new DirectoryService();
         fileDataService = new FileDataService();
-        mainHandlerFileManipulationService = new MainHandlerFileManipulationService(directoryService, fileDataService);
-        mainHandlerRequestDirectoryService = new MainHandlerRequestDirectoryService(directoryService, fileDataService);
-        mainHandlerDownloadService = new MainHandlerDownloadService(directoryService, fileDataService);
-        mainHandlerChangePasswordService = new MainHandlerChangePasswordService();
+        fileManipulationService = new FileManipulationService(directoryService, fileDataService);
+        requestDirectoryService = new RequestDirectoryService(directoryService, fileDataService);
+        downloadService = new DownloadService(directoryService, fileDataService);
+        changePasswordService = new ChangePasswordService();
     }
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws IOException {
         try {
             if (msg instanceof FileManipulationRequest) {
-                mainHandlerFileManipulationService.requestFileHandle(ctx, (FileManipulationRequest) msg, currentDirectory);
+                fileManipulationService.requestFileHandle(ctx, (FileManipulationRequest) msg, currentDirectory);
             } else if (msg instanceof FileDataPackage) {
-                mainHandlerDownloadService.downloadSmallFile(ctx, (FileDataPackage) msg);
+                downloadService.downloadSmallFile(ctx, (FileDataPackage) msg);
             } else if (msg instanceof FileChunkPackage) {
-                mainHandlerDownloadService.downloadBigFile(ctx, (FileChunkPackage) msg);
+                downloadService.downloadBigFile(ctx, (FileChunkPackage) msg);
             } else if (msg instanceof CreatingAndUpdatingManipulationRequest) {
-                mainHandlerRequestDirectoryService.requestDirectoryHandle(ctx, (CreatingAndUpdatingManipulationRequest) msg);
+                requestDirectoryService.requestDirectoryHandle(ctx, (CreatingAndUpdatingManipulationRequest) msg);
             } else if (msg instanceof ChangePasswordRequest) {
-                mainHandlerChangePasswordService.changePassword(ctx, (ChangePasswordRequest) msg, userService, userId);
+                changePasswordService.changePassword(ctx, (ChangePasswordRequest) msg, userService, userId);
             }
         } finally {
             ReferenceCountUtil.release(msg);

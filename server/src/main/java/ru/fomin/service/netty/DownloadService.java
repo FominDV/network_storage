@@ -1,4 +1,4 @@
-package ru.fomin.service.handler;
+package ru.fomin.service.netty;
 
 import io.netty.channel.ChannelHandlerContext;
 import ru.fomin.dto.file_packages.FileChunkPackage;
@@ -17,7 +17,7 @@ import java.nio.file.Paths;
 /**
  * Service for process FileDataPackage and FileChunkPackage messages from client.
  */
-public class MainHandlerDownloadService {
+public class DownloadService {
 
     //services
     private final DirectoryService DIRECTORY_SERVICE;
@@ -25,7 +25,7 @@ public class MainHandlerDownloadService {
 
     private final FileChunkDownloaderService fileChunkDownloaderService;
 
-    public MainHandlerDownloadService(DirectoryService DIRECTORY_SERVICE, FileDataService FILE_DATA_SERVICE) {
+    public DownloadService(DirectoryService DIRECTORY_SERVICE, FileDataService FILE_DATA_SERVICE) {
         this.DIRECTORY_SERVICE = DIRECTORY_SERVICE;
         this.FILE_DATA_SERVICE = FILE_DATA_SERVICE;
         fileChunkDownloaderService = new FileChunkDownloaderService();

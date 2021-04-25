@@ -1,4 +1,4 @@
-package ru.fomin.service.handler;
+package ru.fomin.service.netty;
 
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.log4j.Log4j2;
@@ -25,7 +25,7 @@ import java.util.Map;
  * Service for process FileManipulationRequest message from client.
  */
 @Log4j2
-public class MainHandlerFileManipulationService {
+public class FileManipulationService {
 
     //services
     private final DirectoryService DIRECTORY_SERVICE;
@@ -34,7 +34,7 @@ public class MainHandlerFileManipulationService {
     private FileTransmitterService fileTransmitterService;
     private Thread fileTransmitterThread;
 
-    public MainHandlerFileManipulationService(DirectoryService DIRECTORY_SERVICE, FileDataService FILE_DATA_SERVICE) {
+    public FileManipulationService(DirectoryService DIRECTORY_SERVICE, FileDataService FILE_DATA_SERVICE) {
         this.DIRECTORY_SERVICE = DIRECTORY_SERVICE;
         this.FILE_DATA_SERVICE = FILE_DATA_SERVICE;
     }

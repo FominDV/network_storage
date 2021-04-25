@@ -1,4 +1,4 @@
-package ru.fomin.service.handler;
+package ru.fomin.service.netty;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPipeline;
@@ -24,7 +24,7 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class AuthHandlerServiceTest {
+class AuthServiceTest {
 
     private static final String WRIGHT_LOGIN = "login";
     private static final String WRIGHT_PASSWORD = "password";
@@ -48,9 +48,9 @@ class AuthHandlerServiceTest {
     ArgumentCaptor<AuthResult> authResult;
 
     @InjectMocks
-    private AuthHandlerService authHandlerService;
+    private AuthService authService;
 
-    public AuthHandlerServiceTest() {
+    public AuthServiceTest() {
         MockitoAnnotations.initMocks(this);
     }
 
@@ -69,7 +69,7 @@ class AuthHandlerServiceTest {
         Mockito.when(channelPipeline.get(MainHandler.class))
                 .thenReturn(handler);
 
-        Assertions.assertDoesNotThrow(() -> authHandlerService.authHandle(ctx, AuthAndRegRequest.AUTH, actualLogin, actualPassword));
+        Assertions.assertDoesNotThrow(() -> authService.authHandle(ctx, AuthAndRegRequest.AUTH, actualLogin, actualPassword));
 
         if (result.equals("OK_AUTH")) {
             Mockito.verify(handler).setUserService(userServiceCaptor.capture());
@@ -89,7 +89,7 @@ PropertiesLoader.getPASSWORD();
                 Mockito.endsWith(File.separator + actualLogin)))
                 .thenReturn(true);
 
-        Assertions.assertDoesNotThrow(() -> authHandlerService.authHandle(ctx, AuthAndRegRequest.REGISTRATION, actualLogin, actualPassword));
+        Assertions.assertDoesNotThrow(() -> authService.authHandle(ctx, AuthAndRegRequest.REGISTRATION, actualLogin, actualPassword));
 
         Mockito.verify(ctx).writeAndFlush(authResult.capture());
         Assertions.assertEquals(result, authResult.getValue());

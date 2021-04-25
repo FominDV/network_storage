@@ -1,4 +1,4 @@
-package ru.fomin.service.handler;
+package ru.fomin.service.netty;
 
 import io.netty.channel.ChannelHandlerContext;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +10,7 @@ import ru.fomin.service.db.UserService;
  * Service for changing password of user.
  */
 @RequiredArgsConstructor
-public class MainHandlerChangePasswordService {
+public class ChangePasswordService {
 
     public void changePassword(ChannelHandlerContext ctx, ChangePasswordRequest request, UserService userService, Long userId) {
         boolean isSuccessful = false;

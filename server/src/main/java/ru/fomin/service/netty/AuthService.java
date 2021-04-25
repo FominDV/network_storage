@@ -1,4 +1,4 @@
-package ru.fomin.service.handler;
+package ru.fomin.service.netty;
 
 import io.netty.channel.ChannelHandlerContext;
 import lombok.Getter;
@@ -19,7 +19,7 @@ import java.nio.file.Paths;
  * Service for process AuthRequest message from client.
  */
 @Log4j2
-public class AuthHandlerService {
+public class AuthService {
 
     //Services
     private final UserService userService;
@@ -28,12 +28,12 @@ public class AuthHandlerService {
     @Getter
     private boolean isAuthorized;
 
-    public AuthHandlerService() {
+    public AuthService() {
         userService = new UserService();
         isAuthorized = false;
     }
 
-    public AuthHandlerService(UserService userService) {
+    public AuthService(UserService userService) {
         this.userService = userService;
         isAuthorized = false;
     }

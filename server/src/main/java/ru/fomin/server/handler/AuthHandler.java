@@ -4,7 +4,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;
 import ru.fomin.dto.requests.AuthRequest;
-import ru.fomin.service.handler.AuthHandlerService;
+import ru.fomin.service.netty.AuthService;
 
 import java.io.IOException;
 
@@ -13,16 +13,16 @@ import java.io.IOException;
  */
 public class AuthHandler extends ChannelInboundHandlerAdapter {
 
-    private final AuthHandlerService authHandlerService;
+    private final AuthService authService;
 
     public AuthHandler() {
-        authHandlerService = new AuthHandlerService();
+        authService = new AuthService();
     }
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws IOException {
         //if client is already authorized this request will be delegated to next handler
-        if (authHandlerService.isAuthorized()) {
+        if (authService.isAuthorized()) {
             ctx.fireChannelRead(msg);
             return;
         }
@@ -30,7 +30,7 @@ public class AuthHandler extends ChannelInboundHandlerAdapter {
         try {
             if (msg instanceof AuthRequest) {
                 AuthRequest request = (AuthRequest) msg;
-                authHandlerService.authHandle(ctx, request.getAuthAndRegRequest(), request.getLogin(), request.getPassword());
+                authService.authHandle(ctx, request.getAuthAndRegRequest(), request.getLogin(), request.getPassword());
             }
         } finally {
             ReferenceCountUtil.release(msg);
