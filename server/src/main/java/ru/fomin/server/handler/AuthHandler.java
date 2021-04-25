@@ -5,6 +5,7 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;
 import ru.fomin.dto.requests.AuthRequest;
 import ru.fomin.service.netty.AuthService;
+import ru.fomin.service.netty.impl.AuthServiceImpl;
 
 import java.io.IOException;
 
@@ -16,7 +17,7 @@ public class AuthHandler extends ChannelInboundHandlerAdapter {
     private final AuthService authService;
 
     public AuthHandler() {
-        authService = new AuthService();
+        authService = new AuthServiceImpl();
     }
 
     @Override

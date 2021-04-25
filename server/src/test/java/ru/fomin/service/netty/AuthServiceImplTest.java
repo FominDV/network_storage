@@ -8,12 +8,13 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.*;
-import ru.fomin.server.handler.MainHandler;
-import ru.fomin.util.PropertiesLoader;
 import ru.fomin.dto.responses.AuthResult;
 import ru.fomin.enumeration.AuthAndRegRequest;
 import ru.fomin.enumeration.AuthAndRegResult;
-import ru.fomin.service.db.UserService;
+import ru.fomin.server.handler.MainHandler;
+import ru.fomin.service.db.impl.UserServiceImpl;
+import ru.fomin.service.netty.impl.AuthServiceImpl;
+import ru.fomin.util.PropertiesLoader;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,15 +23,15 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class AuthServiceTest {
+class AuthServiceImplTest {
 
     private static final String WRIGHT_LOGIN = "login";
     private static final String WRIGHT_PASSWORD = "password";
 
     @Mock
-    private UserService userService;
+    private UserServiceImpl userServiceImpl;
 
     @Mock
     ChannelHandlerContext ctx;
@@ -42,15 +43,15 @@ class AuthServiceTest {
     MainHandler handler;
 
     @Captor
-    ArgumentCaptor<UserService> userServiceCaptor;
+    ArgumentCaptor<UserServiceImpl> userServiceCaptor;
 
     @Captor
     ArgumentCaptor<AuthResult> authResult;
 
     @InjectMocks
-    private AuthService authService;
+    private AuthServiceImpl authServiceImpl;
 
-    public AuthServiceTest() {
+    public AuthServiceImplTest() {
         MockitoAnnotations.initMocks(this);
     }
 
@@ -59,37 +60,37 @@ class AuthServiceTest {
             WRIGHT_LOGIN + ", " + WRIGHT_PASSWORD + ", OK_AUTH",
             "login, 'wrong password', FAIL_AUTH",
     })
-    public void authHandle_Authentication(String actualLogin, String actualPassword, String result) {
-        Mockito.when(userService.isValidUserData(Mockito.anyString(), Mockito.anyString()))
+    public void authentication(String actualLogin, String actualPassword, String result) {
+        Mockito.when(userServiceImpl.isValidUserData(Mockito.anyString(), Mockito.anyString()))
                 .thenReturn(new Object[]{false, 0});
-        Mockito.when(userService.isValidUserData(WRIGHT_LOGIN, WRIGHT_PASSWORD))
+        Mockito.when(userServiceImpl.isValidUserData(WRIGHT_LOGIN, WRIGHT_PASSWORD))
                 .thenReturn(new Object[]{true, 1L});
         Mockito.when(ctx.pipeline())
                 .thenReturn(channelPipeline);
         Mockito.when(channelPipeline.get(MainHandler.class))
                 .thenReturn(handler);
 
-        Assertions.assertDoesNotThrow(() -> authService.authHandle(ctx, AuthAndRegRequest.AUTH, actualLogin, actualPassword));
+        Assertions.assertDoesNotThrow(() -> authServiceImpl.authHandle(ctx, AuthAndRegRequest.AUTH, actualLogin, actualPassword));
 
         if (result.equals("OK_AUTH")) {
             Mockito.verify(handler).setUserService(userServiceCaptor.capture());
-            assertEquals(userService, userServiceCaptor.getValue());
+            assertEquals(userServiceImpl, userServiceCaptor.getValue());
         }
         Mockito.verify(ctx).writeAndFlush(new AuthResult(AuthAndRegResult.valueOf(result)));
     }
 
     @ParameterizedTest
     @MethodSource("authHandleRegistrationTestProvider")
-    public void authHandle_Registration(String actualLogin, String actualPassword, AuthResult result) {
-PropertiesLoader.getPASSWORD();
-        Mockito.when(userService.createUser(Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
+    public void registration(String actualLogin, String actualPassword, AuthResult result) {
+        PropertiesLoader.getPASSWORD();
+        Mockito.when(userServiceImpl.createUser(Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
                 .thenReturn(false);
-        Mockito.when(userService.createUser(Mockito.eq(WRIGHT_LOGIN),
+        Mockito.when(userServiceImpl.createUser(Mockito.eq(WRIGHT_LOGIN),
                 Mockito.eq(WRIGHT_PASSWORD),
                 Mockito.endsWith(File.separator + actualLogin)))
                 .thenReturn(true);
 
-        Assertions.assertDoesNotThrow(() -> authService.authHandle(ctx, AuthAndRegRequest.REGISTRATION, actualLogin, actualPassword));
+        Assertions.assertDoesNotThrow(() -> authServiceImpl.authHandle(ctx, AuthAndRegRequest.REGISTRATION, actualLogin, actualPassword));
 
         Mockito.verify(ctx).writeAndFlush(authResult.capture());
         Assertions.assertEquals(result, authResult.getValue());

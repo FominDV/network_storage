@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import ru.fomin.domain.CodePair;
-import ru.fomin.util.encoder.Encoder;
+import ru.fomin.util.encoder.Codable;
 
 import javax.xml.bind.DatatypeConverter;
 import java.nio.charset.StandardCharsets;
@@ -18,7 +18,7 @@ import java.security.SecureRandom;
  */
 @Log4j2
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class EncoderSHA256 implements Encoder {
+public class EncoderSHA256 implements Codable {
 
     @Getter
     private final static EncoderSHA256 INSTANCE = new EncoderSHA256();
@@ -77,7 +77,7 @@ public class EncoderSHA256 implements Encoder {
         try {
             return (MessageDigest) encoder.clone();
         } catch (CloneNotSupportedException e) {
-            throw new RuntimeException("Encoder cloning error: " + e.getCause());
+            throw new RuntimeException("Codable cloning error: " + e.getCause());
         }
     }
 
@@ -85,7 +85,7 @@ public class EncoderSHA256 implements Encoder {
         try {
             return MessageDigest.getInstance("SHA-256");
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("Encoder initialization error: " + e.getCause());
+            throw new RuntimeException("Codable initialization error: " + e.getCause());
         }
     }
 

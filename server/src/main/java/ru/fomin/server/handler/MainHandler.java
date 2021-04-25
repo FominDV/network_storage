@@ -13,10 +13,16 @@ import ru.fomin.dto.file_packages.FileDataPackage;
 import ru.fomin.service.db.DirectoryService;
 import ru.fomin.service.db.FileDataService;
 import ru.fomin.service.db.UserService;
+import ru.fomin.service.db.impl.DirectoryServiceImpl;
+import ru.fomin.service.db.impl.FileDataServiceImpl;
 import ru.fomin.service.netty.ChangePasswordService;
 import ru.fomin.service.netty.DownloadService;
 import ru.fomin.service.netty.FileManipulationService;
 import ru.fomin.service.netty.RequestDirectoryService;
+import ru.fomin.service.netty.impl.ChangePasswordServiceImpl;
+import ru.fomin.service.netty.impl.DownloadServiceImpl;
+import ru.fomin.service.netty.impl.FileManipulationServiceImpl;
+import ru.fomin.service.netty.impl.RequestDirectoryServiceImpl;
 
 import java.io.IOException;
 
@@ -42,12 +48,12 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
     private Long userId;
 
     public MainHandler() {
-        directoryService = new DirectoryService();
-        fileDataService = new FileDataService();
-        fileManipulationService = new FileManipulationService(directoryService, fileDataService);
-        requestDirectoryService = new RequestDirectoryService(directoryService, fileDataService);
-        downloadService = new DownloadService(directoryService, fileDataService);
-        changePasswordService = new ChangePasswordService();
+        directoryService = new DirectoryServiceImpl();
+        fileDataService = new FileDataServiceImpl();
+        fileManipulationService = new FileManipulationServiceImpl(directoryService, fileDataService);
+        requestDirectoryService = new RequestDirectoryServiceImpl(directoryService, fileDataService);
+        downloadService = new DownloadServiceImpl(directoryService, fileDataService);
+        changePasswordService = new ChangePasswordServiceImpl();
     }
 
     @Override
