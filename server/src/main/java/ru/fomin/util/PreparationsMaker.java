@@ -1,4 +1,4 @@
-package ru.fomin.core;
+package ru.fomin.util;
 
 import org.flywaydb.core.Flyway;
 

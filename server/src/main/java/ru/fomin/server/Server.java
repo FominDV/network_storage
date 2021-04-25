@@ -1,4 +1,4 @@
-package ru.fomin.core;
+package ru.fomin.server;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -10,8 +10,10 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
-import lombok.extern.log4j.Log4j;
 import lombok.extern.log4j.Log4j2;
+import ru.fomin.server.handler.AuthHandler;
+import ru.fomin.server.handler.MainHandler;
+import ru.fomin.util.PropertiesLoader;
 
 import static io.netty.channel.ChannelOption.SO_BACKLOG;
 import static io.netty.channel.ChannelOption.SO_KEEPALIVE;

@@ -1,7 +1,7 @@
-package ru.fomin.services.impl;
+package ru.fomin.service.impl;
 
 import javafx.application.Platform;
-import ru.fomin.dto.enumeration.AuthAndRegResult;
+import ru.fomin.enumeration.AuthAndRegResult;
 import ru.fomin.rervice.FileChunkDownloaderService;
 import ru.fomin.dto.responses.AuthResult;
 import ru.fomin.dto.responses.ChangePasswordResponse;
@@ -14,8 +14,8 @@ import ru.fomin.controller.AuthenticationController;
 import ru.fomin.controller.MainPanelController;
 import ru.fomin.controller.RegistrationController;
 import ru.fomin.controller.UpdatePasswordController;
-import ru.fomin.services.NetworkConnectionService;
-import ru.fomin.services.ResponseProcessor;
+import ru.fomin.service.NetworkConnectionService;
+import ru.fomin.service.ResponseProcessor;
 
 import java.io.File;
 import java.io.IOException;

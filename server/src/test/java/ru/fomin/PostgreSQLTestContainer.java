@@ -1,7 +1,7 @@
 package ru.fomin;
 
 import org.testcontainers.containers.PostgreSQLContainer;
-import ru.fomin.core.PropertiesLoader;
+import ru.fomin.util.PropertiesLoader;
 
 import java.io.*;
 import java.util.Properties;

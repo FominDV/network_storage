@@ -1,7 +1,7 @@
 package ru.fomin;
 
-import ru.fomin.core.PreparationsMaker;
-import ru.fomin.core.Server;
+import ru.fomin.util.PreparationsMaker;
+import ru.fomin.server.Server;
 
 public class StartServer {
 

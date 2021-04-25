@@ -1,4 +1,4 @@
-package ru.fomin.services.impl;
+package ru.fomin.service.impl;
 
 import javafx.application.Platform;
 import javafx.scene.control.Labeled;
@@ -8,14 +8,14 @@ import ru.fomin.dto.requests.AuthRequest;
 import ru.fomin.dto.requests.ChangePasswordRequest;
 import ru.fomin.dto.requests.CreatingAndUpdatingManipulationRequest;
 import ru.fomin.dto.requests.FileManipulationRequest;
-import ru.fomin.dto.enumeration.AuthAndRegRequest;
-import ru.fomin.dto.enumeration.CreatingAndUpdatingRequest;
-import ru.fomin.dto.enumeration.FileManipulateRequest;
+import ru.fomin.enumeration.AuthAndRegRequest;
+import ru.fomin.enumeration.CreatingAndUpdatingRequest;
+import ru.fomin.enumeration.FileManipulateRequest;
 import ru.fomin.network.impl.NetworkConnection;
-import ru.fomin.services.AuthenticationService;
-import ru.fomin.services.ChangingPasswordService;
-import ru.fomin.services.MainPanelService;
-import ru.fomin.services.RegistrationService;
+import ru.fomin.service.AuthenticationService;
+import ru.fomin.service.ChangingPasswordService;
+import ru.fomin.service.MainPanelService;
+import ru.fomin.service.RegistrationService;
 
 import static ru.fomin.util.ControllersUtil.*;
 

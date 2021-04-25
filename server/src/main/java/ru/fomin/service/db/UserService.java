@@ -4,7 +4,7 @@ import ru.fomin.dao.UserDao;
 import ru.fomin.entities.Directory;
 import ru.fomin.entities.User;
 import ru.fomin.domain.CodePair;
-import ru.fomin.util.Encoder;
+import ru.fomin.util.encoder.Encoder;
 import ru.fomin.factory.EncoderFactory;
 
 public class UserService {

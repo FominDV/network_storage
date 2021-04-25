@@ -1,9 +1,7 @@
-package ru.fomin.core;
+package ru.fomin.util;
 
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 
 import java.io.*;
