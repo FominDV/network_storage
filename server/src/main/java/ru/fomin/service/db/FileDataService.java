@@ -1,6 +1,7 @@
 package ru.fomin.service.db;
 
-import ru.fomin.dao.FileDataDao;
+import ru.fomin.dao.CommonDao;
+import ru.fomin.dao.impl.CommonDaoImpl;
 import ru.fomin.entity.Directory;
 import ru.fomin.entity.FileData;
 
@@ -13,7 +14,7 @@ import java.nio.file.Paths;
  */
 public class FileDataService {
 
-    private static final FileDataDao FILE_DATA_DAO = new FileDataDao();
+    private static final CommonDao FILE_DATA_DAO = new CommonDaoImpl();
 
     /**
      * Creates new file.
@@ -24,7 +25,7 @@ public class FileDataService {
      */
     public Long createFile(String fileName, Directory directory) {
         FileData fileData = new FileData(directory, fileName);
-        return FILE_DATA_DAO.create(fileData);
+        return FILE_DATA_DAO.save(fileData);
     }
 
     /**
@@ -34,14 +35,14 @@ public class FileDataService {
      * @return - name of removed file
      */
     public String deleteFile(Long id) {
-        FileData fileData = FILE_DATA_DAO.getFile(id);
-        FILE_DATA_DAO.deleteFile(fileData);
+        FileData fileData = FILE_DATA_DAO.getById(id, FileData.class);
+        FILE_DATA_DAO.delete(fileData);
         return fileData.getName();
     }
 
 
     public FileData getFileDataById(Long id) {
-        return FILE_DATA_DAO.getFile(id);
+        return FILE_DATA_DAO.getById(id, FileData.class);
     }
 
     /**
@@ -72,7 +73,7 @@ public class FileDataService {
     public Path renameFileData(Long id, String newFileName) {
         FileData fileData = getFileDataById(id);
         fileData.setName(newFileName);
-        FILE_DATA_DAO.updateFile(fileData);
+        FILE_DATA_DAO.update(fileData);
         return Paths.get(fileData.getDirectory().getPath() + File.separator + newFileName);
     }
 }

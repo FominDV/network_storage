@@ -1,31 +1,15 @@
 package ru.fomin.dao;
 
-public class CommonDao extends TransactionExecutor {
+public interface CommonDao {
 
-    public <T> T save(T entity) {
-        return executeTransaction(session -> (T) session.save(entity));
-    }
+    <T> Long save(T entity);
 
-    public void save(Object... entities) {
-        executeTransaction(session -> {
-            for (Object entity : entities) {
-                session.save(entity);
-            }
-            return null;
-        });
-    }
+    void save(Object... entities);
 
-    public void update(Object... entities) {
-        executeTransaction(session -> {
-            for (Object entity : entities) {
-                session.update(entity);
-            }
-            return null;
-        });
-    }
+    void update(Object... entities);
 
-    public <T> T getById(Long id, Class<T> clazz) {
-        return executeTransaction(session -> session.get(clazz, id));
-    }
+    <T> T getById(Long id, Class<T> clazz);
+
+    void delete(Object entity);
 
 }

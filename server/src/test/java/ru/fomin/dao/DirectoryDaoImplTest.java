@@ -10,6 +10,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.fomin.PostgreSQLTestContainer;
+import ru.fomin.dao.impl.DirectoryDaoImpl;
 import ru.fomin.util.PreparationsMaker;
 import ru.fomin.entity.Directory;
 
@@ -17,12 +18,12 @@ import java.util.stream.Stream;
 
 
 @Testcontainers
-class DirectoryDaoTest {
+class DirectoryDaoImplTest {
 
     @Container
     private static final PostgreSQLContainer<?> postgresqlContainer = PostgreSQLTestContainer.getTestContainer();
 
-    private DirectoryDao directoryDao = new DirectoryDao();
+    private DirectoryDaoImpl directoryDaoImpl = new DirectoryDaoImpl();
 
     @BeforeAll
     public static void init() {
@@ -33,7 +34,7 @@ class DirectoryDaoTest {
     @ParameterizedTest
     @MethodSource("getStreamForCreate")
     public void create(Directory directory, Long expectedId) {
-        Long actualId = directoryDao.create(directory);
+        Long actualId = directoryDaoImpl.save(directory);
         Assertions.assertEquals(expectedId, actualId);
     }
 

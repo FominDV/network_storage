@@ -20,14 +20,14 @@ import java.nio.file.Paths;
 public class DownloadService {
 
     //services
-    private final DirectoryService DIRECTORY_SERVICE;
-    private final FileDataService FILE_DATA_SERVICE;
+    private final DirectoryService directoryService;
+    private final FileDataService fileDataService;
 
     private final FileChunkDownloaderService fileChunkDownloaderService;
 
-    public DownloadService(DirectoryService DIRECTORY_SERVICE, FileDataService FILE_DATA_SERVICE) {
-        this.DIRECTORY_SERVICE = DIRECTORY_SERVICE;
-        this.FILE_DATA_SERVICE = FILE_DATA_SERVICE;
+    public DownloadService(DirectoryService directoryService, FileDataService fileDataService) {
+        this.directoryService = directoryService;
+        this.fileDataService = fileDataService;
         fileChunkDownloaderService = new FileChunkDownloaderService();
     }
 
@@ -41,10 +41,10 @@ public class DownloadService {
         if (isFileExist(ctx, fileName, directoryId)) {
             return;
         }
-        Path path = Paths.get(DIRECTORY_SERVICE.getDirectoryPathById(directoryId) + File.separator + fileName);
+        Path path = Paths.get(directoryService.getDirectoryPathById(directoryId) + File.separator + fileName);
         Files.write(path, pack.getData());
         //Creates file into DB and returns id of new file
-        Long id = FILE_DATA_SERVICE.createFile(fileName, DIRECTORY_SERVICE.getDirectoryById(directoryId));
+        Long id = fileDataService.createFile(fileName, directoryService.getDirectoryById(directoryId));
         ctx.writeAndFlush(new ru.fomin.dto.responses.FileManipulationResponse(FileManipulateResponse.FILE_UPLOADED, fileName, id));
     }
 
@@ -61,11 +61,11 @@ public class DownloadService {
 
         //creates action for callback
         Runnable action = () -> {
-            Long id = FILE_DATA_SERVICE.createFile(fileName, DIRECTORY_SERVICE.getDirectoryById(directoryId));
+            Long id = fileDataService.createFile(fileName, directoryService.getDirectoryById(directoryId));
             ctx.writeAndFlush(new ru.fomin.dto.responses.FileManipulationResponse(FileManipulateResponse.FILE_UPLOADED, fileName, id));
         };
         //delegates processing to FileChunkDownloaderService
-        fileChunkDownloaderService.writeFileChunk(pack, action, DIRECTORY_SERVICE.getDirectoryPathById(directoryId));
+        fileChunkDownloaderService.writeFileChunk(pack, action, directoryService.getDirectoryPathById(directoryId));
     }
 
     /**
@@ -75,7 +75,7 @@ public class DownloadService {
      * @return - true if this file already exists
      */
     private boolean isFileExist(ChannelHandlerContext ctx, String fileName, Long directory) {
-        if (DIRECTORY_SERVICE.isFileExist(fileName, DIRECTORY_SERVICE.getDirectoryById(directory))) {
+        if (directoryService.isFileExist(fileName, directoryService.getDirectoryById(directory))) {
             ctx.writeAndFlush(new ru.fomin.dto.responses.FileManipulationResponse(FileManipulateResponse.FILE_ALREADY_EXIST, fileName));
             return true;
         } else {

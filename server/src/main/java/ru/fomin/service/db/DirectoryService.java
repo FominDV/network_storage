@@ -1,6 +1,7 @@
 package ru.fomin.service.db;
 
 import ru.fomin.dao.DirectoryDao;
+import ru.fomin.dao.impl.DirectoryDaoImpl;
 import ru.fomin.entity.Directory;
 import ru.fomin.entity.FileData;
 
@@ -14,7 +15,7 @@ import java.util.List;
  */
 public class DirectoryService {
 
-    private final static DirectoryDao DIRECTORY_DAO = new DirectoryDao();
+    private final static DirectoryDao DIRECTORY_DAO = new DirectoryDaoImpl();
 
     /**
      * Returns all files from this directory.
@@ -42,7 +43,7 @@ public class DirectoryService {
             return -1L;
         } else {
             Directory directory = new Directory(currentDirectory.getUser(), currentDirectory, newDirectory);
-            return DIRECTORY_DAO.create(directory);
+            return DIRECTORY_DAO.save(directory);
         }
     }
 
@@ -60,7 +61,7 @@ public class DirectoryService {
     }
 
     public Directory getDirectoryById(Long id) {
-        return DIRECTORY_DAO.getDirectoryById(id);
+        return DIRECTORY_DAO.getById(id, Directory.class);
     }
 
     /**
@@ -70,7 +71,7 @@ public class DirectoryService {
      * @return - path of removed directory
      */
     public String deleteDirectory(Long id) {
-        Directory directory = DIRECTORY_DAO.getDirectoryById(id);
+        Directory directory = DIRECTORY_DAO.getById(id, Directory.class);
         DIRECTORY_DAO.delete(directory);
         return directory.getPath();
     }
@@ -79,7 +80,7 @@ public class DirectoryService {
      * Renames directory and returns new path of this directory.
      */
     public String renameDirectory(Long id, String newSimpleName) {
-        Directory directory = DIRECTORY_DAO.getDirectoryById(id);
+        Directory directory = DIRECTORY_DAO.getById(id, Directory.class);
         String newPath = directory.getParentDirectory().getPath() + File.separator + newSimpleName;
         directory.setPath(newPath);
         DIRECTORY_DAO.update(directory);

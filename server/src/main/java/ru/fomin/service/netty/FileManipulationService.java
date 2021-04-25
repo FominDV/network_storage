@@ -28,15 +28,15 @@ import java.util.Map;
 public class FileManipulationService {
 
     //services
-    private final DirectoryService DIRECTORY_SERVICE;
-    private final FileDataService FILE_DATA_SERVICE;
+    private final DirectoryService directoryService;
+    private final FileDataService fileDataService;
 
     private FileTransmitterService fileTransmitterService;
     private Thread fileTransmitterThread;
 
-    public FileManipulationService(DirectoryService DIRECTORY_SERVICE, FileDataService FILE_DATA_SERVICE) {
-        this.DIRECTORY_SERVICE = DIRECTORY_SERVICE;
-        this.FILE_DATA_SERVICE = FILE_DATA_SERVICE;
+    public FileManipulationService(DirectoryService directoryService, FileDataService fileDataService) {
+        this.directoryService = directoryService;
+        this.fileDataService = fileDataService;
     }
 
     /**
@@ -70,14 +70,14 @@ public class FileManipulationService {
     }
 
     private void sendFileListOfParentDirectory(ChannelHandlerContext ctx, Long currentDirectoryId) {
-        Directory newCurrentDirectory = DIRECTORY_SERVICE.getDirectoryById(currentDirectoryId).getParentDirectory();
+        Directory newCurrentDirectory = directoryService.getDirectoryById(currentDirectoryId).getParentDirectory();
         ctx.pipeline().get(MainHandler.class).setCurrentDirectory(newCurrentDirectory);
         sendFileList(ctx, newCurrentDirectory);
     }
 
     private void deleteFile(ChannelHandlerContext ctx, Long id, Directory currentDirectory) throws IOException {
         //deletes from DB
-        String fileName = FILE_DATA_SERVICE.deleteFile(id);
+        String fileName = fileDataService.deleteFile(id);
         //deletes real file
         Path path = Paths.get(currentDirectory.getPath(), fileName);
         Files.delete(path);
@@ -91,11 +91,11 @@ public class FileManipulationService {
             fileTransmitterThread.setDaemon(true);
             fileTransmitterThread.start();
         }
-        fileTransmitterService.addFile(FILE_DATA_SERVICE.getFileById(fileId), fileId);
+        fileTransmitterService.addFile(fileDataService.getFileById(fileId), fileId);
     }
 
     private void sendFileList(ChannelHandlerContext ctx, Long directoryId) {
-        Directory newCurrentDirectory = DIRECTORY_SERVICE.getDirectoryById(directoryId);
+        Directory newCurrentDirectory = directoryService.getDirectoryById(directoryId);
         ctx.pipeline().get(MainHandler.class).setCurrentDirectory(newCurrentDirectory);
         sendFileList(ctx, newCurrentDirectory);
     }
@@ -104,8 +104,8 @@ public class FileManipulationService {
         Map<String, Long> fileMap = new HashMap<>();
         Map<String, Long> directoryMap = new HashMap<>();
         Long id = currentDirectory.getId();
-        List<FileData> currentFileList = DIRECTORY_SERVICE.getFiles(id);
-        List<Directory> currentDirectoryList = DIRECTORY_SERVICE.getNestedDirectories(id);
+        List<FileData> currentFileList = directoryService.getFiles(id);
+        List<Directory> currentDirectoryList = directoryService.getNestedDirectories(id);
         currentFileList.forEach(fileData -> fileMap.put(Prefix.FILE_NAME_PREFIX + fileData.getName(), fileData.getId()));
         currentDirectoryList.forEach(directory -> directoryMap.put(Prefix.DIRECTORY_NAME_PREFIX + directory.getPath().substring(currentDirectory.getPath().length() + 1), directory.getId()));
         String currentDirectoryName = currentDirectory.getPath().substring(PropertiesLoader.getROOT_DIRECTORY().length());
@@ -117,7 +117,7 @@ public class FileManipulationService {
      */
     private void deleteDirectory(ChannelHandlerContext ctx, Long id) throws IOException {
         //deletes from DB
-        String directoryPathString = DIRECTORY_SERVICE.deleteDirectory(id);
+        String directoryPathString = directoryService.deleteDirectory(id);
         //deletes real file
         Path directoryPath = Paths.get(directoryPathString);
         Files.walkFileTree(directoryPath, new SimpleFileVisitor<Path>() {

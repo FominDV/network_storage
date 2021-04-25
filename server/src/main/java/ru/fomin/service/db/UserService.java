@@ -1,11 +1,12 @@
 package ru.fomin.service.db;
 
 import ru.fomin.dao.UserDao;
+import ru.fomin.dao.impl.UserDaoImpl;
+import ru.fomin.domain.CodePair;
 import ru.fomin.entity.Directory;
 import ru.fomin.entity.User;
-import ru.fomin.domain.CodePair;
-import ru.fomin.util.encoder.Encoder;
 import ru.fomin.factory.EncoderFactory;
+import ru.fomin.util.encoder.Encoder;
 
 public class UserService {
 
@@ -14,7 +15,7 @@ public class UserService {
     /**
      * Helper class for requests to User entity from database.
      */
-    private final static UserDao USER_DAO = new UserDao();
+    private final static UserDao USER_DAO = new UserDaoImpl();
 
     /**
      * Verifies login and password for authorizing.
@@ -55,7 +56,7 @@ public class UserService {
             User user = new User(login, codePair.getValue(), dataRoot, codePair.getSalt());
             dataRoot.setUser(user);
             dataRoot.setPath(root);
-            USER_DAO.create(user, dataRoot);
+            USER_DAO.save(user, dataRoot);
             return true;
         }
         return false;
@@ -80,7 +81,7 @@ public class UserService {
      */
     public boolean changePassword(String currentPassword, String newPassword, Long id) {
 
-        User user = USER_DAO.findUserById(id);
+        User user = USER_DAO.getById(id, User.class);
         currentPassword = encoder.encode(currentPassword, user.getSalt());
 
         if (user == null || !user.getPassword().equals(currentPassword)) {
@@ -101,7 +102,7 @@ public class UserService {
         CodePair codePair = encoder.encode(password);
         user.setPassword(codePair.getValue());
         user.setSalt(codePair.getSalt());
-        USER_DAO.updateUser(user);
+        USER_DAO.update(user);
     }
 
 }
