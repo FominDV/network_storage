@@ -1,4 +1,4 @@
-package ru.fomin.service.netty;
+package ru.fomin.service.netty.impl;
 
 import io.netty.channel.ChannelHandlerContext;
 import ru.fomin.dto.file_packages.FileChunkPackage;
@@ -7,6 +7,7 @@ import ru.fomin.enumeration.FileManipulateResponse;
 import ru.fomin.rervice.FileChunkDownloaderService;
 import ru.fomin.service.db.DirectoryService;
 import ru.fomin.service.db.FileDataService;
+import ru.fomin.service.netty.DownloadService;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,7 +18,7 @@ import java.nio.file.Paths;
 /**
  * Service for process FileDataPackage and FileChunkPackage messages from client.
  */
-public class DownloadService {
+public class DownloadServiceImpl implements DownloadService {
 
     //services
     private final DirectoryService directoryService;
@@ -25,7 +26,7 @@ public class DownloadService {
 
     private final FileChunkDownloaderService fileChunkDownloaderService;
 
-    public DownloadService(DirectoryService directoryService, FileDataService fileDataService) {
+    public DownloadServiceImpl(DirectoryService directoryService, FileDataService fileDataService) {
         this.directoryService = directoryService;
         this.fileDataService = fileDataService;
         fileChunkDownloaderService = new FileChunkDownloaderService();
@@ -34,6 +35,7 @@ public class DownloadService {
     /**
      * Creates new file by one iteration.
      */
+    @Override
     public void downloadSmallFile(ChannelHandlerContext ctx, FileDataPackage pack) throws IOException {
         Long directoryId = pack.getDirectoryId();
         String fileName = pack.getFilename();
@@ -51,6 +53,7 @@ public class DownloadService {
     /**
      * Delegates processing chunk of file to FileChunkDownloaderService.
      */
+    @Override
     public void downloadBigFile(ChannelHandlerContext ctx, FileChunkPackage pack) throws IOException {
         String fileName = pack.getFilename();
         Long directoryId = pack.getId();

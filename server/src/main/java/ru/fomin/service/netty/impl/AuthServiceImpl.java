@@ -1,14 +1,16 @@
-package ru.fomin.service.netty;
+package ru.fomin.service.netty.impl;
 
 import io.netty.channel.ChannelHandlerContext;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
-import ru.fomin.util.PropertiesLoader;
 import ru.fomin.dto.responses.AuthResult;
-import ru.fomin.server.handler.MainHandler;
 import ru.fomin.enumeration.AuthAndRegRequest;
 import ru.fomin.enumeration.AuthAndRegResult;
+import ru.fomin.server.handler.MainHandler;
 import ru.fomin.service.db.UserService;
+import ru.fomin.service.db.impl.UserServiceImpl;
+import ru.fomin.service.netty.AuthService;
+import ru.fomin.util.PropertiesLoader;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,7 +21,7 @@ import java.nio.file.Paths;
  * Service for process AuthRequest message from client.
  */
 @Log4j2
-public class AuthService {
+public class AuthServiceImpl implements AuthService {
 
     //Services
     private final UserService userService;
@@ -28,12 +30,12 @@ public class AuthService {
     @Getter
     private boolean isAuthorized;
 
-    public AuthService() {
-        userService = new UserService();
+    public AuthServiceImpl() {
+        userService = new UserServiceImpl();
         isAuthorized = false;
     }
 
-    public AuthService(UserService userService) {
+    public AuthServiceImpl(UserService userService) {
         this.userService = userService;
         isAuthorized = false;
     }
@@ -41,6 +43,7 @@ public class AuthService {
     /**
      * Processes request from client when he is not authorized yet.
      */
+    @Override
     public void authHandle(ChannelHandlerContext ctx, AuthAndRegRequest type, String login, String password) {
         switch (type) {
             //If client want to authorize

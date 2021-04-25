@@ -1,4 +1,4 @@
-package ru.fomin.service.db;
+package ru.fomin.service.db.impl;
 
 import ru.fomin.dao.UserDao;
 import ru.fomin.dao.impl.UserDaoImpl;
@@ -6,15 +6,16 @@ import ru.fomin.domain.CodePair;
 import ru.fomin.entity.Directory;
 import ru.fomin.entity.User;
 import ru.fomin.factory.EncoderFactory;
-import ru.fomin.util.encoder.Encoder;
+import ru.fomin.service.db.UserService;
+import ru.fomin.util.encoder.Codable;
 
-public class UserService {
+/**
+ * Helper class for requests to User entity from database.
+ */
+public class UserServiceImpl implements UserService {
 
-    private final Encoder encoder = EncoderFactory.getEncoder();
+    private final Codable codable = EncoderFactory.getEncoder();
 
-    /**
-     * Helper class for requests to User entity from database.
-     */
     private final static UserDao USER_DAO = new UserDaoImpl();
 
     /**
@@ -22,13 +23,14 @@ public class UserService {
      *
      * @return - [0] - boolean, true if login and password is valid, [1] - Long, id of authorized client
      */
+    @Override
     public Object[] isValidUserData(String login, String password) {
 
         User user = USER_DAO.getUsersByLogin(login);
 
         Object[] response = new Object[2];
         if (user != null) {
-            String encodedPassword = encoder.encode(password, user.getSalt());
+            String encodedPassword = codable.encode(password, user.getSalt());
             response[0] = user.getPassword().equals(encodedPassword);
             response[1] = user.getId();
         } else {
@@ -47,9 +49,10 @@ public class UserService {
      *
      * @return - false if user with this login already exists
      */
+    @Override
     public boolean createUser(String login, String password, String root) {
 
-        CodePair codePair = encoder.encode(password);
+        CodePair codePair = codable.encode(password);
 
         if (USER_DAO.getUsersByLogin(login) == null) {
             Directory dataRoot = new Directory();
@@ -62,10 +65,12 @@ public class UserService {
         return false;
     }
 
+    @Override
     public User getUserByLogin(String login) {
         return USER_DAO.getUsersByLogin(login);
     }
 
+    @Override
     public Directory getRootDirectoryByLogin(String login) {
         User user = getUserByLogin(login);
         return user.getRootDirectory();
@@ -79,10 +84,11 @@ public class UserService {
      * @param id              - id of user
      * @return - true if password was changed
      */
+    @Override
     public boolean changePassword(String currentPassword, String newPassword, Long id) {
 
         User user = USER_DAO.getById(id, User.class);
-        currentPassword = encoder.encode(currentPassword, user.getSalt());
+        currentPassword = codable.encode(currentPassword, user.getSalt());
 
         if (user == null || !user.getPassword().equals(currentPassword)) {
             return false;
@@ -99,7 +105,7 @@ public class UserService {
      * @param user     - target user
      */
     private void updateUserSalt(String password, User user) {
-        CodePair codePair = encoder.encode(password);
+        CodePair codePair = codable.encode(password);
         user.setPassword(codePair.getValue());
         user.setSalt(codePair.getSalt());
         USER_DAO.update(user);

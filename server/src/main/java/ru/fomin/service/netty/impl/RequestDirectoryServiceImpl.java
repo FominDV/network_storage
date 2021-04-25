@@ -1,4 +1,4 @@
-package ru.fomin.service.netty;
+package ru.fomin.service.netty.impl;
 
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.log4j.Log4j2;
@@ -7,6 +7,8 @@ import ru.fomin.entity.Directory;
 import ru.fomin.enumeration.FileManipulateResponse;
 import ru.fomin.service.db.DirectoryService;
 import ru.fomin.service.db.FileDataService;
+import ru.fomin.service.db.impl.FileDataServiceImpl;
+import ru.fomin.service.netty.RequestDirectoryService;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,13 +20,13 @@ import java.nio.file.Paths;
  * Service for process CreatingAndUpdatingRequest message from client.
  */
 @Log4j2
-public class RequestDirectoryService {
+public class RequestDirectoryServiceImpl implements RequestDirectoryService {
 
     //services
     private final DirectoryService directoryService;
     private final FileDataService fileDataService;
 
-    public RequestDirectoryService(DirectoryService directoryService, FileDataService fileDataService) {
+    public RequestDirectoryServiceImpl(DirectoryService directoryService, FileDataService fileDataService) {
         this.directoryService = directoryService;
         this.fileDataService = fileDataService;
     }
@@ -32,6 +34,7 @@ public class RequestDirectoryService {
     /**
      * Verifies type of request and processes it.
      */
+    @Override
     public void requestDirectoryHandle(ChannelHandlerContext ctx, CreatingAndUpdatingManipulationRequest request) throws IOException {
         String newName = request.getNewName();
         Long id = request.getId();

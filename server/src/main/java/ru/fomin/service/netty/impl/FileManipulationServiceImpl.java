@@ -1,9 +1,7 @@
-package ru.fomin.service.netty;
+package ru.fomin.service.netty.impl;
 
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.log4j.Log4j2;
-import ru.fomin.server.handler.MainHandler;
-import ru.fomin.util.PropertiesLoader;
 import ru.fomin.dto.requests.FileManipulationRequest;
 import ru.fomin.dto.responses.CurrentDirectoryEntityList;
 import ru.fomin.entity.Directory;
@@ -11,8 +9,11 @@ import ru.fomin.entity.FileData;
 import ru.fomin.enumeration.FileManipulateResponse;
 import ru.fomin.enumeration.Prefix;
 import ru.fomin.rervice.FileTransmitterService;
+import ru.fomin.server.handler.MainHandler;
 import ru.fomin.service.db.DirectoryService;
 import ru.fomin.service.db.FileDataService;
+import ru.fomin.service.netty.FileManipulationService;
+import ru.fomin.util.PropertiesLoader;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -25,7 +26,7 @@ import java.util.Map;
  * Service for process FileManipulationRequest message from client.
  */
 @Log4j2
-public class FileManipulationService {
+public class FileManipulationServiceImpl implements FileManipulationService {
 
     //services
     private final DirectoryService directoryService;
@@ -34,7 +35,7 @@ public class FileManipulationService {
     private FileTransmitterService fileTransmitterService;
     private Thread fileTransmitterThread;
 
-    public FileManipulationService(DirectoryService directoryService, FileDataService fileDataService) {
+    public FileManipulationServiceImpl(DirectoryService directoryService, FileDataService fileDataService) {
         this.directoryService = directoryService;
         this.fileDataService = fileDataService;
     }
@@ -42,6 +43,7 @@ public class FileManipulationService {
     /**
      * Verifies type of request and delegate it to needed method.
      */
+    @Override
     public void requestFileHandle(ChannelHandlerContext ctx, FileManipulationRequest request, Directory currentDirectory) throws IOException {
         switch (request.getRequest()) {
             //returns all files and nested directories from current directory
