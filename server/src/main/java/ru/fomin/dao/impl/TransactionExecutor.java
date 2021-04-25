@@ -1,4 +1,4 @@
-package ru.fomin.dao;
+package ru.fomin.dao.impl;
 
 import org.hibernate.Session;
 import ru.fomin.factory.SessionFactory;

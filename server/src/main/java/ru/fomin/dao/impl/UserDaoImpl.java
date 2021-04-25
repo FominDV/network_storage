@@ -1,44 +1,32 @@
-package ru.fomin.dao;
+package ru.fomin.dao.impl;
 
-import org.hibernate.Session;
 import org.hibernate.query.Query;
+import ru.fomin.dao.UserDao;
 import ru.fomin.entity.Directory;
 import ru.fomin.entity.User;
-import ru.fomin.factory.SessionFactory;
 
-import javax.persistence.NoResultException;
+public class UserDaoImpl extends CommonDaoImpl implements UserDao {
 
-public class UserDao extends CommonDao{
-
+    @Override
     public User getUsersByLogin(String login) {
-        try (Session session = SessionFactory.getSession()) {
+        return executeTransaction(session -> {
             Query query = session.createQuery("select i from User i where i.login=:login", User.class);
             query.setParameter("login", login);
-            return (User) query.getSingleResult();
-        } catch (NoResultException e) {
-            return null;
-        }
+            try {
+                return (User) query.getSingleResult();
+            } catch (Exception e) {
+               return null;
+            }
+        });
     }
 
-    public void create(User user, Directory dataRoot) {
-        save(user, dataRoot);
-    }
-
+    @Override
     public Directory getRootDirectory(Long id) {
-        try (Session session = SessionFactory.getSession()) {
+        return executeTransaction(session -> {
             Query query = session.createQuery("select u.rootDirectory from User u where u.id=:id", Directory.class);
             query.setParameter("id", id);
             return (Directory) query.getSingleResult();
-        } catch (NoResultException e) {
-            return null;
-        }
+        });
     }
 
-    public void updateUser(User user) {
-       update(user);
-    }
-
-    public User findUserById(Long id) {
-      return  getById(id, User.class);
-    }
 }
