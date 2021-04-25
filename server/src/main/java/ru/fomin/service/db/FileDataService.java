@@ -1,8 +1,8 @@
 package ru.fomin.service.db;
 
 import ru.fomin.dao.FileDataDao;
-import ru.fomin.entities.Directory;
-import ru.fomin.entities.FileData;
+import ru.fomin.entity.Directory;
+import ru.fomin.entity.FileData;
 
 import java.io.File;
 import java.nio.file.Path;

@@ -1,8 +1,8 @@
 package ru.fomin.service.db;
 
 import ru.fomin.dao.UserDao;
-import ru.fomin.entities.Directory;
-import ru.fomin.entities.User;
+import ru.fomin.entity.Directory;
+import ru.fomin.entity.User;
 import ru.fomin.domain.CodePair;
 import ru.fomin.util.encoder.Encoder;
 import ru.fomin.factory.EncoderFactory;

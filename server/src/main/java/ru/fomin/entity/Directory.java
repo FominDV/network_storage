@@ -1,4 +1,4 @@
-package ru.fomin.entities;
+package ru.fomin.entity;
 
 
 
@@ -14,7 +14,7 @@ import java.util.List;
 
 @Entity
 @Data
-@Table(name = "directories")
+@Table(name = "directory")
 @NoArgsConstructor
 public class Directory {
 

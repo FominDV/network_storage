@@ -1,4 +1,4 @@
-package ru.fomin.entities;
+package ru.fomin.entity;
 
 import com.sun.istack.NotNull;
 import lombok.Data;
@@ -8,7 +8,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "users")
+@Table(name = "user_profile")
 @Data
 @NoArgsConstructor
 public class User {

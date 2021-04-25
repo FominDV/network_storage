@@ -7,7 +7,7 @@ import lombok.Setter;
 import ru.fomin.dto.requests.ChangePasswordRequest;
 import ru.fomin.dto.requests.CreatingAndUpdatingManipulationRequest;
 import ru.fomin.dto.requests.FileManipulationRequest;
-import ru.fomin.entities.Directory;
+import ru.fomin.entity.Directory;
 import ru.fomin.dto.file_packages.FileChunkPackage;
 import ru.fomin.dto.file_packages.FileDataPackage;
 import ru.fomin.service.db.DirectoryService;

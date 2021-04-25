@@ -3,7 +3,7 @@ package ru.fomin.service.netty;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.log4j.Log4j2;
 import ru.fomin.dto.requests.CreatingAndUpdatingManipulationRequest;
-import ru.fomin.entities.Directory;
+import ru.fomin.entity.Directory;
 import ru.fomin.enumeration.FileManipulateResponse;
 import ru.fomin.service.db.DirectoryService;
 import ru.fomin.service.db.FileDataService;

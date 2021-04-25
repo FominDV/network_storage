@@ -11,7 +11,7 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.fomin.PostgreSQLTestContainer;
 import ru.fomin.util.PreparationsMaker;
-import ru.fomin.entities.Directory;
+import ru.fomin.entity.Directory;
 
 import java.util.stream.Stream;
 

@@ -1,14 +1,9 @@
 package ru.fomin.dao;
 
 import org.hibernate.Session;
-import ru.fomin.entities.Directory;
-import ru.fomin.entities.FileData;
+import ru.fomin.entity.FileData;
 
 import javax.persistence.Query;
-import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Collection;
 
 public class FileDataDao {
 

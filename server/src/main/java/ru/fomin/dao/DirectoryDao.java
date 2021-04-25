@@ -1,11 +1,10 @@
 package ru.fomin.dao;
 
 import org.hibernate.Session;
-import ru.fomin.entities.Directory;
-import ru.fomin.entities.FileData;
+import ru.fomin.entity.Directory;
+import ru.fomin.entity.FileData;
 
 import javax.persistence.Query;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 

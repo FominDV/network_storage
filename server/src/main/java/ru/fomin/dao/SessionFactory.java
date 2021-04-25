@@ -2,9 +2,9 @@ package ru.fomin.dao;
 
 import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
-import ru.fomin.entities.Directory;
-import ru.fomin.entities.FileData;
-import ru.fomin.entities.User;
+import ru.fomin.entity.Directory;
+import ru.fomin.entity.FileData;
+import ru.fomin.entity.User;
 
 public class SessionFactory {
 

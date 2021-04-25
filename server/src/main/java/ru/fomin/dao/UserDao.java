@@ -2,8 +2,8 @@ package ru.fomin.dao;
 
 import org.hibernate.Session;
 import org.hibernate.query.Query;
-import ru.fomin.entities.Directory;
-import ru.fomin.entities.User;
+import ru.fomin.entity.Directory;
+import ru.fomin.entity.User;
 
 import javax.persistence.NoResultException;
 

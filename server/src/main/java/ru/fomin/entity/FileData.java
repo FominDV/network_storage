@@ -1,4 +1,4 @@
-package ru.fomin.entities;
+package ru.fomin.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "files")
+@Table(name = "file")
 @Data
 @NoArgsConstructor
 public class FileData {
