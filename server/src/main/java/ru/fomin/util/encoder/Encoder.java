@@ -1,4 +1,4 @@
-package ru.fomin.util;
+package ru.fomin.util.encoder;
 
 
 import ru.fomin.domain.CodePair;

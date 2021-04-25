@@ -1,4 +1,4 @@
-package ru.fomin.core;
+package ru.fomin.server.handler;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
