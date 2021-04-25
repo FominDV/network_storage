@@ -3,6 +3,7 @@ package ru.fomin.dao;
 import org.hibernate.Session;
 import ru.fomin.entity.Directory;
 import ru.fomin.entity.FileData;
+import ru.fomin.factory.SessionFactory;
 
 import javax.persistence.Query;
 import java.util.Collection;

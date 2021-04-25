@@ -4,10 +4,11 @@ import org.hibernate.Session;
 import org.hibernate.query.Query;
 import ru.fomin.entity.Directory;
 import ru.fomin.entity.User;
+import ru.fomin.factory.SessionFactory;
 
 import javax.persistence.NoResultException;
 
-public class UserDao {
+public class UserDao extends CommonDao{
 
     public User getUsersByLogin(String login) {
         try (Session session = SessionFactory.getSession()) {
@@ -20,12 +21,7 @@ public class UserDao {
     }
 
     public void create(User user, Directory dataRoot) {
-        Session session = SessionFactory.getSession();
-        session.beginTransaction();
-        session.save(user);
-        session.save(dataRoot);
-        session.getTransaction().commit();
-        session.close();
+        save(user, dataRoot);
     }
 
     public Directory getRootDirectory(Long id) {
@@ -39,17 +35,10 @@ public class UserDao {
     }
 
     public void updateUser(User user) {
-        Session session = SessionFactory.getSession();
-        session.beginTransaction();
-        session.update(user);
-        session.getTransaction().commit();
-        session.close();
+       update(user);
     }
 
     public User findUserById(Long id) {
-        Session session = SessionFactory.getSession();
-        User user = session.get(User.class, id);
-        session.close();
-        return user;
+      return  getById(id, User.class);
     }
 }

@@ -1,4 +1,4 @@
-package ru.fomin.dao;
+package ru.fomin.factory;
 
 import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;

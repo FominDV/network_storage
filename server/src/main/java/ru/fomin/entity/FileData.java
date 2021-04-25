@@ -1,15 +1,19 @@
 package ru.fomin.entity;
 
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "file")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
-public class FileData {
+public class FileData implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

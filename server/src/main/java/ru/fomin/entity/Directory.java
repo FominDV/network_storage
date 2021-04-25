@@ -7,16 +7,20 @@ package ru.fomin.entity;
 
 
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Table(name = "directory")
 @NoArgsConstructor
-public class Directory {
+public class Directory implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

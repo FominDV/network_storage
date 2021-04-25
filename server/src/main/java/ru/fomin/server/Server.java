@@ -39,7 +39,7 @@ public class Server {
         sb.option(SO_BACKLOG, 128);
         sb.childOption(SO_KEEPALIVE, true);
         try {
-            Class.forName("ru.fomin.dao.SessionFactory");
+            Class.forName("ru.fomin.factory.SessionFactory");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
