@@ -1,4 +1,4 @@
-package ru.fomin.services.encoder;
+package ru.fomin.domain;
 
 import lombok.Builder;
 import lombok.Value;

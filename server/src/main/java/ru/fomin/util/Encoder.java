@@ -1,5 +1,7 @@
-package ru.fomin.services.encoder;
+package ru.fomin.util;
 
+
+import ru.fomin.domain.CodePair;
 
 public interface Encoder {
 

@@ -13,6 +13,7 @@ import java.util.List;
  * Helper class for requests to Directory entity from database.
  */
 public class DirectoryService {
+
     private final static DirectoryDao DIRECTORY_DAO = new DirectoryDao();
 
     /**

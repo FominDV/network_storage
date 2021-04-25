@@ -1,9 +1,14 @@
 package ru.fomin.entities;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "files")
+@Data
+@NoArgsConstructor
 public class FileData {
 
     @Id
@@ -21,26 +26,4 @@ public class FileData {
         this.name = name;
     }
 
-    public FileData() {
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Directory getDirectory() {
-        return directory;
-    }
-
-    public void setDirectory(Directory directory) {
-        this.directory = directory;
-    }
-
-    public Long getId() {
-        return id;
-    }
 }

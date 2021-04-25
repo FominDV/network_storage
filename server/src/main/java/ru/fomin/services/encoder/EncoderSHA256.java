@@ -4,6 +4,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import ru.fomin.domain.CodePair;
+import ru.fomin.util.Encoder;
 
 import javax.xml.bind.DatatypeConverter;
 import java.nio.charset.StandardCharsets;

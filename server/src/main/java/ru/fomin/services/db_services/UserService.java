@@ -3,9 +3,9 @@ package ru.fomin.services.db_services;
 import ru.fomin.dao.UserDao;
 import ru.fomin.entities.Directory;
 import ru.fomin.entities.User;
-import ru.fomin.services.encoder.CodePair;
-import ru.fomin.services.encoder.Encoder;
-import ru.fomin.services.encoder.EncoderFactory;
+import ru.fomin.domain.CodePair;
+import ru.fomin.util.Encoder;
+import ru.fomin.factory.EncoderFactory;
 
 public class UserService {
 

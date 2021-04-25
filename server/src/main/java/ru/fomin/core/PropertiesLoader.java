@@ -53,8 +53,8 @@ public class PropertiesLoader {
                 ROOT_DIRECTORY == null ||
                 PORT == null) {
             throw new RuntimeException("Incorrect properties.");
-        }else {
-           log.info("Properties was loaded successful.");
+        } else {
+            log.info("Properties was loaded successful.");
         }
     }
 

@@ -2,13 +2,15 @@ package ru.fomin.entities;
 
 import com.sun.istack.NotNull;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Data
 @Table(name = "users")
+@Data
+@NoArgsConstructor
 public class User {
 
     @Id
@@ -20,8 +22,8 @@ public class User {
 
     @OneToOne
     @JoinTable(name = "root_directory",
-    joinColumns = @JoinColumn(name = "user_id"),
-    inverseJoinColumns = @JoinColumn(name = "directory_id"))
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "directory_id"))
     private Directory rootDirectory;
 
     @NotNull
@@ -38,10 +40,6 @@ public class User {
         this.password = password;
         this.rootDirectory = rootDirectory;
         this.salt = salt;
-    }
-
-    public User() {
-
     }
 
 }

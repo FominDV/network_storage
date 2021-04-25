@@ -67,7 +67,7 @@ public class DirectoryDao {
         session.close();
     }
 
-    public void update(Directory directory){
+    public void update(Directory directory) {
         Session session = SessionFactory.getSession();
         session.beginTransaction();
         session.update(directory);

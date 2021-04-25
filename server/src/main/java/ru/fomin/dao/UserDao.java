@@ -48,8 +48,8 @@ public class UserDao {
 
     public User findUserById(Long id) {
         Session session = SessionFactory.getSession();
-       User user = session.get(User.class, id);
-       session.close();
-       return user;
+        User user = session.get(User.class, id);
+        session.close();
+        return user;
     }
 }
