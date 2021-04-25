@@ -4,12 +4,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import ru.fomin.dto.enumeration.AuthAndRegResult;
+import ru.fomin.enumeration.AuthAndRegResult;
 import ru.fomin.util.encoder.Encoder;
 import ru.fomin.factory.Factory;
 import ru.fomin.network.Connection;
-import ru.fomin.services.AuthenticationService;
-import ru.fomin.services.impl.ResponseService;
+import ru.fomin.service.AuthenticationService;
+import ru.fomin.service.impl.ResponseService;
 
 import static ru.fomin.util.ControllersUtil.*;
 

@@ -1,4 +1,4 @@
-package ru.fomin.services.encoder;
+package ru.fomin.util.impl;
 
 import lombok.AccessLevel;
 import lombok.Getter;

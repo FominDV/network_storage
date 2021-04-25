@@ -10,13 +10,13 @@ import ru.fomin.dto.requests.FileManipulationRequest;
 import ru.fomin.entities.Directory;
 import ru.fomin.dto.file_packages.FileChunkPackage;
 import ru.fomin.dto.file_packages.FileDataPackage;
-import ru.fomin.services.db_services.DirectoryService;
-import ru.fomin.services.db_services.FileDataService;
-import ru.fomin.services.db_services.UserService;
-import ru.fomin.services.handler_services.MainHandlerChangePasswordService;
-import ru.fomin.services.handler_services.MainHandlerDownloadService;
-import ru.fomin.services.handler_services.MainHandlerFileManipulationService;
-import ru.fomin.services.handler_services.MainHandlerRequestDirectoryService;
+import ru.fomin.service.db.DirectoryService;
+import ru.fomin.service.db.FileDataService;
+import ru.fomin.service.db.UserService;
+import ru.fomin.service.handler.MainHandlerChangePasswordService;
+import ru.fomin.service.handler.MainHandlerDownloadService;
+import ru.fomin.service.handler.MainHandlerFileManipulationService;
+import ru.fomin.service.handler.MainHandlerRequestDirectoryService;
 
 import java.io.IOException;
 

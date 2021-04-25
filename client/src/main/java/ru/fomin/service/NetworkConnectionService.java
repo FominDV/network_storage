@@ -1,4 +1,4 @@
-package ru.fomin.services;
+package ru.fomin.service;
 
 import java.nio.file.Path;
 

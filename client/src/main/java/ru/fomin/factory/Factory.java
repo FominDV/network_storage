@@ -6,9 +6,9 @@ import ru.fomin.util.encoder.EncoderMD5;
 import ru.fomin.network.Connection;
 import ru.fomin.network.ResponseSandler;
 import ru.fomin.network.impl.NetworkConnection;
-import ru.fomin.services.*;
-import ru.fomin.services.impl.ResponseService;
-import ru.fomin.services.impl.RequestService;
+import ru.fomin.service.*;
+import ru.fomin.service.impl.ResponseService;
+import ru.fomin.service.impl.RequestService;
 
 @Log4j2
 public class Factory {

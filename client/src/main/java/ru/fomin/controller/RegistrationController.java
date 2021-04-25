@@ -5,11 +5,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import ru.fomin.dto.enumeration.AuthAndRegResult;
+import ru.fomin.enumeration.AuthAndRegResult;
 import ru.fomin.util.encoder.Encoder;
 import ru.fomin.factory.Factory;
-import ru.fomin.services.RegistrationService;
-import ru.fomin.services.impl.ResponseService;
+import ru.fomin.service.RegistrationService;
+import ru.fomin.service.impl.ResponseService;
 import ru.fomin.util.ControllersUtil;
 
 /**

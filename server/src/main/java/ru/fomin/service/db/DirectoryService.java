@@ -1,4 +1,4 @@
-package ru.fomin.services.db_services;
+package ru.fomin.service.db;
 
 import ru.fomin.dao.DirectoryDao;
 import ru.fomin.entities.Directory;

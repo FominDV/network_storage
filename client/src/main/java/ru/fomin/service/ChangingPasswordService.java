@@ -1,6 +1,4 @@
-package ru.fomin.services;
-
-import ru.fomin.dto.requests.ChangePasswordRequest;
+package ru.fomin.service;
 
 public interface ChangingPasswordService {
 

@@ -1,7 +1,7 @@
 package ru.fomin.factory;
 
 import ru.fomin.util.Encoder;
-import ru.fomin.services.encoder.EncoderSHA256;
+import ru.fomin.util.impl.EncoderSHA256;
 
 public class EncoderFactory {
 

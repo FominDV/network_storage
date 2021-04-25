@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import ru.fomin.dto.DataPackage;
-import ru.fomin.dto.enumeration.AuthAndRegResult;
+import ru.fomin.enumeration.AuthAndRegResult;
 
 /**
  * DTO with authAndRegResult of authentication or registration request.

@@ -1,4 +1,4 @@
-package ru.fomin.dto.enumeration;
+package ru.fomin.enumeration;
 
 
 import lombok.Getter;

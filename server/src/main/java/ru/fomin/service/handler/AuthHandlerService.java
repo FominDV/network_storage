@@ -1,4 +1,4 @@
-package ru.fomin.services.handler_services;
+package ru.fomin.service.handler;
 
 import io.netty.channel.ChannelHandlerContext;
 import lombok.Getter;
@@ -6,9 +6,9 @@ import lombok.extern.log4j.Log4j2;
 import ru.fomin.core.PropertiesLoader;
 import ru.fomin.dto.responses.AuthResult;
 import ru.fomin.core.MainHandler;
-import ru.fomin.dto.enumeration.AuthAndRegRequest;
-import ru.fomin.dto.enumeration.AuthAndRegResult;
-import ru.fomin.services.db_services.UserService;
+import ru.fomin.enumeration.AuthAndRegRequest;
+import ru.fomin.enumeration.AuthAndRegResult;
+import ru.fomin.service.db.UserService;
 
 import java.io.File;
 import java.io.IOException;

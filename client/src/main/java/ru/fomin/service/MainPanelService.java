@@ -1,7 +1,7 @@
-package ru.fomin.services;
+package ru.fomin.service;
 
-import ru.fomin.dto.enumeration.CreatingAndUpdatingRequest;
-import ru.fomin.dto.enumeration.FileManipulateRequest;
+import ru.fomin.enumeration.CreatingAndUpdatingRequest;
+import ru.fomin.enumeration.FileManipulateRequest;
 
 import java.io.File;
 

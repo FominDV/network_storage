@@ -1,12 +1,12 @@
-package ru.fomin.services.handler_services;
+package ru.fomin.service.handler;
 
 import io.netty.channel.ChannelHandlerContext;
-import ru.fomin.dto.enumeration.FileManipulateResponse;
+import ru.fomin.enumeration.FileManipulateResponse;
 import ru.fomin.rervice.FileChunkDownloaderService;
 import ru.fomin.dto.file_packages.FileChunkPackage;
 import ru.fomin.dto.file_packages.FileDataPackage;
-import ru.fomin.services.db_services.DirectoryService;
-import ru.fomin.services.db_services.FileDataService;
+import ru.fomin.service.db.DirectoryService;
+import ru.fomin.service.db.FileDataService;
 
 import java.io.File;
 import java.io.IOException;

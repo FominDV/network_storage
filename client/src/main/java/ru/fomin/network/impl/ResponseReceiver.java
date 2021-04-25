@@ -3,8 +3,7 @@ package ru.fomin.network.impl;
 import ru.fomin.dto.DataPackage;
 import ru.fomin.factory.Factory;
 import ru.fomin.network.ResponseSandler;
-import ru.fomin.services.ResponseProcessor;
-import ru.fomin.services.impl.ResponseService;
+import ru.fomin.service.ResponseProcessor;
 
 import static java.lang.Thread.currentThread;
 

@@ -1,7 +1,7 @@
 package ru.fomin.dto.requests;
 
 import lombok.Value;
-import ru.fomin.dto.enumeration.AuthAndRegRequest;
+import ru.fomin.enumeration.AuthAndRegRequest;
 
 /**
  * DTO with command for authentication and registration.

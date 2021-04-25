@@ -6,8 +6,8 @@ import javafx.scene.control.PasswordField;
 import lombok.Getter;
 import ru.fomin.util.encoder.Encoder;
 import ru.fomin.factory.Factory;
-import ru.fomin.services.ChangingPasswordService;
-import ru.fomin.services.impl.ResponseService;
+import ru.fomin.service.ChangingPasswordService;
+import ru.fomin.service.impl.ResponseService;
 import ru.fomin.util.ControllersUtil;
 
 /**

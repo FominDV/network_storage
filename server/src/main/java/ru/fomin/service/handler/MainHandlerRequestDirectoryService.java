@@ -1,12 +1,12 @@
-package ru.fomin.services.handler_services;
+package ru.fomin.service.handler;
 
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.log4j.Log4j2;
 import ru.fomin.dto.requests.CreatingAndUpdatingManipulationRequest;
 import ru.fomin.entities.Directory;
-import ru.fomin.dto.enumeration.FileManipulateResponse;
-import ru.fomin.services.db_services.DirectoryService;
-import ru.fomin.services.db_services.FileDataService;
+import ru.fomin.enumeration.FileManipulateResponse;
+import ru.fomin.service.db.DirectoryService;
+import ru.fomin.service.db.FileDataService;
 
 import java.io.File;
 import java.io.IOException;

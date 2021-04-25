@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import ru.fomin.dto.DataPackage;
-import ru.fomin.dto.enumeration.FileManipulateResponse;
+import ru.fomin.enumeration.FileManipulateResponse;
 
 /**
  * DTO with fileManipulateResponse for client about result of some commands for server.

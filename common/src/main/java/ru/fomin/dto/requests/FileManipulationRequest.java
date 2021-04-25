@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import ru.fomin.dto.DataPackage;
-import ru.fomin.dto.enumeration.FileManipulateRequest;
+import ru.fomin.enumeration.FileManipulateRequest;
 
 /**
  * DTO for removing, downloading and getting names of resources.

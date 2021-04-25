@@ -1,10 +1,10 @@
-package ru.fomin.services.handler_services;
+package ru.fomin.service.handler;
 
 import io.netty.channel.ChannelHandlerContext;
 import lombok.RequiredArgsConstructor;
 import ru.fomin.dto.requests.ChangePasswordRequest;
 import ru.fomin.dto.responses.ChangePasswordResponse;
-import ru.fomin.services.db_services.UserService;
+import ru.fomin.service.db.UserService;
 
 /**
  * Service for changing password of user.

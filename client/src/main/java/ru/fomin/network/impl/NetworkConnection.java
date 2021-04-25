@@ -9,7 +9,7 @@ import ru.fomin.dto.DataPackage;
 import ru.fomin.factory.Factory;
 import ru.fomin.network.Connection;
 import ru.fomin.network.ResponseSandler;
-import ru.fomin.services.NetworkConnectionService;
+import ru.fomin.service.NetworkConnectionService;
 
 import java.io.File;
 import java.io.IOException;

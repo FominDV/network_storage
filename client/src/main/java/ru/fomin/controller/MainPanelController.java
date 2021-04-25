@@ -6,12 +6,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
-import ru.fomin.dto.enumeration.CreatingAndUpdatingRequest;
-import ru.fomin.dto.enumeration.FileManipulateRequest;
-import ru.fomin.dto.enumeration.Prefix;
+import ru.fomin.enumeration.CreatingAndUpdatingRequest;
+import ru.fomin.enumeration.FileManipulateRequest;
+import ru.fomin.enumeration.Prefix;
 import ru.fomin.factory.Factory;
-import ru.fomin.services.MainPanelService;
-import ru.fomin.services.impl.ResponseService;
+import ru.fomin.service.MainPanelService;
+import ru.fomin.service.impl.ResponseService;
 import ru.fomin.dto.responses.CurrentDirectoryEntityList;
 import ru.fomin.dto.responses.FileManipulationResponse;
 

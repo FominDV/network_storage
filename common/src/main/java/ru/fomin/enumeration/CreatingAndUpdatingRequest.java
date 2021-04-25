@@ -1,4 +1,4 @@
-package ru.fomin.dto.enumeration;
+package ru.fomin.enumeration;
 
 public enum CreatingAndUpdatingRequest {
     CREATE, RENAME_DIR, RENAME_FILE
