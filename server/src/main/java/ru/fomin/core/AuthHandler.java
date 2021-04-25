@@ -30,7 +30,7 @@ public class AuthHandler extends ChannelInboundHandlerAdapter {
         try {
             if (msg instanceof AuthRequest) {
                 AuthRequest request = (AuthRequest) msg;
-                authHandlerService.authHandle(ctx, request.getRequestType(), request.getLogin(), request.getPassword());
+                authHandlerService.authHandle(ctx, request.getAuthAndRegRequest(), request.getLogin(), request.getPassword());
             }
         } finally {
             ReferenceCountUtil.release(msg);

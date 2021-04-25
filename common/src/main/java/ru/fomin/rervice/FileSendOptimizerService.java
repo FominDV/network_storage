@@ -1,4 +1,4 @@
-package ru.fomin.classes;
+package ru.fomin.rervice;
 
 
 import ru.fomin.dto.DataPackage;
@@ -15,7 +15,7 @@ import static java.nio.file.Files.*;
 /**
  * Class for analysing of file size and choosing method for transfer.
  */
-public class FileSendOptimizer {
+public class FileSendOptimizerService {
 
     private static final int CHUNK_SIZE = 4 * 1024 * 1024;
 

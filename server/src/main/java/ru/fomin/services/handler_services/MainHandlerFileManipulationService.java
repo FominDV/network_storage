@@ -2,12 +2,12 @@ package ru.fomin.services.handler_services;
 
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.log4j.Log4j2;
-import ru.fomin.classes.Constants;
+import ru.fomin.dto.enumeration.FileManipulateResponse;
+import ru.fomin.dto.enumeration.Prefix;
 import ru.fomin.core.PropertiesLoader;
 import ru.fomin.dto.responses.CurrentDirectoryEntityList;
 import ru.fomin.dto.requests.FileManipulationRequest;
-import ru.fomin.dto.responses.FileManipulationResponse;
-import ru.fomin.classes.FileTransmitter;
+import ru.fomin.rervice.FileTransmitterService;
 import ru.fomin.core.MainHandler;
 import ru.fomin.entities.Directory;
 import ru.fomin.entities.FileData;
@@ -31,7 +31,7 @@ public class MainHandlerFileManipulationService {
     private final DirectoryService DIRECTORY_SERVICE;
     private final FileDataService FILE_DATA_SERVICE;
 
-    private FileTransmitter fileTransmitter;
+    private FileTransmitterService fileTransmitterService;
     private Thread fileTransmitterThread;
 
     public MainHandlerFileManipulationService(DirectoryService DIRECTORY_SERVICE, FileDataService FILE_DATA_SERVICE) {
@@ -81,17 +81,17 @@ public class MainHandlerFileManipulationService {
         //deletes real file
         Path path = Paths.get(currentDirectory.getPath(), fileName);
         Files.delete(path);
-        ctx.writeAndFlush(new FileManipulationResponse(FileManipulationResponse.Response.FILE_REMOVED, fileName, id));
+        ctx.writeAndFlush(new ru.fomin.dto.responses.FileManipulationResponse(FileManipulateResponse.FILE_REMOVED, fileName, id));
     }
 
     private void upload(ChannelHandlerContext ctx, Long fileId) {
-        if (fileTransmitter == null) {
-            fileTransmitter = new FileTransmitter(dataPackage -> ctx.writeAndFlush(dataPackage));
-            fileTransmitterThread = new Thread(fileTransmitter);
+        if (fileTransmitterService == null) {
+            fileTransmitterService = new FileTransmitterService(dataPackage -> ctx.writeAndFlush(dataPackage));
+            fileTransmitterThread = new Thread(fileTransmitterService);
             fileTransmitterThread.setDaemon(true);
             fileTransmitterThread.start();
         }
-        fileTransmitter.addFile(FILE_DATA_SERVICE.getFileById(fileId), fileId);
+        fileTransmitterService.addFile(FILE_DATA_SERVICE.getFileById(fileId), fileId);
     }
 
     private void sendFileList(ChannelHandlerContext ctx, Long directoryId) {
@@ -106,8 +106,8 @@ public class MainHandlerFileManipulationService {
         Long id = currentDirectory.getId();
         List<FileData> currentFileList = DIRECTORY_SERVICE.getFiles(id);
         List<Directory> currentDirectoryList = DIRECTORY_SERVICE.getNestedDirectories(id);
-        currentFileList.forEach(fileData -> fileMap.put(Constants.getFILE_NAME_PREFIX() + fileData.getName(), fileData.getId()));
-        currentDirectoryList.forEach(directory -> directoryMap.put(Constants.getDIRECTORY_NAME_PREFIX() + directory.getPath().substring(currentDirectory.getPath().length() + 1), directory.getId()));
+        currentFileList.forEach(fileData -> fileMap.put(Prefix.FILE_NAME_PREFIX + fileData.getName(), fileData.getId()));
+        currentDirectoryList.forEach(directory -> directoryMap.put(Prefix.DIRECTORY_NAME_PREFIX + directory.getPath().substring(currentDirectory.getPath().length() + 1), directory.getId()));
         String currentDirectoryName = currentDirectory.getPath().substring(PropertiesLoader.getROOT_DIRECTORY().length());
         ctx.writeAndFlush(new CurrentDirectoryEntityList(fileMap, directoryMap, currentDirectoryName, currentDirectory.getId()));
     }
@@ -135,7 +135,7 @@ public class MainHandlerFileManipulationService {
             }
         });
         ctx.writeAndFlush(
-                new FileManipulationResponse(FileManipulationResponse.Response.DIRECTORY_REMOVED,
+                new ru.fomin.dto.responses.FileManipulationResponse(FileManipulateResponse.DIRECTORY_REMOVED,
                         directoryPathString.substring(PropertiesLoader.getROOT_DIRECTORY().length()),
                         id)
         );

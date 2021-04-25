@@ -1,4 +1,4 @@
-package ru.fomin.gui_executor;
+package ru.fomin.starter;
 
 
 import javafx.application.Application;
@@ -12,6 +12,7 @@ import javafx.stage.Stage;
  * Starts application and shows window of authentication.
  */
 public class StartClientApplication extends Application {
+
     @Override
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/authentication.fxml"));
@@ -25,4 +26,5 @@ public class StartClientApplication extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+
 }

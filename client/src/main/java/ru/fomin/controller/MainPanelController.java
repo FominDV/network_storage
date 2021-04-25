@@ -1,4 +1,4 @@
-package ru.fomin.controllers;
+package ru.fomin.controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -6,17 +6,15 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
+import ru.fomin.dto.enumeration.CreatingAndUpdatingRequest;
+import ru.fomin.dto.enumeration.FileManipulateRequest;
+import ru.fomin.dto.enumeration.Prefix;
 import ru.fomin.factory.Factory;
 import ru.fomin.services.MainPanelService;
 import ru.fomin.services.impl.ResponseService;
-import ru.fomin.classes.Constants;
-import ru.fomin.dto.requests.CreatingAndUpdatingManipulationRequest;
 import ru.fomin.dto.responses.CurrentDirectoryEntityList;
-import ru.fomin.dto.requests.FileManipulationRequest;
 import ru.fomin.dto.responses.FileManipulationResponse;
 
-import static ru.fomin.dto.requests.FileManipulationRequest.Request.DELETE_DIR;
-import static ru.fomin.dto.requests.FileManipulationRequest.Request.DELETE_FILE;
 import static ru.fomin.util.ControllersUtil.*;
 
 import java.io.File;
@@ -170,25 +168,25 @@ public class MainPanelController {
         }
 
         Long id;
-        CreatingAndUpdatingManipulationRequest.Type type;
+        CreatingAndUpdatingRequest type;
         //Searching resource
         if (fileMap.containsKey(resourceName)) {
             //Verify duplicate names
-            if (fileMap.containsKey(Constants.getFILE_NAME_PREFIX() + newName)) {
+            if (fileMap.containsKey(Prefix.FILE_NAME_PREFIX + newName)) {
                 showErrorMessage(String.format("File with the name \"%s\" already exist", newName));
                 field_resource_name.clear();
                 return;
             }
-            type = CreatingAndUpdatingManipulationRequest.Type.RENAME_FILE;
+            type = CreatingAndUpdatingRequest.RENAME_FILE;
             id = fileMap.get(resourceName);
         } else if (directoryMap.containsKey(resourceName)) {
             //Verify duplicate names
-            if (directoryMap.containsKey(Constants.getDIRECTORY_NAME_PREFIX() + newName)) {
+            if (directoryMap.containsKey(Prefix.DIRECTORY_NAME_PREFIX + newName)) {
                 showErrorMessage(String.format("Directory with the name \"%s\" already exist", newName));
                 field_resource_name.clear();
                 return;
             }
-            type = CreatingAndUpdatingManipulationRequest.Type.RENAME_DIR;
+            type = CreatingAndUpdatingRequest.RENAME_DIR;
             id = directoryMap.get(resourceName);
         } else {
             //resource is not contained into maps
@@ -225,17 +223,17 @@ public class MainPanelController {
             return;
         }
         Long id;
-        FileManipulationRequest.Request type;
+        FileManipulateRequest type;
         if (fileMap.containsKey(fileName)) {
             //it is file
-            type = DELETE_FILE;
+            type = FileManipulateRequest.DELETE_FILE;
             id = fileMap.get(fileName);
         } else if (directoryMap.containsKey(fileName)) {
             //it is directory
             if (!isConfirmDeleteDirectory()) {
                 return;
             }
-            type = DELETE_DIR;
+            type = FileManipulateRequest.DELETE_DIR;
             id = directoryMap.get(fileName);
         } else {
             //resource is not contained into maps
@@ -269,7 +267,7 @@ public class MainPanelController {
             showErrorMessage("It is not valid directory");
             return;
         }
-        String realFileName = fileName.substring(Constants.getFILE_NAME_PREFIX().length());
+        String realFileName = fileName.substring(Prefix.FILE_NAME_PREFIX.getValue().length());
         if (Files.exists(Paths.get(directory.toString(), realFileName)) && !isConfirmOverrideFile(realFileName)) {
             return;
         }
@@ -323,7 +321,7 @@ public class MainPanelController {
     public synchronized void getFileManipulationResponse(FileManipulationResponse response) {
         String fileName = response.getFileName();
         Long id = response.getId();
-        switch (response.getResponse()) {
+        switch (response.getFileManipulateResponse()) {
             case DIR_ALREADY_EXIST:
                 showErrorMessage(String.format("Directory with the name \"%s\" already exist", fileName));
                 break;
@@ -335,7 +333,7 @@ public class MainPanelController {
                 showInfoMessage(String.format("Uploading of file \"%s\" is successful", fileName));
                 break;
             case DIR_CREATED:
-                String directorySpecialName = Constants.getDIRECTORY_NAME_PREFIX() + fileName;
+                String directorySpecialName = Prefix.DIRECTORY_NAME_PREFIX + fileName;
                 directoryMap.put(directorySpecialName, id);
                 observableList.add(directorySpecialName);
                 showInfoMessage(String.format("The directory \"%s\" was created", fileName));
@@ -363,13 +361,13 @@ public class MainPanelController {
                 showInfoMessage(String.format("The directory \"%s\" with all that it contains was removed", fileName));
                 break;
             case RENAME_DIR:
-                handleRenameResponse(directoryMap, "directory", id, fileName, Constants.getDIRECTORY_NAME_PREFIX());
+                handleRenameResponse(directoryMap, "directory", id, fileName, Prefix.DIRECTORY_NAME_PREFIX.getValue());
                 break;
             case RENAME_FILE:
-                handleRenameResponse(fileMap, "file", id, fileName, Constants.getFILE_NAME_PREFIX());
+                handleRenameResponse(fileMap, "file", id, fileName, Prefix.FILE_NAME_PREFIX.getValue());
                 break;
             default:
-                showErrorMessage(String.format("Unknown response \"%s\" from server", response.getResponse()));
+                showErrorMessage(String.format("Unknown response \"%s\" from server", response.getFileManipulateResponse()));
                 mainPanelService.exitToAuthentication(btn_info);
         }
     }

@@ -1,4 +1,4 @@
-package ru.fomin.classes;
+package ru.fomin.rervice;
 
 
 import ru.fomin.dto.file_packages.FileChunkPackage;
@@ -11,7 +11,7 @@ import java.nio.file.Path;
 /**
  * Downloads chunks of the file.
  */
-public class FileChunkDownloader {
+public class FileChunkDownloaderService {
 
     private String filename;
     private OutputStream out;

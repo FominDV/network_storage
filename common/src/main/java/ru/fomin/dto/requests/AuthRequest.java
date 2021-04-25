@@ -1,6 +1,7 @@
 package ru.fomin.dto.requests;
 
 import lombok.Value;
+import ru.fomin.dto.enumeration.AuthAndRegRequest;
 
 /**
  * DTO with command for authentication and registration.
@@ -9,16 +10,12 @@ import lombok.Value;
 public class AuthRequest extends BasePasswordRequest {
 
     String login;
-    RequestType requestType;
+    AuthAndRegRequest authAndRegRequest;
 
-    public AuthRequest(String password, String login, RequestType requestType) {
+    public AuthRequest(String password, String login, AuthAndRegRequest authAndRegRequest) {
         super(password);
         this.login = login;
-        this.requestType = requestType;
-    }
-
-    public enum RequestType {
-        AUTH, REGISTRATION
+        this.authAndRegRequest = authAndRegRequest;
     }
 
 }

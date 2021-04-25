@@ -2,12 +2,12 @@ package ru.fomin.services.handler_services;
 
 import io.netty.channel.ChannelHandlerContext;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import ru.fomin.core.PropertiesLoader;
-import ru.fomin.dto.requests.AuthRequest;
 import ru.fomin.dto.responses.AuthResult;
 import ru.fomin.core.MainHandler;
+import ru.fomin.dto.enumeration.AuthAndRegRequest;
+import ru.fomin.dto.enumeration.AuthAndRegResult;
 import ru.fomin.services.db_services.UserService;
 
 import java.io.File;
@@ -41,7 +41,7 @@ public class AuthHandlerService {
     /**
      * Processes request from client when he is not authorized yet.
      */
-    public void authHandle(ChannelHandlerContext ctx, AuthRequest.RequestType type, String login, String password) {
+    public void authHandle(ChannelHandlerContext ctx, AuthAndRegRequest type, String login, String password) {
         switch (type) {
             //If client want to authorize
             case AUTH:
@@ -52,9 +52,9 @@ public class AuthHandlerService {
                     handler.setCurrentDirectory(userService.getRootDirectoryByLogin(login));
                     handler.setUserService(userService);
                     handler.setUserId((Long) responseFromDB[1]);
-                    ctx.writeAndFlush(new AuthResult(AuthResult.Result.OK_AUTH));
+                    ctx.writeAndFlush(new AuthResult(AuthAndRegResult.OK_AUTH));
                 } else {
-                    ctx.writeAndFlush(new AuthResult(AuthResult.Result.FAIL_AUTH));
+                    ctx.writeAndFlush(new AuthResult(AuthAndRegResult.FAIL_AUTH));
                 }
                 break;
             //If client want to create new account
@@ -63,9 +63,9 @@ public class AuthHandlerService {
                 //Verifies existing duplicate login
                 if (userService.createUser(login, password, root)) {
                     createUserRootDirectory(root);
-                    ctx.writeAndFlush(new AuthResult(AuthResult.Result.OK_REG, login));
+                    ctx.writeAndFlush(new AuthResult(AuthAndRegResult.OK_REG, login));
                 } else {
-                    ctx.writeAndFlush(new AuthResult(AuthResult.Result.FAIL_REG, login));
+                    ctx.writeAndFlush(new AuthResult(AuthAndRegResult.FAIL_REG, login));
                 }
                 break;
             default:

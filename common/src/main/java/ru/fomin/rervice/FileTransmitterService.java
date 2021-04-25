@@ -1,4 +1,4 @@
-package ru.fomin.classes;
+package ru.fomin.rervice;
 
 import ru.fomin.dto.DataPackage;
 
@@ -16,7 +16,7 @@ import static java.lang.Thread.currentThread;
 /**
  * Class for thread that will be transfer files.
  */
-public class FileTransmitter implements Runnable {
+public class FileTransmitterService implements Runnable {
 
     private final Consumer<DataPackage> sendAction;
 
@@ -26,7 +26,7 @@ public class FileTransmitter implements Runnable {
     //map has file and directory's id of this file
     private final Map<File, Long> fileDestinationMap;
 
-    private final FileSendOptimizer fileSendOptimizer;
+    private final FileSendOptimizerService fileSendOptimizerService;
 
     //max count of files into the queue
     private static final int MAX_COUNT = 100;
@@ -36,11 +36,11 @@ public class FileTransmitter implements Runnable {
      *
      * @param sendAction - action for sending DTO
      */
-    public FileTransmitter(Consumer<DataPackage> sendAction) {
+    public FileTransmitterService(Consumer<DataPackage> sendAction) {
         this.sendAction = sendAction;
         queue = new PriorityBlockingQueue<>(MAX_COUNT, Comparator.comparingLong(File::length));
         fileDestinationMap = new HashMap<>();
-        fileSendOptimizer = new FileSendOptimizer();
+        fileSendOptimizerService = new FileSendOptimizerService();
     }
 
     @Override
@@ -53,8 +53,8 @@ public class FileTransmitter implements Runnable {
                 }
                 File file = queue.take();
                 Path path = file.toPath();
-                //delegating task of transfer to FileSendOptimizer
-                fileSendOptimizer.sendFile(path, fileDestinationMap.get(file), sendAction);
+                //delegating task of transfer to FileSendOptimizerService
+                fileSendOptimizerService.sendFile(path, fileDestinationMap.get(file), sendAction);
                 fileDestinationMap.remove(file);
             }
         } catch (InterruptedException e) {

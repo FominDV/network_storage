@@ -1,8 +1,9 @@
-package ru.fomin.encoder;
+package ru.fomin.util.encoder;
 
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
 import javax.xml.bind.DatatypeConverter;
 
 import java.nio.charset.StandardCharsets;

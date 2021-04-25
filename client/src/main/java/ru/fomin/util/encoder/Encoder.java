@@ -1,4 +1,4 @@
-package ru.fomin.encoder;
+package ru.fomin.util.encoder;
 
 public interface Encoder {
 

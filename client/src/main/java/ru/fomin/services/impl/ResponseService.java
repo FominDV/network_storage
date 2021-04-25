@@ -1,7 +1,8 @@
 package ru.fomin.services.impl;
 
 import javafx.application.Platform;
-import ru.fomin.classes.FileChunkDownloader;
+import ru.fomin.dto.enumeration.AuthAndRegResult;
+import ru.fomin.rervice.FileChunkDownloaderService;
 import ru.fomin.dto.responses.AuthResult;
 import ru.fomin.dto.responses.ChangePasswordResponse;
 import ru.fomin.dto.responses.CurrentDirectoryEntityList;
@@ -9,10 +10,10 @@ import ru.fomin.dto.DataPackage;
 import ru.fomin.dto.responses.FileManipulationResponse;
 import ru.fomin.dto.file_packages.FileChunkPackage;
 import ru.fomin.dto.file_packages.FileDataPackage;
-import ru.fomin.controllers.AuthenticationController;
-import ru.fomin.controllers.MainPanelController;
-import ru.fomin.controllers.RegistrationController;
-import ru.fomin.controllers.UpdatePasswordController;
+import ru.fomin.controller.AuthenticationController;
+import ru.fomin.controller.MainPanelController;
+import ru.fomin.controller.RegistrationController;
+import ru.fomin.controller.UpdatePasswordController;
 import ru.fomin.services.NetworkConnectionService;
 import ru.fomin.services.ResponseProcessor;
 
@@ -37,7 +38,7 @@ public class ResponseService implements ResponseProcessor, NetworkConnectionServ
     private static RegistrationController registrationController;
     private static UpdatePasswordController updatePasswordController;
 
-    private static final FileChunkDownloader FILE_CHUNK_DOWNLOADER = new FileChunkDownloader();
+    private static final FileChunkDownloaderService FILE_CHUNK_DOWNLOADER = new FileChunkDownloaderService();
 
     //contains id of downloading file anf path of this file on client side.
     private final Map<Long, Path> downloadingFilesMap;
@@ -151,11 +152,11 @@ public class ResponseService implements ResponseProcessor, NetworkConnectionServ
      * Handling informational message from server about authentication.
      */
     private void handleAuthResponse(AuthResult authResult) {
-        AuthResult.Result result = authResult.getResult();
-        if (result == AuthResult.Result.FAIL_AUTH || result == AuthResult.Result.OK_AUTH) {
-            authenticationController.handleResponse(result);
+        AuthAndRegResult authAndRegResult = authResult.getAuthAndRegResult();
+        if (authAndRegResult == AuthAndRegResult.FAIL_AUTH || authAndRegResult == AuthAndRegResult.OK_AUTH) {
+            authenticationController.handleResponse(authAndRegResult);
         } else {
-            registrationController.handleResponse(result, authResult.getLogin());
+            registrationController.handleResponse(authAndRegResult, authResult.getLogin());
         }
     }
 

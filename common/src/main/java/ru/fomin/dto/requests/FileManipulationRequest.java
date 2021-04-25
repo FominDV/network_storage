@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import ru.fomin.dto.DataPackage;
+import ru.fomin.dto.enumeration.FileManipulateRequest;
 
 /**
  * DTO for removing, downloading and getting names of resources.
@@ -16,16 +17,7 @@ import ru.fomin.dto.DataPackage;
 @AllArgsConstructor
 public class FileManipulationRequest extends DataPackage {
 
-    private final Request request;
+    private final FileManipulateRequest request;
     private Long id;
-
-    public enum Request {
-        DELETE_DIR,
-        DELETE_FILE,
-        DOWNLOAD,
-        GET_FILES_LIST,
-        INTO_DIR,
-        OUT_DIR
-    }
 
 }

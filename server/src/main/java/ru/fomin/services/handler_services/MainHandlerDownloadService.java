@@ -1,8 +1,8 @@
 package ru.fomin.services.handler_services;
 
 import io.netty.channel.ChannelHandlerContext;
-import ru.fomin.classes.FileChunkDownloader;
-import ru.fomin.dto.responses.FileManipulationResponse;
+import ru.fomin.dto.enumeration.FileManipulateResponse;
+import ru.fomin.rervice.FileChunkDownloaderService;
 import ru.fomin.dto.file_packages.FileChunkPackage;
 import ru.fomin.dto.file_packages.FileDataPackage;
 import ru.fomin.services.db_services.DirectoryService;
@@ -23,12 +23,12 @@ public class MainHandlerDownloadService {
     private final DirectoryService DIRECTORY_SERVICE;
     private final FileDataService FILE_DATA_SERVICE;
 
-    private final FileChunkDownloader fileChunkDownloader;
+    private final FileChunkDownloaderService fileChunkDownloaderService;
 
     public MainHandlerDownloadService(DirectoryService DIRECTORY_SERVICE, FileDataService FILE_DATA_SERVICE) {
         this.DIRECTORY_SERVICE = DIRECTORY_SERVICE;
         this.FILE_DATA_SERVICE = FILE_DATA_SERVICE;
-        fileChunkDownloader = new FileChunkDownloader();
+        fileChunkDownloaderService = new FileChunkDownloaderService();
     }
 
     /**
@@ -45,11 +45,11 @@ public class MainHandlerDownloadService {
         Files.write(path, pack.getData());
         //Creates file into DB and returns id of new file
         Long id = FILE_DATA_SERVICE.createFile(fileName, DIRECTORY_SERVICE.getDirectoryById(directoryId));
-        ctx.writeAndFlush(new FileManipulationResponse(FileManipulationResponse.Response.FILE_UPLOADED, fileName, id));
+        ctx.writeAndFlush(new ru.fomin.dto.responses.FileManipulationResponse(FileManipulateResponse.FILE_UPLOADED, fileName, id));
     }
 
     /**
-     * Delegates processing chunk of file to FileChunkDownloader.
+     * Delegates processing chunk of file to FileChunkDownloaderService.
      */
     public void downloadBigFile(ChannelHandlerContext ctx, FileChunkPackage pack) throws IOException {
         String fileName = pack.getFilename();
@@ -62,10 +62,10 @@ public class MainHandlerDownloadService {
         //creates action for callback
         Runnable action = () -> {
             Long id = FILE_DATA_SERVICE.createFile(fileName, DIRECTORY_SERVICE.getDirectoryById(directoryId));
-            ctx.writeAndFlush(new FileManipulationResponse(FileManipulationResponse.Response.FILE_UPLOADED, fileName, id));
+            ctx.writeAndFlush(new ru.fomin.dto.responses.FileManipulationResponse(FileManipulateResponse.FILE_UPLOADED, fileName, id));
         };
-        //delegates processing to FileChunkDownloader
-        fileChunkDownloader.writeFileChunk(pack, action, DIRECTORY_SERVICE.getDirectoryPathById(directoryId));
+        //delegates processing to FileChunkDownloaderService
+        fileChunkDownloaderService.writeFileChunk(pack, action, DIRECTORY_SERVICE.getDirectoryPathById(directoryId));
     }
 
     /**
@@ -76,7 +76,7 @@ public class MainHandlerDownloadService {
      */
     private boolean isFileExist(ChannelHandlerContext ctx, String fileName, Long directory) {
         if (DIRECTORY_SERVICE.isFileExist(fileName, DIRECTORY_SERVICE.getDirectoryById(directory))) {
-            ctx.writeAndFlush(new FileManipulationResponse(FileManipulationResponse.Response.FILE_ALREADY_EXIST, fileName));
+            ctx.writeAndFlush(new ru.fomin.dto.responses.FileManipulationResponse(FileManipulateResponse.FILE_ALREADY_EXIST, fileName));
             return true;
         } else {
             return false;

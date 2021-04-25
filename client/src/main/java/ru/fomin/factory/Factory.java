@@ -1,8 +1,8 @@
 package ru.fomin.factory;
 
 import lombok.extern.log4j.Log4j2;
-import ru.fomin.encoder.Encoder;
-import ru.fomin.encoder.EncoderMD5;
+import ru.fomin.util.encoder.Encoder;
+import ru.fomin.util.encoder.EncoderMD5;
 import ru.fomin.network.Connection;
 import ru.fomin.network.ResponseSandler;
 import ru.fomin.network.impl.NetworkConnection;
@@ -49,7 +49,7 @@ public class Factory {
     }
 
     //Encoder
-    public static Encoder getEncoder(){
+    public static Encoder getEncoder() {
         return EncoderMD5.getINSTANCE();
     }
 

@@ -4,20 +4,17 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import ru.fomin.dto.DataPackage;
+import ru.fomin.dto.enumeration.AuthAndRegResult;
 
 /**
- * DTO with result of authentication or registration request.
+ * DTO with authAndRegResult of authentication or registration request.
  */
 @Data
 @RequiredArgsConstructor
 @AllArgsConstructor
 public class AuthResult extends DataPackage {
 
-    private final Result result;
+    private final AuthAndRegResult authAndRegResult;
     private String login;
-
-    public enum Result {
-        FAIL_AUTH, OK_AUTH, FAIL_REG, OK_REG
-    }
 
 }

@@ -1,4 +1,4 @@
-package ru.fomin.controllers;
+package ru.fomin.controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

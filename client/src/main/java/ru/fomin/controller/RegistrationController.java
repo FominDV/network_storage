@@ -1,15 +1,15 @@
-package ru.fomin.controllers;
+package ru.fomin.controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import ru.fomin.encoder.Encoder;
+import ru.fomin.dto.enumeration.AuthAndRegResult;
+import ru.fomin.util.encoder.Encoder;
 import ru.fomin.factory.Factory;
 import ru.fomin.services.RegistrationService;
 import ru.fomin.services.impl.ResponseService;
-import ru.fomin.dto.responses.AuthResult;
 import ru.fomin.util.ControllersUtil;
 
 /**
@@ -76,8 +76,8 @@ public class RegistrationController {
     /**
      * Handling response from server.
      */
-    public void handleResponse(AuthResult.Result result, String login) {
-        if (result == AuthResult.Result.OK_REG) {
+    public void handleResponse(AuthAndRegResult authAndRegResult, String login) {
+        if (authAndRegResult == AuthAndRegResult.OK_REG) {
             AuthenticationController.setAuthenticationData(login, currentPassword);
             ControllersUtil.showInfoMessage(String.format("Registration is successful\nYour login is \"%s\"", login));
             registrationRequest.exitToAuthentication(btn_info);

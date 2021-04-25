@@ -1,11 +1,11 @@
-package ru.fomin.controllers;
+package ru.fomin.controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import ru.fomin.dto.responses.AuthResult;
-import ru.fomin.encoder.Encoder;
+import ru.fomin.dto.enumeration.AuthAndRegResult;
+import ru.fomin.util.encoder.Encoder;
 import ru.fomin.factory.Factory;
 import ru.fomin.network.Connection;
 import ru.fomin.services.AuthenticationService;
@@ -112,8 +112,8 @@ public class AuthenticationController {
     /**
      * Handling response from server.
      */
-    public void handleResponse(AuthResult.Result result) {
-        if (result == AuthResult.Result.OK_AUTH) {
+    public void handleResponse(AuthAndRegResult authAndRegResult) {
+        if (authAndRegResult == AuthAndRegResult.OK_AUTH) {
             showAndHideStages("/fxml/main_panel.fxml", btn_login);
         } else {
             field_login.clear();

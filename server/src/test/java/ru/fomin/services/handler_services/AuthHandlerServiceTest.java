@@ -10,8 +10,9 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.*;
 import ru.fomin.core.MainHandler;
 import ru.fomin.core.PropertiesLoader;
-import ru.fomin.dto.requests.AuthRequest;
 import ru.fomin.dto.responses.AuthResult;
+import ru.fomin.dto.enumeration.AuthAndRegRequest;
+import ru.fomin.dto.enumeration.AuthAndRegResult;
 import ru.fomin.services.db_services.UserService;
 
 import java.io.File;
@@ -68,13 +69,13 @@ class AuthHandlerServiceTest {
         Mockito.when(channelPipeline.get(MainHandler.class))
                 .thenReturn(handler);
 
-        Assertions.assertDoesNotThrow(() -> authHandlerService.authHandle(ctx, AuthRequest.RequestType.AUTH, actualLogin, actualPassword));
+        Assertions.assertDoesNotThrow(() -> authHandlerService.authHandle(ctx, AuthAndRegRequest.AUTH, actualLogin, actualPassword));
 
         if (result.equals("OK_AUTH")) {
             Mockito.verify(handler).setUserService(userServiceCaptor.capture());
             assertEquals(userService, userServiceCaptor.getValue());
         }
-        Mockito.verify(ctx).writeAndFlush(new AuthResult(AuthResult.Result.valueOf(result)));
+        Mockito.verify(ctx).writeAndFlush(new AuthResult(AuthAndRegResult.valueOf(result)));
     }
 
     @ParameterizedTest
@@ -88,7 +89,7 @@ PropertiesLoader.getPASSWORD();
                 Mockito.endsWith(File.separator + actualLogin)))
                 .thenReturn(true);
 
-        Assertions.assertDoesNotThrow(() -> authHandlerService.authHandle(ctx, AuthRequest.RequestType.REGISTRATION, actualLogin, actualPassword));
+        Assertions.assertDoesNotThrow(() -> authHandlerService.authHandle(ctx, AuthAndRegRequest.REGISTRATION, actualLogin, actualPassword));
 
         Mockito.verify(ctx).writeAndFlush(authResult.capture());
         Assertions.assertEquals(result, authResult.getValue());
@@ -98,8 +99,8 @@ PropertiesLoader.getPASSWORD();
 
     private static Stream<Arguments> authHandleRegistrationTestProvider() {
         return Stream.of(
-                Arguments.arguments(WRIGHT_LOGIN, WRIGHT_PASSWORD, new AuthResult(AuthResult.Result.OK_REG, WRIGHT_LOGIN)),
-                Arguments.arguments(WRIGHT_LOGIN, "123", new AuthResult(AuthResult.Result.FAIL_REG, WRIGHT_LOGIN))
+                Arguments.arguments(WRIGHT_LOGIN, WRIGHT_PASSWORD, new AuthResult(AuthAndRegResult.OK_REG, WRIGHT_LOGIN)),
+                Arguments.arguments(WRIGHT_LOGIN, "123", new AuthResult(AuthAndRegResult.FAIL_REG, WRIGHT_LOGIN))
         );
     }
 

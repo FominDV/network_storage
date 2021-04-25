@@ -1,11 +1,10 @@
-package ru.fomin.controllers;
+package ru.fomin.controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.Labeled;
 import javafx.scene.control.PasswordField;
 import lombok.Getter;
-import ru.fomin.encoder.Encoder;
+import ru.fomin.util.encoder.Encoder;
 import ru.fomin.factory.Factory;
 import ru.fomin.services.ChangingPasswordService;
 import ru.fomin.services.impl.ResponseService;
