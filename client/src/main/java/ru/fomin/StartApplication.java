@@ -5,7 +5,7 @@ import ru.fomin.starter.StartClientApplication;
 public class StartApplication {
 
     public static void main(String[] args) {
-        StartClientApplication.main(new String[]{});
+        StartClientApplication.main(args);
     }
 
 }
