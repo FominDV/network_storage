@@ -23,8 +23,8 @@ import java.util.ResourceBundle;
 public class AuthenticationController {
 
     //initial values of login and password
-    private static String login = "Dmitriy777";
-    private static String password = "Dmitriy777";
+    private static String login = "";
+    private static String password = "";
 
     private static final Encoder encoder = Factory.getEncoder();
 
