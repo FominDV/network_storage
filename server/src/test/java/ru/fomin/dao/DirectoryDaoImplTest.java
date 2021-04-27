@@ -33,7 +33,7 @@ class DirectoryDaoImplTest {
 
     @ParameterizedTest
     @MethodSource("getStreamForCreate")
-    public void create(Directory directory, Long expectedId) {
+    public void save(Directory directory, Long expectedId) {
         Long actualId = directoryDaoImpl.save(directory);
         Assertions.assertEquals(expectedId, actualId);
     }
