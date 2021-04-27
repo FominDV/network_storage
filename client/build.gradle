@@ -1,0 +1,9 @@
+dependencies {
+    implementation project(':common')
+    compile 'org.openjfx:javafx-controls:11'
+    compile 'org.openjfx:javafx-graphics:11'
+    compile 'org.openjfx:javafx-fxml:11'
+    compile 'javax.xml.bind:jaxb-api:2.3.1'
+}
+
+description = 'client'
