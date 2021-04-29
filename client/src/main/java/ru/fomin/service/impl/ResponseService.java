@@ -38,7 +38,7 @@ public class ResponseService implements ResponseProcessor, NetworkConnectionServ
     private static RegistrationController registrationController;
     private static UpdatePasswordController updatePasswordController;
 
-    private static final FileChunkDownloadable FILE_CHUNK_DOWNLOADER_SERVICE = new FileChunkDownloadService();
+    private static final FileChunkDownloadable fileChunkDownloadable = new FileChunkDownloadService();
 
     //contains id of downloading file anf path of this file on client side.
     private final Map<Long, Path> downloadingFilesMap;
@@ -142,7 +142,7 @@ public class ResponseService implements ResponseProcessor, NetworkConnectionServ
         //getting path of downloading file from map by id of file
         Path path = downloadingFilesMap.get(pack.getId());
         try {
-            FILE_CHUNK_DOWNLOADER_SERVICE.writeFileChunk(pack, action, path);
+            fileChunkDownloadable.writeFileChunk(pack, action, path);
         } catch (IOException e) {
             downloadingError(fileName);
         }

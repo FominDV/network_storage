@@ -15,7 +15,7 @@ import java.nio.file.Paths;
  */
 public class FileDataServiceImpl implements FileDataService {
 
-    private static final CommonDao FILE_DATA_DAO = new CommonDaoImpl();
+    private static final CommonDao commonDao = new CommonDaoImpl();
 
     /**
      * Creates new file.
@@ -27,7 +27,7 @@ public class FileDataServiceImpl implements FileDataService {
     @Override
     public Long createFile(String fileName, Directory directory) {
         FileData fileData = new FileData(directory, fileName);
-        return FILE_DATA_DAO.save(fileData);
+        return commonDao.save(fileData);
     }
 
     /**
@@ -38,14 +38,14 @@ public class FileDataServiceImpl implements FileDataService {
      */
     @Override
     public String deleteFile(Long id) {
-        FileData fileData = FILE_DATA_DAO.getById(id, FileData.class);
-        FILE_DATA_DAO.delete(fileData);
+        FileData fileData = commonDao.getById(id, FileData.class);
+        commonDao.delete(fileData);
         return fileData.getName();
     }
 
     @Override
     public FileData getFileDataById(Long id) {
-        return FILE_DATA_DAO.getById(id, FileData.class);
+        return commonDao.getById(id, FileData.class);
     }
 
     /**
@@ -79,7 +79,7 @@ public class FileDataServiceImpl implements FileDataService {
     public Path renameFileData(Long id, String newFileName) {
         FileData fileData = getFileDataById(id);
         fileData.setName(newFileName);
-        FILE_DATA_DAO.update(fileData);
+        commonDao.update(fileData);
         return Paths.get(fileData.getDirectory().getPath() + File.separator + newFileName);
     }
 }

@@ -16,7 +16,7 @@ public class UserServiceImpl implements UserService {
 
     private final Codable codable = EncoderFactory.getEncoder();
 
-    private final static UserDao USER_DAO = new UserDaoImpl();
+    private final static UserDao userDao = new UserDaoImpl();
 
     /**
      * Verifies login and password for authorizing.
@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Object[] isValidUserData(String login, String password) {
 
-        User user = USER_DAO.getUsersByLogin(login);
+        User user = userDao.getUsersByLogin(login);
 
         Object[] response = new Object[2];
         if (user != null) {
@@ -54,12 +54,12 @@ public class UserServiceImpl implements UserService {
 
         CodePair codePair = codable.encode(password);
 
-        if (USER_DAO.getUsersByLogin(login) == null) {
+        if (userDao.getUsersByLogin(login) == null) {
             Directory dataRoot = new Directory();
             User user = new User(login, codePair.getValue(), dataRoot, codePair.getSalt());
             dataRoot.setUser(user);
             dataRoot.setPath(root);
-            USER_DAO.save(user, dataRoot);
+            userDao.save(user, dataRoot);
             return true;
         }
         return false;
@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserByLogin(String login) {
-        return USER_DAO.getUsersByLogin(login);
+        return userDao.getUsersByLogin(login);
     }
 
     @Override
@@ -87,7 +87,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean changePassword(String currentPassword, String newPassword, Long id) {
 
-        User user = USER_DAO.getById(id, User.class);
+        User user = userDao.getById(id, User.class);
         currentPassword = codable.encode(currentPassword, user.getSalt());
 
         if (user == null || !user.getPassword().equals(currentPassword)) {
@@ -108,7 +108,7 @@ public class UserServiceImpl implements UserService {
         CodePair codePair = codable.encode(password);
         user.setPassword(codePair.getValue());
         user.setSalt(codePair.getSalt());
-        USER_DAO.update(user);
+        userDao.update(user);
     }
 
 }

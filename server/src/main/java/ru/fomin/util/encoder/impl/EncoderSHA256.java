@@ -21,7 +21,7 @@ import java.security.SecureRandom;
 public class EncoderSHA256 implements Codable {
 
     @Getter
-    private final static EncoderSHA256 INSTANCE = new EncoderSHA256();
+    private final static EncoderSHA256 instance = new EncoderSHA256();
 
     private final MessageDigest encoder = getDigest();
 

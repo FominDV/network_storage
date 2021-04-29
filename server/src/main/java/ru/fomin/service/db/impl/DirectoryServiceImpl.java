@@ -16,14 +16,14 @@ import java.util.List;
  */
 public class DirectoryServiceImpl implements DirectoryService {
 
-    private final static DirectoryDao DIRECTORY_DAO = new DirectoryDaoImpl();
+    private final static DirectoryDao directoryDao = new DirectoryDaoImpl();
 
     /**
      * Returns all files from this directory.
      */
     @Override
     public List<FileData> getFiles(Long id) {
-        return DIRECTORY_DAO.getFiles(id);
+        return directoryDao.getFiles(id);
     }
 
     /**
@@ -31,7 +31,7 @@ public class DirectoryServiceImpl implements DirectoryService {
      */
     @Override
     public List<Directory> getNestedDirectories(Long id) {
-        return DIRECTORY_DAO.getNestedDirectories(id);
+        return directoryDao.getNestedDirectories(id);
     }
 
     /**
@@ -43,11 +43,11 @@ public class DirectoryServiceImpl implements DirectoryService {
      */
     @Override
     public Long createDirectory(Directory currentDirectory, String newDirectory) {
-        if (DIRECTORY_DAO.getNestedDirectories(currentDirectory.getId()).stream().anyMatch(directory -> directory.getPath().equals(newDirectory))) {
+        if (directoryDao.getNestedDirectories(currentDirectory.getId()).stream().anyMatch(directory -> directory.getPath().equals(newDirectory))) {
             return -1L;
         } else {
             Directory directory = new Directory(currentDirectory.getUser(), currentDirectory, newDirectory);
-            return DIRECTORY_DAO.save(directory);
+            return directoryDao.save(directory);
         }
     }
 
@@ -68,7 +68,7 @@ public class DirectoryServiceImpl implements DirectoryService {
 
     @Override
     public Directory getDirectoryById(Long id) {
-        return DIRECTORY_DAO.getById(id, Directory.class);
+        return directoryDao.getById(id, Directory.class);
     }
 
     /**
@@ -79,8 +79,8 @@ public class DirectoryServiceImpl implements DirectoryService {
      */
     @Override
     public String deleteDirectory(Long id) {
-        Directory directory = DIRECTORY_DAO.getById(id, Directory.class);
-        DIRECTORY_DAO.delete(directory);
+        Directory directory = directoryDao.getById(id, Directory.class);
+        directoryDao.delete(directory);
         return directory.getPath();
     }
 
@@ -89,10 +89,10 @@ public class DirectoryServiceImpl implements DirectoryService {
      */
     @Override
     public String renameDirectory(Long id, String newSimpleName) {
-        Directory directory = DIRECTORY_DAO.getById(id, Directory.class);
+        Directory directory = directoryDao.getById(id, Directory.class);
         String newPath = directory.getParentDirectory().getPath() + File.separator + newSimpleName;
         directory.setPath(newPath);
-        DIRECTORY_DAO.update(directory);
+        directoryDao.update(directory);
         return newPath;
     }
 }

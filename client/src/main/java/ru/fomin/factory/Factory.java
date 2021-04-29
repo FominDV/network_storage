@@ -50,7 +50,7 @@ public class Factory {
 
     //Encoder
     public static Encoder getEncoder() {
-        return EncoderMD5.getINSTANCE();
+        return EncoderMD5.getInstance();
     }
 
 }

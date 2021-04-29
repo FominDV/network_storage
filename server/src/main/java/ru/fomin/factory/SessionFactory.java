@@ -8,10 +8,10 @@ import ru.fomin.entity.User;
 
 public class SessionFactory {
 
-    private static final org.hibernate.SessionFactory SESSION_FACTORY;
+    private static final org.hibernate.SessionFactory sessionFactory;
 
     static {
-        SESSION_FACTORY = new Configuration().
+        sessionFactory = new Configuration().
                 addAnnotatedClass(User.class).
                 addAnnotatedClass(Directory.class).
                 addAnnotatedClass(FileData.class).
@@ -19,6 +19,6 @@ public class SessionFactory {
     }
 
     public static Session getSession() {
-        return SESSION_FACTORY.openSession();
+        return sessionFactory.openSession();
     }
 }

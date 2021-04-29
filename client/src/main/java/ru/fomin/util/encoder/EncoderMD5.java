@@ -14,7 +14,7 @@ import java.security.NoSuchAlgorithmException;
 public class EncoderMD5 implements Encoder {
 
     @Getter(lazy = true)
-    private static final Encoder INSTANCE = new EncoderMD5();
+    private static final Encoder instance = new EncoderMD5();
 
     private final static MessageDigest messageDigest = getMessageDigest();
 
