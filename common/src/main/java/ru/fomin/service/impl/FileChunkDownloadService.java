@@ -1,7 +1,8 @@
-package ru.fomin.rervice;
+package ru.fomin.service.impl;
 
 
 import ru.fomin.dto.file_packages.FileChunkPackage;
+import ru.fomin.service.FileChunkDownloadable;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -11,7 +12,7 @@ import java.nio.file.Path;
 /**
  * Downloads chunks of the file.
  */
-public class FileChunkDownloaderService {
+public class FileChunkDownloadService implements FileChunkDownloadable {
 
     private String filename;
     private OutputStream out;
@@ -23,6 +24,7 @@ public class FileChunkDownloaderService {
      * @param saveFullAction - actions from class that invoked this method
      * @param directory      - path of directory for saving this file
      */
+    @Override
     public void writeFileChunk(FileChunkPackage pack, Runnable saveFullAction, Path directory) throws IOException {
         filename = pack.getFilename();
         try {

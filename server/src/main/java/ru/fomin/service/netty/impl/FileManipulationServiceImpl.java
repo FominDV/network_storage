@@ -8,7 +8,8 @@ import ru.fomin.entity.Directory;
 import ru.fomin.entity.FileData;
 import ru.fomin.enumeration.FileManipulateResponse;
 import ru.fomin.enumeration.Prefix;
-import ru.fomin.rervice.FileTransmitterService;
+import ru.fomin.service.FileTransmittable;
+import ru.fomin.service.impl.FileTransmitterService;
 import ru.fomin.server.handler.MainHandler;
 import ru.fomin.service.db.DirectoryService;
 import ru.fomin.service.db.FileDataService;
@@ -32,7 +33,7 @@ public class FileManipulationServiceImpl implements FileManipulationService {
     private final DirectoryService directoryService;
     private final FileDataService fileDataService;
 
-    private FileTransmitterService fileTransmitterService;
+    private FileTransmittable fileTransmittable;
     private Thread fileTransmitterThread;
 
     public FileManipulationServiceImpl(DirectoryService directoryService, FileDataService fileDataService) {
@@ -87,13 +88,13 @@ public class FileManipulationServiceImpl implements FileManipulationService {
     }
 
     private void upload(ChannelHandlerContext ctx, Long fileId) {
-        if (fileTransmitterService == null) {
-            fileTransmitterService = new FileTransmitterService(dataPackage -> ctx.writeAndFlush(dataPackage));
-            fileTransmitterThread = new Thread(fileTransmitterService);
+        if (fileTransmittable == null) {
+            fileTransmittable = new FileTransmitterService(dataPackage -> ctx.writeAndFlush(dataPackage));
+            fileTransmitterThread = new Thread(fileTransmittable);
             fileTransmitterThread.setDaemon(true);
             fileTransmitterThread.start();
         }
-        fileTransmitterService.addFile(fileDataService.getFileById(fileId), fileId);
+        fileTransmittable.addFile(fileDataService.getFileById(fileId), fileId);
     }
 
     private void sendFileList(ChannelHandlerContext ctx, Long directoryId) {

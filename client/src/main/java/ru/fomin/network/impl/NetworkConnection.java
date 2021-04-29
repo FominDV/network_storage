@@ -4,7 +4,8 @@ import io.netty.handler.codec.serialization.ObjectDecoderInputStream;
 import io.netty.handler.codec.serialization.ObjectEncoderOutputStream;
 import lombok.Getter;
 import lombok.Setter;
-import ru.fomin.rervice.FileTransmitterService;
+import ru.fomin.service.FileTransmittable;
+import ru.fomin.service.impl.FileTransmitterService;
 import ru.fomin.dto.DataPackage;
 import ru.fomin.factory.Factory;
 import ru.fomin.network.Connection;
@@ -40,7 +41,7 @@ public class NetworkConnection implements Connection, ResponseSandler {
     private static final int MAX_OBJ_SIZE = 10 * 1024 * 1024;
 
     private ExecutorService executorService;
-    private FileTransmitterService fileTransmitterService;
+    private FileTransmittable fileTransmittable;
     private ResponseReceiver responseReceiver;
     private NetworkConnectionService networkConnectionService;
     private ObjectEncoderOutputStream out;
@@ -71,8 +72,8 @@ public class NetworkConnection implements Connection, ResponseSandler {
         createSocketAndStreams();
         responseReceiver = new ResponseReceiver();
         executorService.execute(responseReceiver);
-        fileTransmitterService = new FileTransmitterService(dataPackage -> sendToServer(dataPackage));
-        executorService.execute(fileTransmitterService);
+        fileTransmittable = new FileTransmitterService(dataPackage -> sendToServer(dataPackage));
+        executorService.execute(fileTransmittable);
     }
 
     /**
@@ -121,7 +122,7 @@ public class NetworkConnection implements Connection, ResponseSandler {
     }
 
     public void addFileToTransmitter(File file, Long directoryId) {
-        fileTransmitterService.addFile(file, directoryId);
+        fileTransmittable.addFile(file, directoryId);
     }
 
     public void putDownloadingFilesMapToResponseHandler(Long id, Path path) {

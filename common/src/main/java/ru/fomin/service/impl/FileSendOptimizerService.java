@@ -1,9 +1,10 @@
-package ru.fomin.rervice;
+package ru.fomin.service.impl;
 
 
 import ru.fomin.dto.DataPackage;
 import ru.fomin.dto.file_packages.FileChunkPackage;
 import ru.fomin.dto.file_packages.FileDataPackage;
+import ru.fomin.service.FileSendOptimizely;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,7 +16,7 @@ import static java.nio.file.Files.*;
 /**
  * Class for analysing of file size and choosing method for transfer.
  */
-public class FileSendOptimizerService {
+public class FileSendOptimizerService implements FileSendOptimizely {
 
     private static final int CHUNK_SIZE = 4 * 1024 * 1024;
 
@@ -26,6 +27,7 @@ public class FileSendOptimizerService {
      * @param directoryId - id of directory that this file will be upload
      * @param sendAction  - action that will be done for transfer DTO
      */
+    @Override
     public void sendFile(Path path, Long directoryId, Consumer<DataPackage> sendAction) throws IOException {
         if (size(path) < CHUNK_SIZE * 8) {
             sendFull(path, directoryId, sendAction);

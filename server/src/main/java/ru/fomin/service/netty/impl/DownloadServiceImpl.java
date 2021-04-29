@@ -4,7 +4,8 @@ import io.netty.channel.ChannelHandlerContext;
 import ru.fomin.dto.file_packages.FileChunkPackage;
 import ru.fomin.dto.file_packages.FileDataPackage;
 import ru.fomin.enumeration.FileManipulateResponse;
-import ru.fomin.rervice.FileChunkDownloaderService;
+import ru.fomin.service.FileChunkDownloadable;
+import ru.fomin.service.impl.FileChunkDownloadService;
 import ru.fomin.service.db.DirectoryService;
 import ru.fomin.service.db.FileDataService;
 import ru.fomin.service.netty.DownloadService;
@@ -24,12 +25,12 @@ public class DownloadServiceImpl implements DownloadService {
     private final DirectoryService directoryService;
     private final FileDataService fileDataService;
 
-    private final FileChunkDownloaderService fileChunkDownloaderService;
+    private final FileChunkDownloadable fileChunkDownloadable;
 
     public DownloadServiceImpl(DirectoryService directoryService, FileDataService fileDataService) {
         this.directoryService = directoryService;
         this.fileDataService = fileDataService;
-        fileChunkDownloaderService = new FileChunkDownloaderService();
+        fileChunkDownloadable = new FileChunkDownloadService();
     }
 
     /**
@@ -68,7 +69,7 @@ public class DownloadServiceImpl implements DownloadService {
             ctx.writeAndFlush(new ru.fomin.dto.responses.FileManipulationResponse(FileManipulateResponse.FILE_UPLOADED, fileName, id));
         };
         //delegates processing to FileChunkDownloaderService
-        fileChunkDownloaderService.writeFileChunk(pack, action, directoryService.getDirectoryPathById(directoryId));
+        fileChunkDownloadable.writeFileChunk(pack, action, directoryService.getDirectoryPathById(directoryId));
     }
 
     /**

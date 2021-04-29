@@ -1,6 +1,8 @@
-package ru.fomin.rervice;
+package ru.fomin.service.impl;
 
 import ru.fomin.dto.DataPackage;
+import ru.fomin.service.FileSendOptimizely;
+import ru.fomin.service.FileTransmittable;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,7 +18,7 @@ import static java.lang.Thread.currentThread;
 /**
  * Class for thread that will be transfer files.
  */
-public class FileTransmitterService implements Runnable {
+public class FileTransmitterService implements FileTransmittable {
 
     private final Consumer<DataPackage> sendAction;
 
@@ -26,7 +28,7 @@ public class FileTransmitterService implements Runnable {
     //map has file and directory's id of this file
     private final Map<File, Long> fileDestinationMap;
 
-    private final FileSendOptimizerService fileSendOptimizerService;
+    private final FileSendOptimizely fileSendOptimizely;
 
     //max count of files into the queue
     private static final int MAX_COUNT = 100;
@@ -40,7 +42,7 @@ public class FileTransmitterService implements Runnable {
         this.sendAction = sendAction;
         queue = new PriorityBlockingQueue<>(MAX_COUNT, Comparator.comparingLong(File::length));
         fileDestinationMap = new HashMap<>();
-        fileSendOptimizerService = new FileSendOptimizerService();
+        fileSendOptimizely = new FileSendOptimizerService();
     }
 
     @Override
@@ -54,7 +56,7 @@ public class FileTransmitterService implements Runnable {
                 File file = queue.take();
                 Path path = file.toPath();
                 //delegating task of transfer to FileSendOptimizerService
-                fileSendOptimizerService.sendFile(path, fileDestinationMap.get(file), sendAction);
+                fileSendOptimizely.sendFile(path, fileDestinationMap.get(file), sendAction);
                 fileDestinationMap.remove(file);
             }
         } catch (InterruptedException e) {
@@ -67,6 +69,7 @@ public class FileTransmitterService implements Runnable {
     /**
      * Adding file to queue and map
      */
+    @Override
     public void addFile(File file, Long directoryId) {
         queue.put(file);
         fileDestinationMap.put(file, directoryId);

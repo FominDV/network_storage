@@ -2,7 +2,6 @@ package ru.fomin.service.impl;
 
 import javafx.application.Platform;
 import ru.fomin.enumeration.AuthAndRegResult;
-import ru.fomin.rervice.FileChunkDownloaderService;
 import ru.fomin.dto.responses.AuthResult;
 import ru.fomin.dto.responses.ChangePasswordResponse;
 import ru.fomin.dto.responses.CurrentDirectoryEntityList;
@@ -14,6 +13,7 @@ import ru.fomin.controller.AuthenticationController;
 import ru.fomin.controller.MainPanelController;
 import ru.fomin.controller.RegistrationController;
 import ru.fomin.controller.UpdatePasswordController;
+import ru.fomin.service.FileChunkDownloadable;
 import ru.fomin.service.NetworkConnectionService;
 import ru.fomin.service.ResponseProcessor;
 
@@ -38,7 +38,7 @@ public class ResponseService implements ResponseProcessor, NetworkConnectionServ
     private static RegistrationController registrationController;
     private static UpdatePasswordController updatePasswordController;
 
-    private static final FileChunkDownloaderService FILE_CHUNK_DOWNLOADER = new FileChunkDownloaderService();
+    private static final FileChunkDownloadable FILE_CHUNK_DOWNLOADER_SERVICE = new FileChunkDownloadService();
 
     //contains id of downloading file anf path of this file on client side.
     private final Map<Long, Path> downloadingFilesMap;
@@ -142,7 +142,7 @@ public class ResponseService implements ResponseProcessor, NetworkConnectionServ
         //getting path of downloading file from map by id of file
         Path path = downloadingFilesMap.get(pack.getId());
         try {
-            FILE_CHUNK_DOWNLOADER.writeFileChunk(pack, action, path);
+            FILE_CHUNK_DOWNLOADER_SERVICE.writeFileChunk(pack, action, path);
         } catch (IOException e) {
             downloadingError(fileName);
         }
