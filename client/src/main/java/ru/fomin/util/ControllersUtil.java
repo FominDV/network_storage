@@ -20,13 +20,18 @@ public class ControllersUtil {
      one small letter
      and contain special character OR digit*/
     private static final String PASSWORD_PATTERN = "(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9@#$%]).{8,}";
+    private static final String DEVELOPER_INFO = "<html>Developer: Dmitriy Fomin<br>GitHub: https://github.com/FominDV <br> Email: 79067773397@yandex.ru<br>*All rights reserved*</html>";
+    private static final String PASSWORD_RULE = "The password should be at least 8 characters long,\n" +
+            " contain at least 1 large letter,\n" +
+            " one small letter\n" +
+            " and contain special character OR digit.";
 
     /**
      * Shows pop-up window with information about developer.
      */
     public static void showDeveloperInfo() {
         JOptionPane.showMessageDialog(null,
-                "<html>Developer: Dmitriy Fomin<br>GitHub: https://github.com/FominDV <br> Email: 79067773397@yandex.ru<br>*All rights reserved*</html>",
+                DEVELOPER_INFO,
                 "Developer info", JOptionPane.INFORMATION_MESSAGE);
     }
 
@@ -179,10 +184,7 @@ public class ControllersUtil {
     public static boolean verifyPassword(String password, String repeated_password) {
         //Verify password entity
         if (!password.matches(PASSWORD_PATTERN)) {
-            showErrorMessage("The password should be at least 8 characters long,\n" +
-                    " contain at least 1 large letter,\n" +
-                    " one small letter\n" +
-                    " and contain special character OR digit.");
+            showErrorMessage(PASSWORD_RULE);
             return false;
         }
 
