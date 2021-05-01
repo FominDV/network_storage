@@ -1,6 +1,5 @@
 package ru.fomin.factory;
 
-import lombok.extern.log4j.Log4j2;
 import ru.fomin.util.encoder.Encoder;
 import ru.fomin.util.encoder.EncoderMD5;
 import ru.fomin.network.Connection;
@@ -10,7 +9,6 @@ import ru.fomin.service.*;
 import ru.fomin.service.impl.ResponseService;
 import ru.fomin.service.impl.RequestService;
 
-@Log4j2
 public class Factory {
 
     //NetworkConnection

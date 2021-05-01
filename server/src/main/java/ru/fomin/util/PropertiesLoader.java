@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 
 import java.io.*;
+import java.nio.file.Path;
 import java.util.Properties;
 
 /**
@@ -62,7 +63,9 @@ public class PropertiesLoader {
 
         //get list of target files
         ClassLoader classLoader = PropertiesLoader.class.getClassLoader();
-        File classpathRoot = new File(classLoader.getResource("").getPath());
+        File classpathRoot = new File(classLoader.getResource("").getPath()).getParentFile().getParentFile().getParentFile();
+        classpathRoot = new File(classpathRoot.getPath() + File.separator + "resources" + File.separator + "main");
+
         File[] fileList = classpathRoot.listFiles((dir, name) -> (name.endsWith(SERVER_PROPERTIES) || name.equals(HIBERNATE_PROPERTIES)));
 
         Properties properties = new Properties();

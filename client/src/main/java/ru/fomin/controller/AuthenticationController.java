@@ -5,17 +5,17 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import ru.fomin.enumeration.AuthAndRegResult;
-import ru.fomin.util.encoder.Encoder;
 import ru.fomin.factory.Factory;
 import ru.fomin.network.Connection;
 import ru.fomin.service.AuthenticationService;
 import ru.fomin.service.impl.ResponseService;
-
-import static ru.fomin.util.ControllersUtil.*;
+import ru.fomin.util.encoder.Encoder;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import static ru.fomin.util.ControllersUtil.*;
 
 /**
  * Window of authentication.
