@@ -13,6 +13,7 @@
     <properties>
         <org.testcontainers>1.15.3</org.testcontainers>
     </properties>
+
     <dependencies>
         <dependency>
             <groupId>ru.fomin</groupId>
