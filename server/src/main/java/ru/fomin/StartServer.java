@@ -3,13 +3,11 @@ package ru.fomin;
 import ru.fomin.util.PreparationsMaker;
 import ru.fomin.server.Server;
 
+/**
+ * Start the server.
+ */
 public class StartServer {
 
-    private final static String PROPERTIES_PATH = "server/src/main/resources/hibernate.properties";
-
-    /**
-     * Start the server.
-     */
     public static void main(String[] args) {
 
         //preparation for launch
