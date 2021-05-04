@@ -14,6 +14,7 @@ public class CurrentDirectoryEntityList extends DataPackage {
 
     Map<String, Long> fileMap;
     Map<String, Long> directoryMap;
+    Map<String, Long> contentSizeMap;
     String currentDirectory;
     Long currentDirectoryId;
 

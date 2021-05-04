@@ -1,6 +1,8 @@
 package ru.fomin.service.netty.impl;
 
 import io.netty.channel.ChannelHandlerContext;
+import lombok.Getter;
+import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import ru.fomin.dto.requests.FileManipulationRequest;
 import ru.fomin.dto.responses.CurrentDirectoryEntityList;
@@ -16,6 +18,7 @@ import ru.fomin.service.db.FileDataService;
 import ru.fomin.service.netty.FileManipulationService;
 import ru.fomin.util.PropertiesLoader;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -106,13 +109,27 @@ public class FileManipulationServiceImpl implements FileManipulationService {
     private void sendFileList(ChannelHandlerContext ctx, Directory currentDirectory) {
         Map<String, Long> fileMap = new HashMap<>();
         Map<String, Long> directoryMap = new HashMap<>();
+        Map<String, Long> contentSizeMap = new HashMap<>();
+
         Long id = currentDirectory.getId();
         List<FileData> currentFileList = directoryService.getFiles(id);
         List<Directory> currentDirectoryList = directoryService.getNestedDirectories(id);
-        currentFileList.forEach(fileData -> fileMap.put(Prefix.FILE_NAME_PREFIX + fileData.getName(), fileData.getId()));
-        currentDirectoryList.forEach(directory -> directoryMap.put(Prefix.DIRECTORY_NAME_PREFIX + directory.getPath().substring(currentDirectory.getPath().length() + 1), directory.getId()));
+        currentFileList.forEach(fileData -> {
+            String filename = Prefix.FILE_NAME_PREFIX + fileData.getName();
+            fileMap.put(filename, fileData.getId());
+            contentSizeMap.put(filename, getFileSize(fileData));
+        });
+        currentDirectoryList.forEach(directory -> {
+            String directoryName = Prefix.DIRECTORY_NAME_PREFIX + directory.getPath().substring(currentDirectory.getPath().length() + 1);
+            directoryMap.put(directoryName, directory.getId());
+            contentSizeMap.put(directoryName, getDirectorySize(directory));
+        });
         String currentDirectoryName = currentDirectory.getPath().substring(PropertiesLoader.getROOT_DIRECTORY().length());
-        ctx.writeAndFlush(new CurrentDirectoryEntityList(fileMap, directoryMap, currentDirectoryName, currentDirectory.getId()));
+        ctx.writeAndFlush(new CurrentDirectoryEntityList(fileMap,
+                directoryMap,
+                contentSizeMap,
+                currentDirectoryName,
+                currentDirectory.getId()));
     }
 
     /**
@@ -143,4 +160,36 @@ public class FileManipulationServiceImpl implements FileManipulationService {
                         id)
         );
     }
+
+    @SneakyThrows
+    /**Returns the file size in bytes.*/
+    private Long getFileSize(FileData fileData) {
+        Path path = Paths.get(fileData.getDirectory().getPath() + File.separator + fileData.getName());
+        return Files.size(path);
+    }
+
+    @SneakyThrows
+    /**Returns the directory and all its entry size in bytes.*/
+    private Long getDirectorySize(Directory directory) {
+        Path path = Path.of(directory.getPath());
+        DirectorySizeCounterFileVisitor fileVisitor = new DirectorySizeCounterFileVisitor();
+        Files.walkFileTree(path, fileVisitor);
+        return fileVisitor.getDirectorySize();
+    }
+
+    /**
+     * Class for calculating the size of directory.
+     */
+    class DirectorySizeCounterFileVisitor extends SimpleFileVisitor<Path> {
+
+        @Getter
+        private Long directorySize = 0L;
+
+        @Override
+        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+            directorySize += attrs.size();
+            return FileVisitResult.CONTINUE;
+        }
+    }
+
 }

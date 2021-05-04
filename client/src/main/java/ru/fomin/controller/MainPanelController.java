@@ -2,6 +2,7 @@ package ru.fomin.controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.DirectoryChooser;
@@ -31,6 +32,7 @@ public class MainPanelController {
       value - id of resource on server side*/
     private Map<String, Long> fileMap = new HashMap<>();
     private Map<String, Long> directoryMap = new HashMap<>();
+    private Map<String, Long> contentSizeMap = new HashMap<>();
 
     private MainPanelService mainPanelService;
     private ObservableList<String> observableList;
@@ -80,6 +82,9 @@ public class MainPanelController {
     private Label label_current_dir;
 
     @FXML
+    private Label label_file_size;
+
+    @FXML
     private Button btn_rename;
 
     @FXML
@@ -105,6 +110,8 @@ public class MainPanelController {
         btn_into_dir.setOnAction(event -> moveToNestedDirectory());
 
         btn_out_dir.setOnAction(event -> moveFromCurrentDirectory());
+
+        list_files.setOnMouseClicked(event -> refreshLabelFileSize());
 
         ResponseService.setMainPanelController(this);
 
@@ -293,11 +300,13 @@ public class MainPanelController {
     /**
      * Updating list of files and nested directories on client side.
      */
-    public void updateDirectoryEntity(CurrentDirectoryEntityList com) {
-        fileMap = com.getFileMap();
-        directoryMap = com.getDirectoryMap();
-        label_current_dir.setText(com.getCurrentDirectory());
-        remoteCurrentDirectoryId = com.getCurrentDirectoryId();
+    public void updateDirectoryEntity(CurrentDirectoryEntityList directoryEntityList) {
+        fileMap = directoryEntityList.getFileMap();
+        directoryMap = directoryEntityList.getDirectoryMap();
+        contentSizeMap = directoryEntityList.getContentSizeMap();
+
+        label_current_dir.setText(directoryEntityList.getCurrentDirectory());
+        remoteCurrentDirectoryId = directoryEntityList.getCurrentDirectoryId();
 
         //root directory is set only once
         if (remoteRootDirectoryId == null) {
@@ -312,7 +321,10 @@ public class MainPanelController {
         observableList = FXCollections.observableArrayList(filesList);
         list_files.setItems(observableList);
         multipleSelectionModel = list_files.getSelectionModel();
-        if (multipleSelectionModel.getSelectedItem() == null) multipleSelectionModel.select(0);
+        if (multipleSelectionModel.getSelectedItem() == null) {
+            multipleSelectionModel.select(0);
+        }
+        refreshLabelFileSize();
     }
 
     /**
@@ -370,6 +382,7 @@ public class MainPanelController {
                 showErrorMessage(String.format("Unknown response \"%s\" from server", response.getFileManipulateResponse()));
                 mainPanelService.exitToAuthentication(btn_info);
         }
+        refreshLabelFileSize();
     }
 
     /**
@@ -390,7 +403,26 @@ public class MainPanelController {
         }
     }
 
+    /**
+     * Refreshes label which shows size of selected file or directory.
+     */
+    private void refreshLabelFileSize() {
+        String fileName = multipleSelectionModel.getSelectedItem();
+
+        if (!(hasText(fileName) && contentSizeMap.containsKey(fileName)
+                &&
+                (fileMap.containsKey(fileName) || directoryMap.containsKey(fileName))
+        )) {
+            label_file_size.setText("");
+            return;
+        }
+
+        String fileType = fileMap.containsKey(fileName) ? "file" : "directory";
+        label_file_size.setText(getStringForLabelFileSize(fileType, contentSizeMap.get(fileName)));
+    }
+
     public Labeled getLabeled() {
         return btn_info;
     }
+
 }

@@ -9,6 +9,7 @@ import javafx.stage.Stage;
 
 import javax.swing.*;
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * Utility class for base helpful operations.
@@ -202,5 +203,12 @@ public class ControllersUtil {
      */
     public static void showConnectionError() {
         showErrorMessage("Unable to connect to the server");
+    }
+
+    public static String getStringForLabelFileSize(String fileType, long sizeByte){
+        long size =sizeByte;
+        String unitType = "bytes";
+
+       return String.format("Size of %s is %d %s", fileType, size, unitType);
     }
 }
