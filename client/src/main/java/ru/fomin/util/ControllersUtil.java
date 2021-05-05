@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Labeled;
 import javafx.stage.Stage;
+import lombok.Getter;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -26,6 +27,7 @@ public class ControllersUtil {
             " contain at least 1 large letter,\n" +
             " one small letter\n" +
             " and contain special character OR digit.";
+    private static final double DIVISOR = 1024.00;
 
     /**
      * Shows pop-up window with information about developer.
@@ -205,10 +207,44 @@ public class ControllersUtil {
         showErrorMessage("Unable to connect to the server");
     }
 
-    public static String getStringForLabelFileSize(String fileType, long sizeByte){
-        long size =sizeByte;
-        String unitType = "bytes";
+    public static String getStringForLabelFileSize(String fileType, long sizeByte) {
 
-       return String.format("Size of %s is %d %s", fileType, size, unitType);
+        double size = sizeByte;
+        SizeUnit unitType = SizeUnit.B;
+        SizeUnit[] sizeUnits = SizeUnit.values();
+
+        for (int i = 1; i < sizeUnits.length; i++) {
+            if (size < DIVISOR) {
+                break;
+            }
+            size /= DIVISOR;
+            unitType = sizeUnits[i];
+        }
+
+        return String.format("Size of %s is %.2f %s", fileType, size, unitType);
+
+
+    }
+
+    /**
+     * File size units.
+     * All elements of enumeration should be ordered in ascending order.
+     */
+    enum SizeUnit {
+        B("bytes"),
+        KB("kilobytes"),
+        MB("megabytes"),
+        GB("gigabytes");
+
+        private String typeName;
+
+        SizeUnit(String typeName) {
+            this.typeName = typeName;
+        }
+
+        @Override
+        public String toString() {
+            return typeName;
+        }
     }
 }
