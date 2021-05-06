@@ -211,12 +211,9 @@ public class MainPanelController {
      */
     private void createDirectory() {
         String dirName = field_resource_name.getText();
-        if (!hasText(dirName)) {
-            showErrorMessage("You should insert name of new directory into the filed");
-            field_resource_name.clear();
-            return;
+        if (isCorrectDirectoryName(dirName)) {
+            mainPanelService.createDir(dirName, remoteCurrentDirectoryId);
         }
-        mainPanelService.createDir(dirName, remoteCurrentDirectoryId);
         field_resource_name.clear();
     }
 

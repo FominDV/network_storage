@@ -247,4 +247,17 @@ public class ControllersUtil {
             return typeName;
         }
     }
+
+    public static boolean isCorrectDirectoryName(String dirName) {
+        if (!hasText(dirName)) {
+            showErrorMessage("You should insert name of new directory into the filed");
+            return false;
+        }
+        if (dirName.matches("(.*)[/\\\\.](.*)")) {
+            showErrorMessage("Directory name should not contain '.', '\\' and '/'");
+            return false;
+        }
+        return true;
+    }
+
 }
